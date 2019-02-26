@@ -6,9 +6,9 @@
  * Time: 17:36
  */
 
-namespace Zhyu\Repository\Criterias;
+namespace Zhyu\Repositories\Criterias;
 
-use Zhyu\Repository\Contracts\RepositoryInterface;
+use Zhyu\Repositories\Contracts\RepositoryInterface;
 
 
 abstract class Criteria {

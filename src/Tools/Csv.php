@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhyu\Tool;
+namespace Zhyu\Tools;
 
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Collection;
