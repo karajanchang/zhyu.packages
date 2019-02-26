@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhyu\Repositories\Eloquents;
+namespace Zhyu\Repository\Eloquents;
 
 class Test {
 	public static function Hello(){

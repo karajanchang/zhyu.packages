@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhyu\Repositories\Contracts;
+namespace Zhyu\Repository\Contracts;
 
 Interface RepositoryInterface{
 

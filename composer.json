@@ -10,8 +10,8 @@
   ],
   "authors": [
     {
-      "name": "david",
-      "email": "david@zhyu.com.tw"
+      "name": "karajanchang",
+      "email": "karajanchang@gmail.com"
     }
   ],
   "require": {
@@ -21,7 +21,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Zhyu\\Repositories\\": "src/Repositories"
+      "Zhyu\\Repository\\": "src/Repositories",
+      "Zhyu\\Tool\\": "src/Tools"
     }
   },
   "autoload-dev": {

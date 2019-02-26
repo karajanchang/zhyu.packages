@@ -1,10 +1,10 @@
 <?php
-namespace Zhyu\Repositories\Eloquents;
+namespace Zhyu\Repository\Eloquents;
 
-use Zhyu\Repositories\Contracts\CriteriaInterface;
-use Zhyu\Repositories\Criterias\Criteria;
-use Zhyu\Repositories\Contracts\RepositoryInterface;
-use Zhyu\Repositories\Exceptions\RepositoryException;
+use Zhyu\Repository\Contracts\CriteriaInterface;
+use Zhyu\Repository\Criterias\Criteria;
+use Zhyu\Repository\Contracts\RepositoryInterface;
+use Zhyu\Repository\Exceptions\RepositoryException;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

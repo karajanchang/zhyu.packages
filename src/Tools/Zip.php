@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhyu\Repositories\Tools;
+namespace Zhyu\Tool;
 
 class Zip {
 	public function getContent($file){

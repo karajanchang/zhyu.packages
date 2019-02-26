@@ -6,13 +6,13 @@
  * Time: 17:26
  */
 
-namespace Zhyu\Repositories\Exceptions;
+namespace Zhyu\Repository\Exceptions;
 
 use \Exception;
 
 /**
  * Class RepositoryException
- * @package Zhyu\Repositories\Exceptions
+ * @package Zhyu\Repository\Exceptions
  */
 class RepositoryException extends Exception
 {

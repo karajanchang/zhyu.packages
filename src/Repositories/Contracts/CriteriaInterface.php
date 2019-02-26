@@ -6,9 +6,9 @@
  * Time: 17:39
  */
 
-namespace Zhyu\Repositories\Contracts;
+namespace Zhyu\Repository\Contracts;
 
-use Zhyu\Repositories\Criterias\Criteria;
+use Zhyu\Repository\Criterias\Criteria;
 
 
 /**
