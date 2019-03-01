@@ -1,6 +1,6 @@
 {
-  "name": "zhyu/repositories",
-  "description": "Laravel Repositories",
+  "name": "zhyu/packages",
+  "description": "some tools for laravel",
   "keywords": [
     "laravel",
     "repository",
@@ -26,7 +26,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Zhyu\\Tests\\Repositories\\": "tests/"
+      "Zhyu\\Tests\\Packages\\": "tests/"
     }
   },
   "extra": {
