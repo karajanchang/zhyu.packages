@@ -9,7 +9,7 @@
 namespace Zhyu\Repositories\Eloquents;
 
 use Illuminate\Support\Collection;
-
+use Zhyu\Repositories\Contracts\RepositoryInterface;
 
 class RepositoryApp{
     public static function bind($name){
