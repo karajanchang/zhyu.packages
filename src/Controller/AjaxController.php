@@ -8,8 +8,12 @@
 
 namespace Zhyu\Controller;
 
+use Zhyu\Repositories\Contracts\RepositoryInterface;
+use Zhyu\Repositories\Criterias\CriteriaApp;
+use Zhyu\Repositories\Eloquents\RepositoryApp;
+use Zhyu\Controller\Controller as ZhyuController;
 
-class AjaxController extends Controller
+class AjaxController extends ZhyuController
 {
     public function __construct()
     {

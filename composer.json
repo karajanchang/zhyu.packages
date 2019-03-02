@@ -17,7 +17,8 @@
   "require": {
     "php": ">=5.6.0",
     "illuminate/support": "5.*",
-    "illuminate/database": "5.*"
+    "illuminate/database": "5.*",
+    "illuminate/auth": "^5.8"
   },
   "autoload": {
     "psr-4": {
@@ -35,7 +36,7 @@
     },
     "laravel": {
       "providers": [
-        "Zhyu\\ZhyuPackagesServiceProvider"
+        "Zhyu\\ZhyuServiceProvider"
       ]
     }
   },

@@ -10,7 +10,7 @@ namespace Zhyu;
 
 use Illuminate\Support\ServiceProvider;
 
-class ZhyuPackagesServiceProvider extends ServiceProvider
+class ZhyuServiceProvider extends ServiceProvider
 {
     public function register(){
 
@@ -28,7 +28,7 @@ class ZhyuPackagesServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            Zhyu\ZhyuPackagesServiceProvider::class,
+            Zhyu\ZhyuServiceProvider::class,
         ];
     }
 
