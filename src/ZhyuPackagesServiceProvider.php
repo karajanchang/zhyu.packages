@@ -20,4 +20,16 @@ class ZhyuPackagesServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
     }
 
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            Zhyu\ZhyuPackagesServiceProvider::class,
+        ];
+    }
+
 }
