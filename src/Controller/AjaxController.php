@@ -17,7 +17,7 @@ class AjaxController extends ZhyuController
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'checklogin']);
+        $this->middleware(['web', 'auth', 'checklogin']);
     }
 
     public function index($model, $key, $per_page_nums = 50)
