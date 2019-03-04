@@ -3,6 +3,7 @@
 namespace Zhyu\Datatables;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Lang;
 
 class TableCreate {
     private $id;
@@ -49,9 +50,12 @@ class TableCreate {
         if(count($this->cols_display)){
             foreach($this->cols_display as $cols){
                 $css = isset($cols['css']) ? $this->css($cols['css']) : '';
-                $title = $tableName.'.'.$cols['title'];
-                $str.='<th '.$css.'>'.trans($title).'</th>';
-//				$str.='<th '.$css.'>'.$cols['title'].'</th>';
+                $title = $tableName . '.' . $cols['title'];
+                if(Lang::has($title)) {
+                    $str.='<th '.$css.'>'.trans($title).'</th>';
+                }else{
+                    $str.='<th '.$css.'>'.$cols['title'].'</th>';
+                }
             }
         }
         return $str;
