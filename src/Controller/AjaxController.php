@@ -20,7 +20,7 @@ class AjaxController extends ZhyuController
         $this->middleware(['web', 'auth', 'checklogin']);
     }
 
-    public function index($model, $key, $per_page_nums = 50)
+    public function index($model, $key, $limit = 50)
     {
         RepositoryApp::bind($model);
         $repository = app()->make(RepositoryInterface::class);

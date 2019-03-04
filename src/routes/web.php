@@ -6,7 +6,7 @@
  * Time: 05:28
  */
 
-Route::get('/ajax/{model}-{key}/{per_page_nums?}', 'Zhyu\Controller\AjaxController@index')->name('ajax');
+Route::get('/ajax/{model}-{key}/{limit?}', 'Zhyu\Controller\AjaxController@index')->name('ajax');
 
 
 
