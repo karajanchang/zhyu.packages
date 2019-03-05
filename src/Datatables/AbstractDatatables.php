@@ -38,6 +38,7 @@ abstract class AbstractDatatables
     abstract public function model();
 
 
+    /*
     private function getDbCols(){
         $config = $this->config();
         $rcol = [];
@@ -67,7 +68,7 @@ abstract class AbstractDatatables
         }
         return $rcol;
     }
-
+    */
 
 }
 
