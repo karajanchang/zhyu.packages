@@ -13,7 +13,19 @@ use Zhyu\Repositories\Eloquents\Repository;
 
 
 class CriteriaApp{
+    //---for normal bind
     public static function bind(Repository $repository, $name){
+        $criterias = config('criteria.'.$name);
+        if(is_null($criterias) || count($criterias)==0){
+            return ;
+        }
+
+        foreach($criterias as $criteria) {
+            $repository->pushCriteria(new $criteria);
+        }
+    }
+    //---for ajax bind
+    public static function ajaxBind(Repository $repository, $name){
         $criterias = config('criteria.'.$name);
         if(is_null($criterias) || count($criterias)==0){
             return ;
@@ -39,5 +51,7 @@ class CriteriaApp{
                 }
             }
         }
+
+
     }
 }

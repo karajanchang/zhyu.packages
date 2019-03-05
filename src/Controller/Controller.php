@@ -18,8 +18,44 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $columns;
+    protected $limit;
+
     public function __construct()
     {
         RepositoryApp::bind((new \ReflectionClass($this))->getShortName());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * @param mixed $columns
+     */
+    public function setColumns($columns): void
+    {
+        $this->columns = $columns;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param mixed $limit
+     */
+    public function setLimit($limit): void
+    {
+        $this->limit = $limit;
     }
 }

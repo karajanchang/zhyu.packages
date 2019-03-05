@@ -71,4 +71,3 @@ abstract class AbstractDatatables
 
 }
 
-

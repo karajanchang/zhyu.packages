@@ -190,4 +190,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         return $this;
     }
 
+    public function __call($name, $arguments)
+    {
+        $res = call_user_func_array([$this->model, $name], $arguments);
+        return $res;
+    }
+
 }
