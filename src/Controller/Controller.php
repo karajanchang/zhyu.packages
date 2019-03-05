@@ -37,7 +37,7 @@ class Controller extends BaseController
     /**
      * @param mixed $columns
      */
-    public function setColumns($columns): void
+    public function setColumns($columns)
     {
         $this->columns = $columns;
     }
@@ -54,7 +54,7 @@ class Controller extends BaseController
     /**
      * @param mixed $limit
      */
-    public function setLimit($limit): void
+    public function setLimit($limit)
     {
         $this->limit = $limit;
     }
