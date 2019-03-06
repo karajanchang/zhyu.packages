@@ -53,7 +53,7 @@ class TableCreate {
 
                 $title = isset($cols['title']) ? $cols['title'] : $col;
                 $otitle = $tableName . '.' . $title;
-                if(Lang::has($title)) {
+                if(Lang::has($otitle)) {
                     $str.='<th '.$css.'>'.trans($otitle).'</th>';
                 }else{
                     $str.='<th '.$css.'>'.$title.'</th>';
