@@ -8,8 +8,8 @@ class JsCreate {
     private $id;
     private $ajax;
     private $js;
-    private $cols_display;
-    private $no_orderable_cols;
+    private $cols_display = [];
+    private $no_orderable_cols = [];
     private $render;
     private $model;
 
@@ -37,6 +37,9 @@ class JsCreate {
         }
         if (isset($config['no_orderable_cols'])) {
             $this->no_orderable_cols = $config['no_orderable_cols'];
+        }
+        if(isset($this->cols_display['buttons'])){
+            array_push($this->no_orderable_cols, 'buttons');
         }
         $this->head($varName);
         return $this->js;
