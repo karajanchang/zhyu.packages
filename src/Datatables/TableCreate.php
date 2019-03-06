@@ -48,13 +48,15 @@ class TableCreate {
         $tableName = $this->model->getTable();
         $str='';
         if(count($this->cols_display)){
-            foreach($this->cols_display as $cols){
+            foreach($this->cols_display as $col => $cols){
                 $css = isset($cols['css']) ? $this->css($cols['css']) : '';
-                $title = $tableName . '.' . $cols['title'];
+
+                $title = isset($cols['title']) ? $cols['title'] : $col;
+                $otitle = $tableName . '.' . $title;
                 if(Lang::has($title)) {
-                    $str.='<th '.$css.'>'.trans($title).'</th>';
+                    $str.='<th '.$css.'>'.trans($otitle).'</th>';
                 }else{
-                    $str.='<th '.$css.'>'.$cols['title'].'</th>';
+                    $str.='<th '.$css.'>'.$title.'</th>';
                 }
             }
         }
