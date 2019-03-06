@@ -21,13 +21,16 @@ class JsCreate {
         return $this->model = $model;
     }
 
-    public function init($config, $varName = 'table'){
+    public function init($config, $varName = 'table', $custom_ajax = null){
         if(isset($config['id'])){
             $this->id = $config['id'];
         }
         $this->ajax = route('ajax', [ 'model' => class_basename($this->model->getTable()), 'act' => 'ajax' ]);
         if(isset($config['ajax'])){
             $this->ajax = $config['ajax'];
+        }
+        if(!is_null($custom_ajax)){
+            $this->ajax = $custom_ajax;
         }
         if(isset($config['cols_display'])){
             $this->cols_display = $config['cols_display'];

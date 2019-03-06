@@ -2,10 +2,6 @@
 
 namespace Zhyu\Datatables;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
 abstract class AbstractDatatables
 {
     private $tableCreate;
@@ -32,8 +28,13 @@ abstract class AbstractDatatables
     {
         $this->jsCreate->model($this->model());
         $config = $this->config();
-        return $this->jsCreate->init($config, $varName);
+        return $this->jsCreate->init($config, $varName, $this->ajax());
 
+    }
+
+    //---if want custom url, override this function
+    public function ajax(){
+        return null;
     }
     abstract public function model();
 

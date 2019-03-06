@@ -8,5 +8,12 @@
 
 Route::get('/ajax/{model}-{key}/{limit?}', 'Zhyu\Controller\AjaxController@index')->name('ajax');
 
+Route::get('/lang/{locale}', function ($locale) {
+    session()->put('locale', $locale);
+    return Redirect::back();
+})->middleware('web');
 
-
+Route::get('/logout', function() {
+    auth()->logout();
+    return Redirect::to('/');
+})->middleware('web')->name('logout');

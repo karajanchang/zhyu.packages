@@ -192,6 +192,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
     public function __call($name, $arguments)
     {
+        $this->applyCriteria();
         $res = call_user_func_array([$this->model, $name], $arguments);
         return $res;
     }

@@ -49,7 +49,7 @@ class AjaxController extends ZhyuController
         if(count($columns)){
             $cols = [];
             foreach($columns as $column) {
-                if((bool)$column['searchable']===true){
+                if((bool)$column['searchable']===true && $column['data']!='buttons'){
                     array_push($cols, [ $column['data'], 'like', '%'.$search['value'].'%']);
                 }
             }
@@ -72,11 +72,9 @@ class AjaxController extends ZhyuController
         $this->search($repository);
 
         $res = $repository->paginate($this->getLimit());
-        return [
-            'draw' => intval(request()->input('draw')),
-            'recordsTotal' =>  $res->total(),
-            'recordsFiltered' => $res->total(),
-            'data' => $res->items(),
-        ];
+
+        //--wrap data
+        $res = new \App\Http\Resources\LogisticsCollection($res);
+        return $res;
     }
 }
