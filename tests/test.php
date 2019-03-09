@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Zhyu\Repositories\Eloquents\Test;
+//use Zhyu\Repositories\Eloquents\Test;
 
-echo Test::hello();
+//echo Test::hello();
+
+use Zhyu\Decorates\FactoryDecorate;
+
+echo FactoryDecorate::getDecorate('SimpleButton');

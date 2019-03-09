@@ -10,17 +10,42 @@ namespace Zhyu\Decorates;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractDecorate
 {
-    public $data;
-    public $route;
-    public $route_params = [];
-    public $css;
+    private $data;
+    private $route;
+    private $route_params = [];
+    private $css;
 
-    public $icss;
-
-    /**
+    private $icss;
+    
+    private $attributes = [];
+    
+    private $text;
+	
+	/**
+	 * AbstractDecorate constructor.
+	 * @param $data
+	 * @param $route
+	 * @param array $route_params
+	 * @param $css
+	 * @param $icss
+	 * @param array $attributes
+	 * @param $text
+	 */
+	public function __construct($data = null, $route = null, array $route_params = [], $css = null, $icss = null, array $attributes = [], $text = null) {
+		$this->data = $data;
+		$this->route = $route;
+		$this->route_params = $route_params;
+		$this->css = $css;
+		$this->icss = $icss;
+		$this->attributes = $attributes;
+		$this->text = $text;
+	}
+	
+	/**
      * @return mixed
      */
     public function getData()
@@ -91,7 +116,7 @@ abstract class AbstractDecorate
     {
         return $this->icss;
     }
-
+    
     /**
      * @param mixed $icss
      */
@@ -99,6 +124,49 @@ abstract class AbstractDecorate
     {
         $this->icss = $icss;
     }
+	
+	/**
+	 * @return array
+	 */
+	public function getAttributes() {
+		return $this->attributes;
+	}
+	
+	/**
+	 * @param array $attributes
+	 */
+	public function setAttributes($attributes) {
+		$this->attributes = $attributes;
+		
+		return $this;
+	}
+	
+	public function pushAttributes($attribute){
+		array_push($this->attributes, $attribute);
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getText() {
+		return $this->text;
+	}
+	
+	/**
+	 * @param mixed $text
+	 */
+	public function setText($text) {
+		$tran_text = trans('zhyu::common.'.$text);
+		if( $tran_text != 'zhyu::common.logouta'){
+			$this->text = $tran_text;
+			return $this;
+		}
+		$this->text = $text;
+		return $this;
+	}
+	
+	
+    
 
     public function _(){
         return $this->__toString();

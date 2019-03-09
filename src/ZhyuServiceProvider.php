@@ -9,11 +9,14 @@
 namespace Zhyu;
 
 use Illuminate\Support\ServiceProvider;
+use Zhyu\Decorates\SimpleButton;
 
 class ZhyuServiceProvider extends ServiceProvider
 {
     public function register(){
-
+		$this->app->bind(ModifyButton::class, function ($app, $data, $route, $route_params, $text) {
+			return new SimpleButton($data, $route, $route_params, 'btn btn-info btn-circle btn-sm m-l-5', 'ti-pencil-alt', $text);
+		});
     }
 
     public function boot(){
