@@ -3,14 +3,6 @@
 namespace Zhyu\Decorates;
 
 trait TraitDecorate {
-	
-	public function renderUrl(){
-		$route = $this->getRoute();
-		if(!$route){
-			return ;
-		}
-		return route($route, $this->getRouteParams());
-	}
 	public function renderCss(){
 		return $this->renderCssByCss($this->getCss());
 	}
@@ -31,7 +23,7 @@ trait TraitDecorate {
 	public function renderAttribute(){
 		$attrArray = [];
 		$attributes = $this->getAttributes();
-		if(count($attributes)){
+		if(is_array($attributes) && count($attributes)){
 			foreach($attributes as $attribute){
 				if(is_array($attribute)){
 					foreach($attribute as $key => $val){

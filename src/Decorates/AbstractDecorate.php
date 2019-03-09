@@ -14,116 +14,111 @@ use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractDecorate
 {
-    private $data;
-    private $route;
-    private $route_params = [];
-    private $css;
-
-    private $icss;
-    
-    private $attributes = [];
-    
-    private $text;
+	private $data;
+	private $link;
+	private $css;
+	
+	private $icss;
+	
+	private $attributes = [];
+	
+	private $text;
 	
 	/**
 	 * AbstractDecorate constructor.
 	 * @param $data
-	 * @param $route
-	 * @param array $route_params
+	 * @param $link
 	 * @param $css
 	 * @param $icss
 	 * @param array $attributes
 	 * @param $text
 	 */
-	public function __construct($data = null, $route = null, array $route_params = [], $css = null, $icss = null, array $attributes = [], $text = null) {
+	//public function __construct($data = null, $route = null, array $route_params = [], $css = null, $icss = null, $attributes = [], $text = null) {
+	public function __construct($data = null, $link = null, $css = null, $icss = null, $attributes = [], $text = null) {
 		$this->data = $data;
-		$this->route = $route;
-		$this->route_params = $route_params;
+		$this->link = $link;
 		$this->css = $css;
 		$this->icss = $icss;
 		$this->attributes = $attributes;
+		//dump($text);
 		$this->text = $text;
 	}
 	
+	public function renderUrl(){
+		$url = '';
+		if(is_array($this->link)){
+			$url = call_user_func_array('route', $this->link);
+		}
+		if(is_string($this->link)){
+			$url = $this->link;
+		}
+		return $url;
+	}
+	
 	/**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData(Model $data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    /**
-     * @param mixed $route
-     */
-    public function setRoute($route)
-    {
-        $this->route = $route;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRouteParams()
-    {
-        return $this->route_params;
-    }
-
-    /**
-     * @param array $route_params
-     */
-    public function setRouteParams($route_params)
-    {
-        $this->route_params = $route_params;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCss()
-    {
-        return $this->css;
-    }
-
-    /**
-     * @param mixed $css
-     */
-    public function setCss($css)
-    {
-        $this->css = $css;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIcss()
-    {
-        return $this->icss;
-    }
-    
-    /**
-     * @param mixed $icss
-     */
-    public function setIcss($icss)
-    {
-        $this->icss = $icss;
-    }
+	 * @return mixed
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+	
+	/**
+	 * @param mixed $data
+	 */
+	public function setData(Model $data)
+	{
+		$this->data = $data;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getUrl() {
+		return $this->url;
+	}
+	
+	/**
+	 * @param mixed $url
+	 */
+	public function setUrl($url) {
+		$this->url = $url;
+		
+		return $this;
+	}
+	
+	
+	/**
+	 * @return mixed
+	 */
+	public function getCss()
+	{
+		return $this->css;
+	}
+	
+	/**
+	 * @param mixed $css
+	 */
+	public function setCss($css)
+	{
+		$this->css = $css;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getIcss()
+	{
+		return $this->icss;
+	}
+	
+	/**
+	 * @param mixed $icss
+	 */
+	public function setIcss($icss)
+	{
+		$this->icss = $icss;
+	}
 	
 	/**
 	 * @return array
@@ -166,11 +161,11 @@ abstract class AbstractDecorate
 	}
 	
 	
-    
-
-    public function _(){
-        return $this->__toString();
-    }
-
-
+	
+	
+	public function _(){
+		return $this->__toString();
+	}
+	
+	
 }
