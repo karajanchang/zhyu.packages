@@ -152,7 +152,7 @@ abstract class AbstractDecorate
 	 */
 	public function setText($text) {
 		$tran_text = trans('zhyu::common.'.$text);
-		if( $tran_text != 'zhyu::common.logouta'){
+		if( $tran_text != 'zhyu::common.'.$text){
 			$this->text = $tran_text;
 			return $this;
 		}
