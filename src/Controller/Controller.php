@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use mysql_xdevapi\Exception;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
 
 class Controller extends BaseController
@@ -117,7 +118,7 @@ class Controller extends BaseController
     public function returnClassBaseName($class){
         return  strtolower(class_basename($class));
     }
-    protected function view($view, Model $model = null, $params = null){
+    protected function view($view = null, Model $model = null, $params = null){
         $model_name = $this->returnClassBaseName($model);
         ${$model_name} = $model;
 
@@ -127,8 +128,13 @@ class Controller extends BaseController
             if(!is_null($this->table)) {
                 $table = $this->table;
             }else{
-                $table = $model->getTable();
+                if(!is_null($model)) {
+                    $table = $model->getTable();
+                }
             }
+        }
+        if(!isset($table)){
+            throw new \Exception('please provide table name first!!!');
         }
         if(isset($params['title']) && strlen($params['title'])>0){
             $title = $params['title'];
@@ -140,6 +146,6 @@ class Controller extends BaseController
         }
 
 
-        return view($view, compact('table', 'title', 'id', $model_name));
+        return view()-> first([$view, 'vendor.zhyu.form'], compact('table', 'title', 'id', $model_name));
     }
 }
