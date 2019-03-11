@@ -19,9 +19,9 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $title = '';
+    protected $title = null;
     protected $id = null;
-    protected $table = '';
+    protected $table = null;
 
     protected $columns;
     protected $limit;
@@ -120,10 +120,15 @@ class Controller extends BaseController
     protected function view($view, Model $model = null, $params = null){
         $model_name = $this->returnClassBaseName($model);
         ${$model_name} = $model;
+
         if(isset($params['table']) && strlen($params['table'])>0){
             $table = $params['table'];
         }else{
-            $table = $this->table;
+            if(!is_null($this->table)) {
+                $table = $this->table;
+            }else{
+                $table = $model->getTable();
+            }
         }
         if(isset($params['title']) && strlen($params['title'])>0){
             $title = $params['title'];
