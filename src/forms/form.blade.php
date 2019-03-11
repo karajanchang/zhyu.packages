@@ -45,7 +45,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
-                    <div class="table-responsive">
+                    <div class="table-responsive" id="app">
                         @include("forms.".$table)
                     </div>
                 </div>
