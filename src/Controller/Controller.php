@@ -117,7 +117,8 @@ class Controller extends BaseController
     public function returnClassBaseName($class){
         return  strtolower(class_basename($class));
     }
-    protected function view($view = null, Model $model = null, $params = null){
+
+    protected function view($view = 'index', Model $model = null, $params = null){
         $model_name = $this->returnClassBaseName($model);
         ${$model_name} = $model;
 
@@ -143,8 +144,15 @@ class Controller extends BaseController
         if(isset($model->id)){
             $id = $model->id;
         }
+        $datatablesService = null;
+        if(isset($params['datatablesService'])){
+            $datatablesService = $params['datatablesService'];
+        }
+        if($view == 'index'){
+            $view = 'vendor.zhyu.index';
+        }
 
 
-        return view()-> first([$view, 'vendor.zhyu.form'], compact('table', 'title', 'id', $model_name));
+        return view()->first([$view, 'vendor.zhyu.form'], compact('table', 'title', 'id', 'datatablesService', $model_name));
     }
 }
