@@ -24,10 +24,15 @@
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <h3 class="page-title">{{ __('zhyu::common.update') }} - {{ $page_title }}</h3> </div>
+                @if(isset($id) && $id>0)
+                    <h3 class="page-title">{{ __('zhyu::common.update') }} - {{ $title }}</h3> </div>
+                @else
+                    <h3 class="page-title">{{ __('zhyu::common.create') }}</h3> </div>
+                @endif
+
             <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a href="javascript:;">{{ __($model_table.'.index') }}</a></li>
+                    <li><a href="javascript:;">{{ __($table.'.index') }}</a></li>
                     @if(isset($id) && $id>0)
                         <li class="active">{{ __('zhyu::common.update') }}</li>
                     @else
@@ -41,7 +46,7 @@
             <div class="col-md-12">
                 <div class="white-box">
                     <div class="table-responsive">
-                        @include("forms.".$form)
+                        @include("forms.".$table)
                     </div>
                 </div>
             </div>
