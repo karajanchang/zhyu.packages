@@ -22,6 +22,12 @@ class ZhyuServiceProvider extends ServiceProvider
 	public function boot(){
 		$this->loadRoutesFrom(__DIR__.'/routes/web.php');
 		$this->loadTranslationsFrom(__DIR__.'/lang', 'zhyu');
+
+		$this->loadViewsFrom(__DIR__.'/forms', 'zhyu');
+
+		$this->publishes([
+		    __DIR__.'/forms' => resource_path('views/vendor/zhyu'),
+        ]);
 	}
 	
 	/**
