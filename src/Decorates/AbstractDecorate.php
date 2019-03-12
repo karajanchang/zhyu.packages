@@ -47,7 +47,8 @@ abstract class AbstractDecorate
 	public function renderUrl(){
 		$url = '';
 		if(is_array($this->link)){
-			$url = call_user_func_array('route', $this->link);
+			$url = call_user_func_array('route', array_merge($this->link , [false]));
+			return $url;
 		}
 		if(is_string($this->link)){
 			$url = $this->link;
