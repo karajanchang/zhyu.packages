@@ -10,6 +10,7 @@ namespace Zhyu\Decorates;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractDecorate
 {
@@ -40,19 +41,23 @@ abstract class AbstractDecorate
         $this->link = $link;
         $this->css = $css;
         $this->icss = $icss;
-        $this->attributes = $attributes;
+        $this->attributes = is_null($attributes) ? [] : $this->attributes;
         $this->setText($text);
 
         $this->title = $title;
     }
 
     public function renderUrl(){
-        if(is_array($this->link)){
-            $url = call_user_func_array('route', array_merge($this->link , [false]));
+        $rurl = $this->link;
+        if(isset($this->url)){
+            $rurl =  $this->url;
+        }
+        if(is_array($rurl)){
+            $url = call_user_func_array('route', array_merge($rurl , [false]));
             return $url;
         }
-        if(is_string($this->link)){
-            $url = $this->link;
+        if(is_string($rurl)){
+            $url = $rurl;
             return $url;
         }
         return 'javascript:;';
