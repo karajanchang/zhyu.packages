@@ -8,4 +8,5 @@ return [
 	'view' => 'Detail',
 	'delete' => 'Delete',
     'logout' => 'Logout',
+    'list' => 'List',
 ];

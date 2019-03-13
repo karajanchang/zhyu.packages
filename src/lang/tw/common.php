@@ -8,4 +8,5 @@ return [
 	'view' => '詳細',
 	'delete' => '刪除',
 	'logout' => '登出',
+    'list' => '列表',
 ];

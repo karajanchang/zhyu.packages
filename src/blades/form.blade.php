@@ -1,4 +1,4 @@
-@extends("layouts.main")
+@extends("vendor.zhyu.layouts.main")
 
 @push("css_plugins")
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css') }}" />
@@ -20,15 +20,76 @@
     </script>
 @endpush
 
+@php
+    try{
+        $columns = Schema::getColumnListing(${$model_name}->getTable());
+        $tmps = [];
+        foreach($columns as $column){
+            $tmps[] = $column.": `".old($column, ${$model_name}->$column)."`";
+        }
+        $tmp_str = join(',', $tmps);
+
+    }catch (\Exception $e){
+        throw new \Exception($e->getMessage());
+    }
+@endphp
+@push("js")
+    <script>
+        const toast = new Toast();
+        const app = new Vue({
+            el: '#app',
+            data(){
+                return {
+                    form: new Form({
+                        {{ $tmp_str }}
+                    })
+                }
+            },
+            methods: {
+                onSubmit() {
+                    @if(isset($id) && $id>0)
+                        let res = this.form.put('{{ $addOrUpdateUrl}}')
+                            .then(response => {
+                                toast.success('資料已更新完成');
+
+                                try{
+                                    location.href = redirectAfterPut;
+                                }catch(e) {
+                                    location.href = '{{ route(${$model_name}->getTable().'.index') }}';
+                                }
+                            });
+                    @else
+                        let res = this.form.post('{{ $addOrUpdateUrl}}')
+                            .then(response => {
+                                toast.success('資料已新增完成');
+
+                                try{
+                                    location.href = redirectAfterPost;
+                                }catch(e) {
+                                    location.href = '{{ route(${$model_name}->getTable().'.index') }}';
+                                }
+                            });
+                    @endif
+                    res.catch( errors => {
+                            toast.fail(errors.message);
+                        }
+                    )
+                }
+            }
+        });
+    </script>
+@endpush
+
 @section("content")
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                 @if(isset($id) && $id>0)
-                    <h3 class="page-title">{{ __('zhyu::common.update') }} - {{ $title }}</h3> </div>
+                    <h3 class="page-title">{{ __('zhyu::common.update') }} - {{ $title }}</h3>
                 @else
-                    <h3 class="page-title">{{ __('zhyu::common.create') }}</h3> </div>
+                    <h3 class="page-title">{{ __('zhyu::common.insert') }}</h3>
                 @endif
+            </div>
 
             <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                 <ol class="breadcrumb">
@@ -46,7 +107,7 @@
             <div class="col-md-12">
                 <div class="white-box">
                     <div class="table-responsive" id="app">
-                        @include("blades".$table)
+                        @include("blades.".$table)
                     </div>
                 </div>
             </div>

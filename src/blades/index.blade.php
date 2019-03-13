@@ -1,4 +1,4 @@
-@extends("layouts.main")
+@extends("vendor.zhyu.layouts.main")
 
 @push("css_plugins")
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css') }}" />
@@ -23,31 +23,39 @@
 @endpush
 
 @section("content")
-
-        <div class="container-fluid">
-            <div class="row bg-title">
-                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                    <h3 class="page-title">{{ __($table.'.index') }}</h3>
-                </div>
-                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                    <ol class="breadcrumb">
-                        <li><a href="javascript:;">電話客服</a></li>
-                        <li class="active">{{ __('zhyu::common.list') }}<</li>
-                    </ol>
-                </div>
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h3 class="page-title">{{ __('zhyu::common.insert') }}</h3>
             </div>
-            <!-- .row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="white-box">
-                        <h3>new page</h3>
-                        <div class="table-responsive" id="app">
-                            {!! $datatablesService->table() !!}
-                        </div>
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="javascript:;">{{ __($table.'.index') }}</a></li>
+                    <li class="active">{{ __('zhyu::common.list') }}</li>
+                </ol>
+            </div>
+        </div>
+        <!-- .row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="white-box">
+                    @php
+                        echo app()->make('button.create', [
+        	                'data' => null,
+	                        'url' =>
+	                            [
+	                            	$table.'.create'
+	                            ],
+	                        'text' => 'add',
+	                        'title' => 'add',
+                        ]);
+                    @endphp
+                    <div class="table-responsive" id="app">
+                        {!! $datatablesService->table() !!}
                     </div>
                 </div>
             </div>
-            <!-- .row -->
-
         </div>
+        <!-- .row -->
+    </div>
 @stop
