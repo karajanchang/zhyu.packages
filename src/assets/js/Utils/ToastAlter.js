@@ -1,4 +1,4 @@
-class Toast{
+class ToastAlter{
     constructor() {
 
     }
@@ -27,4 +27,4 @@ class Toast{
     }
 }
 
-export default Toast;
+export default ToastAlter;

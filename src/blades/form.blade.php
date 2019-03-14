@@ -35,7 +35,8 @@
 @endphp
 @push("js")
     <script>
-        const toast = new Toast();
+        const toastAlter = new ToastAlter();
+
         const app = new Vue({
             el: '#app',
             data(){
@@ -47,10 +48,10 @@
             },
             methods: {
                 onSubmit() {
-                    @if(isset($id) && $id>0)
-                        let res = this.form.put('{{ $addOrUpdateUrl}}')
+                            @if(isset($id) && $id>0)
+                    let res = this.form.put('{{ $addOrUpdateUrl}}')
                             .then(response => {
-                                toast.success('資料已更新完成');
+                                toastAlter.success('資料已更新完成');
 
                                 try{
                                     location.href = redirectAfterPut;
@@ -58,10 +59,10 @@
                                     location.href = '{{ route(${$model_name}->getTable().'.index') }}';
                                 }
                             });
-                    @else
-                        let res = this.form.post('{{ $addOrUpdateUrl}}')
+                            @else
+                    let res = this.form.post('{{ $addOrUpdateUrl}}')
                             .then(response => {
-                                toast.success('資料已新增完成');
+                                toastAlter.success('資料已新增完成');
 
                                 try{
                                     location.href = redirectAfterPost;
@@ -71,7 +72,7 @@
                             });
                     @endif
                     res.catch( errors => {
-                            toast.fail(errors.message);
+                            toastAlter.fail(errors.message);
                         }
                     )
                 }

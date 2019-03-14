@@ -19,6 +19,7 @@
         $('body').tooltip({ selector: '[data-toggle="tooltip"]', container: 'body', animation: false });
         var table = '';
         {!! $datatablesService->js() !!}
+
     </script>
 @endpush
 
@@ -47,7 +48,7 @@
 	                            	$table.'.create'
 	                            ],
 	                        'text' => 'add',
-	                        'title' => 'add',
+	                        //'title' => 'add'
                         ]);
                     @endphp
                     <div class="table-responsive" id="app">

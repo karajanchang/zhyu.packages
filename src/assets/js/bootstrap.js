@@ -1,6 +1,6 @@
 
 import Form from './Utils/Form';
-import Toast from './Utils/Toast';
+import ToastAlter from './Utils/ToastAlter';
 import SwalAlter from './Utils/SwalAlter';
 
 
@@ -44,7 +44,7 @@ if (token) {
 }
 
 window.Form = Form;
-window.Toast = Toast;
+window.ToastAlter = ToastAlter;
 window.SwalAlter = SwalAlter;
 
 /**
@@ -63,4 +63,5 @@ window.SwalAlter = SwalAlter;
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
 

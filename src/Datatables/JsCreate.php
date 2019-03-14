@@ -48,9 +48,12 @@ class JsCreate {
         $this->js="var $varName = '';\n";
         $this->js.="$(function() {\n";
         $this->js.="\t$varName = $('#".$this->id."').DataTable({\n";
-        $this->js.="\t\t".'"language": {'."\n".
-            "\t\t\t".    '"url": "/js/datatable.tw.json"'."\n".
-            "\t\t".  '},'."\n";
+
+        if(app()->getLocale()=='tw') {
+            $this->js .= "\t\t" . '"language": {' . "\n" .
+                "\t\t\t" . '"url": "/js/datatable.tw.json"' . "\n" .
+                "\t\t" . '},' . "\n";
+        }
         $this->js.="\t\t".'"serverSide": true,'."\n";
         $this->js.="\t\t".'"stateSave": true,'."\n";
         $this->js.="\t\t".'"deferRender": true,'."\n";

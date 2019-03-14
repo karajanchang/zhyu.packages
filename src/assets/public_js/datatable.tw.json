@@ -1,0 +1,25 @@
+{
+    "sProcessing": "載入中...",
+    "sLengthMenu": "每頁 _MENU_ 筆",
+    "sZeroRecords": "沒有符合結果",
+    "sInfo": "從 _START_ 到 _END_ /共 _TOTAL_ 筆",
+    "sInfoEmpty":    "顯示第 0 至 0 項結果，共 0 項",
+    "sInfoFiltered": "(過濾總筆數 _MAX_)",
+    "sInfoPostFix": "",
+    "sSearch": "搜索:",
+    "sUrl": "",
+    "sEmptyTable": "無任何資料",
+    "sLoadingRecords": "載入中...",
+    "sInfoThousands": ",",
+    "oPaginate": {
+        "sFirst": "首頁",
+        "sPrevious": "上頁",
+        "sNext": "下頁",
+        "sLast": "末頁",
+        "sJump": "跳頁"
+    },
+    "oAria": {
+        "sSortAscending": ": 以升序排列此列",
+        "sSortDescending": ": 以降序排列此列"
+    }
+}

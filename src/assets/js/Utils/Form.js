@@ -123,6 +123,7 @@ class Form {
      * @param {object} errors
      */
     onFail(errors) {
+        console.log(errors.errors);
         this.errors.record(errors.errors);
     }
 }

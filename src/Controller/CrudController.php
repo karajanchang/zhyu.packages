@@ -8,7 +8,9 @@
 
 namespace Zhyu\Controller;
 
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use mysql_xdevapi\Exception;
 use Zhyu\Datatables\DatatablesFactoryApp;
 use Zhyu\Controller\Controller as ZhyuController;
 
@@ -20,7 +22,6 @@ abstract class CrudController extends ZhyuController
     public function __construct()
     {
         $this->middleware(['web', 'auth', 'checklogin']);
-
         $this->makeRepository();
     }
 
@@ -30,7 +31,6 @@ abstract class CrudController extends ZhyuController
 
     private function makeRepository(){
         $repository = app()->make($this->repository());
-
         return $this->repository = $repository;
     }
 
@@ -62,12 +62,12 @@ abstract class CrudController extends ZhyuController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         $rules = method_exists($this, 'rules_edit') ? $this->rules_create() : $this->rules();
-        $this->validate(request(), $rules);
-
-        return response()->json([], 200);
+        $this->validate($request, $rules);
+        $this->repository->create($request->all());
+        return $this->responseJson('success');
     }
 
     /**
@@ -78,6 +78,12 @@ abstract class CrudController extends ZhyuController
      */
     public function show($id)
     {
+        try {
+            $model = $this->repository->find($id);
+            return parent::view(null, $model, ['title' => $title]);
+        }catch (\Exception $e){
+            return $this->responseJson($e, 500);
+        }
     }
 
     /**
@@ -88,7 +94,6 @@ abstract class CrudController extends ZhyuController
      */
     public function edit($id, $title = null)
     {
-
         $model = $this->repository->find($id);
         return parent::view(null, $model, ['title' => $title]);
     }
@@ -99,14 +104,16 @@ abstract class CrudController extends ZhyuController
      * @param  App\Model  $logistic
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        $model = $this->repository->find($id);
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_edit() : $this->rules();
 
-        $this->validate(request(), $rules);
-        return response()->json([], 200);
+        $this->validate($request, $rules);
+
+        $this->repository->update($id, $request->all());
+
+        return $this->responseJson('success');
     }
 
     /**
@@ -117,6 +124,14 @@ abstract class CrudController extends ZhyuController
      */
     public function destroy($id)
     {
-        //
+        $this->repository->delete($id);
+        return $this->responseJson('success');
+    }
+
+    public function responseJson($message, $status = 200){
+        if($message instanceof \Exception){
+            $message = $message->getMessage();
+        }
+        return response()->json([ 'message' => $message ], $status);
     }
 }

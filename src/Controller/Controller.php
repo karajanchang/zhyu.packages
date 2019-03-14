@@ -139,10 +139,17 @@ class Controller extends BaseController
         if(!isset($table)){
             throw new \Exception('please provide table name first!!!');
         }
+        /*
         if(isset($params['title']) && strlen($params['title'])>0){
             $title = $params['title'];
         }else{
             $title = $this->title;
+        }
+        */
+        try {
+            $title = (string) $model;
+        }catch(\Exception $e){
+            $title = '';
         }
         if(isset($model->id)){
             $id = $model->id;

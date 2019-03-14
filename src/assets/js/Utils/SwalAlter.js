@@ -1,12 +1,11 @@
 import Form from './Form';
-import Toast from './Toast';
+import ToastAlter from './ToastAlter';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-async function showdone(){
-    let toast = new Toast();
-    toast.success('資料已刪除完成');
+async function showdone(toastAlter){
+    toastAlter.success('資料已刪除完成');
     await sleep(1000);
     location.reload();
 }
@@ -23,11 +22,17 @@ class SwalAlter{
             closeOnConfirm: false
         }, function(){
             let form = new Form({});
+            var toastAlter = new ToastAlter();
+
             let res = form.delete(url)
                 .then(response => {
-                    showdone();
+                    showdone(toastAlter);
                 });
 
+            res.catch( errors => {
+                    toastAlter.fail(errors.message);
+                }
+            );
         });
     }
 }
