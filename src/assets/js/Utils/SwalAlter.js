@@ -7,7 +7,7 @@ function sleep(ms) {
 async function showdone(){
     let toast = new Toast();
     toast.success('資料已刪除完成');
-    await sleep(1500);
+    await sleep(1000);
     location.reload();
 }
 
