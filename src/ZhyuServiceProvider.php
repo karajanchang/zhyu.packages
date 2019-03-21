@@ -36,11 +36,11 @@ class ZhyuServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(__DIR__.'/blades', 'zhyu');
 
 		$this->publishes([
-		    __DIR__.'/blades' => resource_path('views/vendor/zhyu', 'zhyu'),
-            __DIR__.'/assets/js' => resource_path('js', 'zhyu'),
-            __DIR__.'./lang/tw' => resource_path('lang/tw', 'zhyu'),
-            __DIR__.'/assets/public_js' => public_path('js', 'zhyu'),
-        ]);
+		    __DIR__.'/blades' => resource_path('views/vendor/zhyu'),
+            __DIR__.'/assets/js' => resource_path('js'),
+            __DIR__.'/lang/tw' => resource_path('lang/tw'),
+            __DIR__.'/assets/public_js' => public_path('js'),
+        ], 'zhyu');
 	}
 	
 	/**

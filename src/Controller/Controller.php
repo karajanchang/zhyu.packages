@@ -23,6 +23,8 @@ class Controller extends BaseController
     protected $title = null;
     protected $id = null;
     protected $table = null;
+    protected $route = null;
+
 
     protected $columns;
     protected $limit;
@@ -115,6 +117,23 @@ class Controller extends BaseController
         $this->table = $table;
     }
 
+    /**
+     * @return null
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * @param null $route
+     */
+    public function setRoute($route): void
+    {
+        $this->route = $route;
+    }
+
+
 
 
     public function returnClassBaseName($class){
@@ -139,6 +158,12 @@ class Controller extends BaseController
         if(!isset($table)){
             throw new \Exception('please provide table name first!!!');
         }
+
+        $route = $this->getRoute();
+        if(is_null($route)){
+            $route = $table;
+        }
+
         /*
         if(isset($params['title']) && strlen($params['title'])>0){
             $title = $params['title'];
@@ -161,8 +186,21 @@ class Controller extends BaseController
         if($view == 'index'){
             $view = 'vendor.zhyu.index';
         }
-        $addOrUpdateUrl = isset($model->id) ? route($table.'.update', [ 'id' => $model->id ]) : route($table.'.store');
+        $addOrUpdateUrl = '';
+        try {
+            $addOrUpdateUrl = isset($model->id) ? route($route . '.update', ['id' => $model->id]) : route($route . '.store');
+        }catch(\Exception $e) {
+            //dump($view);
+            //exit;
+        }
 
-        return view()->first([$view, 'vendor.zhyu.form'], compact('table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl'));
+        return view()->first([$view, 'vendor.zhyu.form'], compact('route', 'table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl'));
+    }
+
+    public function responseJson($message, $status = 200){
+        if($message instanceof \Exception){
+            $message = $message->getMessage();
+        }
+        return response()->json([ 'message' => $message ], $status);
     }
 }

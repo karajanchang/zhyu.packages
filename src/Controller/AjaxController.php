@@ -8,6 +8,8 @@
 
 namespace Zhyu\Controller;
 
+use App\Driver;
+use App\Task;
 use Illuminate\Pagination\Paginator;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
@@ -44,25 +46,24 @@ class AjaxController extends ZhyuController
         if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2){
             return ;
         }
-        $columns = request()->input('columns');
+//        $columns = request()->input('columns');
 
-        if(count($columns)){
-            $cols = [];
-            foreach($columns as $column) {
-                if((bool)$column['searchable']===true && $column['data']!='buttons'){
-                    array_push($cols, [ $column['data'], 'like', '%'.$search['value'].'%']);
-                }
-            }
-            if(count($cols)) {
-                $criteria = new OrWhereByCustom($cols);
-                $repository->pushCriteria($criteria);
-            }
+        $oColumns = $repository->getSelect(false);
+        $selectColumns = $repository->getSelect(true);
+
+        $cols = [];
+        foreach($selectColumns as $key => $column){
+            $col = $oColumns[$key];
+            array_push($cols, [$col, 'like binary', '%' . $search['value'] . '%']);
+        }
+        if(count($cols)) {
+            $criteria = new OrWhereByCustom($cols);
+            $repository->pushCriteria($criteria);
         }
     }
 
     public function index($model, $key, $limit = 50)
     {
-
         RepositoryApp::bind($model);
         $repository = app()->make(RepositoryInterface::class);
 
@@ -73,8 +74,18 @@ class AjaxController extends ZhyuController
 
         $res = $repository->paginate($this->getLimit());
 
+
         //--wrap data
-        $res = new \App\Http\Resources\LogisticsCollection($res);
+        $rname = str_replace('_', '', ucwords($model, '_'));
+        $cname = '\App\Http\Resources\\'.$rname.'Collection';
+
+        try{
+            if(file_exists(app_path('Http/Resources/'.$rname.'Collection.php'))) {
+                $res = new $cname($res);
+            }
+        }catch(\Exception $e){
+            throw new \Exception(' Resource initial fail: '.$cname);
+        }
         return $res;
     }
 }

@@ -36,6 +36,13 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     protected $skipCriteria = false;
 
     /**
+     * @var array
+     */
+    protected $select = ['*'];
+
+
+
+    /**
      * @param App $app
      * @param Collection $collection
      * @throws \Zhyu\Repositories\Exceptions\RepositoryException
@@ -73,6 +80,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function all($columns = array('*')) {
         $this->applyCriteria();
+        $columns = $this->applySelect($columns);
         return $this->model->get($columns);
     }
 
@@ -83,6 +91,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function paginate($perPage = 15, $columns = array('*')) {
         $this->applyCriteria();
+        $columns = $this->applySelect($columns);
         return $this->model->paginate($perPage, $columns);
     }
 
@@ -119,6 +128,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function find($id, $columns = array('*')) {
         $this->applyCriteria();
+        $columns = $this->applySelect($columns);
         return $this->model->find($id, $columns);
     }
 
@@ -130,6 +140,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function findBy($attribute, $value, $columns = array('*')) {
         $this->applyCriteria();
+        $columns = $this->applySelect($columns);
         return $this->model->where($attribute, '=', $value)->first($columns);
     }
 
@@ -183,11 +194,57 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
             return $this;
 
         foreach($this->getCriteria() as $criteria) {
-            if($criteria instanceof Criteria)
+            if($criteria instanceof Criteria) {
                 $this->model = $criteria->apply($this->model, $this);
+            }
         }
+//        dd($this);
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelect($withParse = false): array
+    {
+        if($withParse===true){
+            return array_map(function($var){
+                $exps = explode('.', $var);
+                if(count($exps)==2) {
+                    return $exps[1];
+                }
+                return $var;
+            }, $this->select);
+        }
+        return $this->select;
+    }
+
+    /**
+     * @param array $select
+     */
+    public function setSelect(array $select): void
+    {
+        $this->select = $select;
+    }
+
+
+    public function applySelect(array $columns){
+        if($columns===['*'] && isset($this->select) && count($this->select)){
+            $columns = array_map(function($var){
+                $exps = explode('.', $var);
+                if(count($exps)==2) {
+                    return $var . ' as ' . $exps[1];
+                }
+                return $var;
+            }, $this->select);
+        }
+        $this->model->select($columns);
+        return $columns;
+    }
+
+    public function select($columns = ['*']){
+        $this->select($columns);
     }
 
     public function __call($name, $arguments)
@@ -198,3 +255,4 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
 }
+

@@ -20,6 +20,9 @@ class DatatablesFactory {
             throw new \Exception('Please create config/datatables.php');
         }
         $className = Collection::make($lut)->get($name, TestDatatables::class);
+        if($className==TestDatatables::class){
+            throw new \Exception('Please create datatables map in config/datatables.php');
+        }
         App::bind(DatatablesInterface::class, $className);
     }
 }

@@ -45,7 +45,7 @@
         	                'data' => null,
 	                        'url' =>
 	                            [
-	                            	$table.'.create'
+	                            	$route.'.create'
 	                            ],
 	                        'text' => 'add',
 	                        //'title' => 'add'

@@ -8,24 +8,28 @@
 
 namespace Zhyu\Repositories\Criterias\Common;
 
+use App\Criterias\Join\JoinAbstract;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Criteria;
 
 
-class OrderByCustom extends Criteria
+class OrWhereByCustom extends Criteria
 {
-    private $orderby_col;
-    private $orderby_dir;
-    public function __construct($orderby_col='', $orderby_dir='')
+    private $columns;
+    public function __construct(array $columns)
     {
-        $this->orderby_col = $orderby_col;
-        $this->orderby_dir = $orderby_dir;
+        $this->columns = $columns;
     }
 
     public function apply($model, RepositoryInterface $repository)
     {
-        $query = $model->orderby($this->orderby_col, $this->orderby_dir);
+        $query = $model->where(function($query){
+            foreach($this->columns as $table => $columns) {
+                foreach($columns as $cols) {
+                    call_user_func_array([$query, 'OrWhere'], $columns);
+                }
+            }
+        });
         return $query;
     }
-
 }

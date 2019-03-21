@@ -30,11 +30,19 @@ class CriteriaApp{
         if(is_null($criterias) || count($criterias)==0){
             return ;
         }
-
-        static::ajax($repository);
-        foreach($criterias as $criteria) {
-            $repository->pushCriteria(new $criteria);
+        if(isset($criterias['select'])){
+            $repository->setSelect($criterias['select']);
         }
+
+        foreach($criterias as $key => $criteria) {
+            if(strtolower($key)!='select'){
+                if(!class_exists($criteria)) {
+                    throw new \Exception('this criteria can not ininal: '.$criteria);
+                }
+                $repository->pushCriteria(new $criteria);
+            }
+        }
+        static::ajax($repository);
     }
 
     public static function ajax(Repository $repository){
@@ -42,16 +50,23 @@ class CriteriaApp{
         $columns = request()->input('columns');
         $orders = request()->input('order');
 
+        $parseColumns = $repository->getSelect(true);
+
         if(count($columns) && count($orders) && $draw){
             foreach($orders as $order) {
                 $key = $order['column'];
                 if(isset($columns[$key]['data'])) {
-                    $criteria = new OrderByCustom($columns[$key]['data'], $order['dir']);
-                    $repository->pushCriteria($criteria);
+                    if(count($parseColumns)){
+                        if(in_array($columns[$key]['data'], $parseColumns)){
+                            $criteria = new OrderByCustom($columns[$key]['data'], $order['dir']);
+                            $repository->pushCriteria($criteria);
+                        }
+                    }else {
+                        $criteria = new OrderByCustom($columns[$key]['data'], $order['dir']);
+                        $repository->pushCriteria($criteria);
+                    }
                 }
             }
         }
-
-
     }
 }

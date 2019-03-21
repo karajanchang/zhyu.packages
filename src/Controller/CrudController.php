@@ -128,10 +128,5 @@ abstract class CrudController extends ZhyuController
         return $this->responseJson('success');
     }
 
-    public function responseJson($message, $status = 200){
-        if($message instanceof \Exception){
-            $message = $message->getMessage();
-        }
-        return response()->json([ 'message' => $message ], $status);
-    }
+
 }
