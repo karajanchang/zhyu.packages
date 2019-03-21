@@ -25,7 +25,6 @@ class OrWhereByCustom extends Criteria
         $query = $model->where(function($query){
             foreach($this->columns as $columns){
                 call_user_func_array([$query, 'OrWhere'], $columns);
-                //$query->orWhere($this->column);
             }
         });
         return $query;
