@@ -13,11 +13,11 @@ abstract class DatatableCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $count = $this->collection->count();
+        $total = $this->resource->total();
         return [
             'draw' => $request->input('draw'),
-            'recordsTotal' =>  $count,
-            'recordsFiltered' =>  $count,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $total,
             'data' =>  $this->collection,
         ];
     }

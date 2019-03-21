@@ -133,9 +133,6 @@ class Controller extends BaseController
         $this->route = $route;
     }
 
-
-
-
     public function returnClassBaseName($class){
         return  strtolower(class_basename($class));
     }
