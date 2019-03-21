@@ -13,6 +13,7 @@ use App\Task;
 use Illuminate\Pagination\Paginator;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
+use Zhyu\Repositories\Criterias\Common\WhereByCustom;
 use Zhyu\Repositories\Criterias\CriteriaApp;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
 use Zhyu\Controller\Controller as ZhyuController;
@@ -62,6 +63,37 @@ class AjaxController extends ZhyuController
         }
     }
 
+    private function query(RepositoryInterface $repository){
+        $query = request()->input('query');
+        if(is_null($query)){
+            return ;
+        }
+        $request_query = explode('*', $query);
+
+        $cols = [];
+        $oColumns = $repository->getSelect(false);
+        $selectColumns = $repository->getSelect(true);
+        if(count($request_query)) {
+            foreach ($request_query as $query) {
+                $params = explode(',', $query);
+                if(count($params)) {
+                    $key = array_search($params[0], $selectColumns);
+                    if(isset($key)) {
+                        $col = $oColumns[$key];
+                        if(isset($col)) {
+                            array_push($cols, [$col, array_shift($params)]);
+                        }
+                    }
+                }
+
+            }
+        }
+        if(count($cols)) {
+            $criteria = new WhereByCustom($cols);
+            $repository->pushCriteria($criteria);
+        }
+    }
+
     public function index($model, $key, $limit = 50)
     {
         RepositoryApp::bind($model);
@@ -71,6 +103,7 @@ class AjaxController extends ZhyuController
 
         $this->currentPage();
         $this->search($repository);
+        $this->query($repository);
 
         $res = $repository->paginate($this->getLimit());
 

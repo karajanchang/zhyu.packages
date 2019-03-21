@@ -32,6 +32,11 @@ class JsCreate {
         if(!is_null($custom_ajax)){
             $this->ajax = $custom_ajax;
         }
+        $query = request()->query();
+        if(isset($query['query'])) {
+            $this->ajax .= '?query=' . $query['query'];
+        }
+
         if(isset($config['cols_display'])){
             $this->cols_display = $config['cols_display'];
         }
