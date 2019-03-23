@@ -17,3 +17,5 @@ Route::get('/logout', function() {
     auth()->logout();
     return Redirect::to('/');
 })->middleware('web')->name('logout');
+
+Route::resource('/resource', 'Zhyu\Controller\ResourceController');
