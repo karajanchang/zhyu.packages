@@ -17,6 +17,7 @@ class CriteriaApp{
     public static function bind(Repository $repository, $name){
         $criterias = config('criteria.'.$name);
         if(is_null($criterias) || count($criterias)==0){
+
             return ;
         }
 
@@ -26,9 +27,11 @@ class CriteriaApp{
     }
     //---for ajax bind
     public static function ajaxBind(Repository $repository, $name){
-        $criterias = config('criteria.'.$name);
-        if(is_null($criterias) || count($criterias)==0){
-            return ;
+        $systems = 'resources.ajax';
+
+        $criterias = config('criteria.' . $name);
+        if (is_null($criterias) || count($criterias) == 0) {
+            return;
         }
         if(isset($criterias['select'])){
             $repository->setSelect($criterias['select']);

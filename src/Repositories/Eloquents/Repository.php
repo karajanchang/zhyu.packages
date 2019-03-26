@@ -9,6 +9,7 @@ use Zhyu\Repositories\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container as App;
+use Illuminate\Support\Facades\Schema;
 /**
  * Class Repository
  * @package Zhyu\Repositories\Eloquents
@@ -81,6 +82,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function all($columns = array('*')) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
+
         return $this->model->get($columns);
     }
 
@@ -92,6 +94,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function paginate($perPage = 15, $columns = array('*')) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
+
         return $this->model->paginate($perPage, $columns);
     }
 
@@ -100,6 +103,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return mixed
      */
     public function create(array $data) {
+
         return $this->model->create($data);
     }
 
@@ -110,6 +114,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return mixed
      */
     public function update($id, array $data, $attribute="id") {
+
         return $this->model->where($attribute, '=', $id)->update($data);
     }
 
@@ -118,6 +123,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return mixed
      */
     public function delete($id) {
+
         return $this->model->destroy($id);
     }
 
@@ -129,6 +135,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function find($id, $columns = array('*')) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
+
         return $this->model->find($id, $columns);
     }
 
@@ -141,6 +148,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function findBy($attribute, $value, $columns = array('*')) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
+
         return $this->model->where($attribute, '=', $value)->first($columns);
     }
 
@@ -149,6 +157,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function resetScope() {
         $this->skipCriteria(false);
+
         return $this;
     }
 
@@ -158,6 +167,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function skipCriteria($status = true){
         $this->skipCriteria = $status;
+
         return $this;
     }
 
@@ -198,7 +208,6 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
                 $this->model = $criteria->apply($this->model, $this);
             }
         }
-//        dd($this);
 
         return $this;
     }
@@ -216,6 +225,9 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
                 }
                 return $var;
             }, $this->select);
+        }
+        if($this->select==['*']) {
+            $this->select = Schema::getColumnListing($this->model->getTable());
         }
         return $this->select;
     }
@@ -240,6 +252,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
             }, $this->select);
         }
         $this->model->select($columns);
+
         return $columns;
     }
 

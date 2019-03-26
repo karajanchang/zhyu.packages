@@ -47,7 +47,6 @@ class AjaxController extends ZhyuController
         if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2){
             return ;
         }
-//        $columns = request()->input('columns');
 
         $oColumns = $repository->getSelect(false);
         $selectColumns = $repository->getSelect(true);
@@ -73,15 +72,17 @@ class AjaxController extends ZhyuController
         $cols = [];
         $oColumns = $repository->getSelect(false);
         $selectColumns = $repository->getSelect(true);
+
         if(count($request_query)) {
             foreach ($request_query as $query) {
                 $params = explode(',', $query);
                 if(count($params)) {
                     $key = array_search($params[0], $selectColumns);
-                    if(isset($key)) {
+                    if(isset($key) && $key>0 ) {
                         $col = $oColumns[$key];
+                        array_shift($params);
                         if(isset($col)) {
-                            array_push($cols, [$col, array_shift($params)]);
+                            array_push($cols, [$col, $params]);
                         }
                     }
                 }

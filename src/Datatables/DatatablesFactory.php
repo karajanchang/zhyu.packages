@@ -15,11 +15,20 @@ use Zhyu\Datatables\Units\TestDatatables;
 
 class DatatablesFactory {
     public static function bind(string $name = null){
-        $lut = config('datatables');
-        if(is_null($lut)){
-            throw new \Exception('Please create config/datatables.php');
+        $systems = [
+            'resources' => \Zhyu\Datatables\Units\ResourceDatatables::class,
+        ];
+
+        if(key_exists($name, $systems)) {
+            $className = $systems[$name];
+        }else{
+            $lut = config('datatables');
+            if(is_null($lut)){
+                throw new \Exception('Please create config/datatables.php');
+            }
+            $className = Collection::make($lut)->get($name, TestDatatables::class);
         }
-        $className = Collection::make($lut)->get($name, TestDatatables::class);
+        //dd($className);
         if($className==TestDatatables::class){
             throw new \Exception('Please create datatables map in config/datatables.php');
         }

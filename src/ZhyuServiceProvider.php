@@ -14,7 +14,7 @@ use Zhyu\Decorates\Buttons\SimpleButton;
 
 class ZhyuServiceProvider extends ServiceProvider
 {
-	public function register(){
+    public function register(){
         $this->app->bind('button.create', function ($app, $params) {
             return new NormalButton($params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
         });
@@ -27,32 +27,39 @@ class ZhyuServiceProvider extends ServiceProvider
         $this->app->bind('button.destroy', function ($app, $params) {
             return new SimpleButton($params['data'], @$params['url'], 'btn btn-danger btn-circle btn-sm m-l-5', 'ti-trash', null, $params['text'], @$params['title']);
         });
-	}
-	
-	public function boot(){
-		$this->loadRoutesFrom(__DIR__.'/routes/web.php');
-		$this->loadTranslationsFrom(__DIR__.'/lang', 'zhyu');
 
-		$this->loadViewsFrom(__DIR__.'/blades', 'zhyu');
+        $this->app->bind('zhyuGate', function()
+        {
+            return new \Zhyu\Helpers\ZhyuGate;
+        });
+    }
 
-		$this->publishes([
-		    __DIR__.'/blades' => resource_path('views/vendor/zhyu'),
+    public function boot(){
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadTranslationsFrom(__DIR__.'/lang', 'zhyu');
+
+        $this->loadViewsFrom(__DIR__.'/blades', 'zhyu');
+
+        $this->publishes([
+            __DIR__.'/Http/Resources' => app_path('Http/Resources'),
+            __DIR__.'/blades' => resource_path('views/vendor/zhyu'),
             __DIR__.'/assets/js' => resource_path('js'),
+            __DIR__.'/lang/en' => resource_path('lang/en'),
             __DIR__.'/lang/tw' => resource_path('lang/tw'),
             __DIR__.'/assets/public_js' => public_path('js'),
         ], 'zhyu');
-	}
-	
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return [
-			Zhyu\ZhyuServiceProvider::class,
-		];
-	}
-	
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            Zhyu\ZhyuServiceProvider::class,
+        ];
+    }
+
 }

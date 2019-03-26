@@ -18,10 +18,17 @@ class RepositoryApp{
         return $name;
     }
     public static function bind($name){
-        $class = config('repository.'.self::parseName($name));
-        if(strlen($class)==0){
+        $systems = [
+            'resources' => \Zhyu\Repositories\Eloquents\ResourceRepository::class,
+        ];
+        if(key_exists($name, $systems)){
+            $class = $systems['resources'];
+        }else {
+            $class = config('repository.' . self::parseName($name));
+            if (strlen($class) == 0) {
 //            throw new \Exception("this config $name dos't exists!");
-            return ;
+                return;
+            }
         }
         app()->bind(RepositoryInterface::class, function($app) use($class){
             return new $class($app, new Collection());

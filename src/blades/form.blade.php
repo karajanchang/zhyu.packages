@@ -108,7 +108,7 @@
             <div class="col-md-12">
                 <div class="white-box">
                     <div class="table-responsive" id="app">
-                        @include("blades.".$table)
+                        @@includeFirst( [ "blades.$table", "vendor.zhyu.$table"])
                     </div>
                 </div>
             </div>

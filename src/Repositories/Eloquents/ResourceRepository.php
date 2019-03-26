@@ -2,7 +2,6 @@
 
 namespace Zhyu\Repositories\Eloquents;
 
-use Zhyu\Repositories\Eloquents\Repository;
 use Zhyu\Model\Resource;
 
 class ResourceRepository extends Repository
