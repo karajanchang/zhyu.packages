@@ -6,6 +6,7 @@ use Illuminate\Pagination\Paginator;
 use Zhyu\Datatables\DatatablesFactoryApp;
 use Zhyu\Controller\Controller as ZhyuController;
 use Zhyu\Repositories\Eloquents\ResourceRepository;
+use Zhyu\Facades\ZhyuUrl;
 
 class ResourceController extends ZhyuController
 {
@@ -37,11 +38,18 @@ class ResourceController extends ZhyuController
      */
     public function index()
     {
+        $query = request()->input('query');
+        if(!isset($query)){
+            return redirect()->to('/resources?query=parent_id,whereNull');
+        }
         $this->authorize('superadmin-only');
         $model = $this->repository->makeModel();
         $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
 
-        return $this->view('index', $model, ['datatablesService' => $datatablesService]);
+        $obj = ZhyuUrl::decode($query);
+        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('resources.index').'\'">返回</button>' : null;
+
+        return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
     }
 
     /**
@@ -142,8 +150,11 @@ class ResourceController extends ZhyuController
     public function rules(){
 
         return [
+            'parent_id' => ['nullable', 'numeric'],
             'name' => 'required',
-            'route' => 'required',
+            'route' => 'nullable',
+            'orderby' => ['nullable', 'numeric'],
+            'icon_css' => ['nullable', 'string'],
         ];
     }
 

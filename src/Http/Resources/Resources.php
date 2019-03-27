@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Zhyu\Facades\ZhyuUrl;
 
 class Resources extends JsonResource
 {
@@ -31,11 +32,24 @@ class Resources extends JsonResource
         $delUrl = route('resources.destroy', ['id' => $this->id], false);
         $delButton->pushAttributes([ 'onclick' => "SwalAlter.delete('".$delUrl."', '刪除', '刪除此筆資料： ".$this->name." - ".$this->route."', '確認刪除')"]);
 
+        $nextButton = null;
+        if(is_null($this->parent_id)) {
+            $nextButton = app()->make('button.show', [
+                'data' => $this,
+                'text' => 'view',
+                'title' => $this->name,
+            ]);
+            $nextUrl = route('resources.index', false) . 'query=' . ZhyuUrl::encode('parent_id', '=', $this->id);
+            $nextButton->setUrl($nextUrl, false);
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'route' => $this->route,
-            'buttons' => (string) $modButton. '&nbsp;' .(string) $delButton,
+            'orderby' => $this->orderby,
+            'icon_css' => '<i class="'.$this->icon_css.'"></i>',
+            'buttons' => (string) $modButton. '&nbsp;' . (string) $delButton . '&nbsp;'. (string) $nextButton,
         ];
     }
 }

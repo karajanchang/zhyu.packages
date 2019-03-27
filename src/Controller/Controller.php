@@ -170,8 +170,13 @@ class Controller extends BaseController
         */
         try {
             $title = (string) $model;
+
         }catch(\Exception $e){
-            $title = '';
+            $title = null;
+        }
+
+        if(is_null($title)){
+            $title = $params['title'];
         }
         if(isset($model->id)){
             $id = $model->id;

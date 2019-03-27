@@ -8,6 +8,7 @@
 
 namespace Zhyu\Repositories\Criterias\Common;
 
+use Illuminate\Support\Arr;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Criteria;
 
@@ -30,6 +31,7 @@ class WhereByCustom extends Criteria
                         unset($columns[1]);
                         call_user_func_array([$query, $func], $columns);
                     }else {
+                        $columns = Arr::flatten($columns);
                         call_user_func_array([$query, 'Where'], $columns);
                     }
                 }

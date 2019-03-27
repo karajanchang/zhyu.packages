@@ -29,6 +29,16 @@ class ResourceDatatables extends AbstractDatatables implements DatatablesInterfa
                     'css' => [ 'text-center' ],
                     'cols_css' => [ 'text-center' ],
                 ],
+                'orderby' => [
+                    'attributes' => [],
+                    'css' => [ 'text-center' ],
+                    'cols_css' => [ 'text-center' ],
+                ],
+                'icon_css' => [
+                    'attributes' => [],
+                    'css' => [ 'text-center' ],
+                    'cols_css' => [ 'text-center' ],
+                ],
                 'buttons' => [
                     'title' => '',
                 ],

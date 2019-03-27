@@ -76,6 +76,14 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
+     * @throws RepositoryException
+     */
+    public function resetModel()
+    {
+        $this->makeModel();
+    }
+
+    /**
      * @param array $columns
      * @return mixed
      */
@@ -83,7 +91,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
-        return $this->model->get($columns);
+        $rows = $this->model->get($columns);
+        $this->resetModel();
+
+        return $rows;
     }
 
     /**
@@ -95,7 +106,11 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
-        return $this->model->paginate($perPage, $columns);
+
+        $rows = $this->model->paginate($perPage, $columns);
+        $this->resetModel();
+
+        return $rows;
     }
 
     /**
@@ -136,7 +151,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
-        return $this->model->find($id, $columns);
+        $rows = $this->model->find($id, $columns);
+        $this->resetModel();
+
+        return $rows;
     }
 
     /**
@@ -149,7 +167,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
-        return $this->model->where($attribute, '=', $value)->first($columns);
+        $rows = $this->model->where($attribute, '=', $value)->first($columns);
+        $this->resetModel();
+
+        return $rows;
     }
 
     /**
@@ -175,6 +196,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return mixed
      */
     public function getCriteria() {
+
         return $this->criteria;
     }
 
@@ -184,6 +206,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function getByCriteria(Criteria $criteria) {
         $this->model = $criteria->apply($this->model, $this);
+
         return $this;
     }
 
@@ -193,6 +216,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function pushCriteria(Criteria $criteria) {
         $this->criteria->push($criteria);
+
         return $this;
     }
 
@@ -218,17 +242,21 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function getSelect($withParse = false): array
     {
         if($withParse===true){
+
             return array_map(function($var){
                 $exps = explode('.', $var);
                 if(count($exps)==2) {
+
                     return $exps[1];
                 }
+
                 return $var;
             }, $this->select);
         }
         if($this->select==['*']) {
             $this->select = Schema::getColumnListing($this->model->getTable());
         }
+
         return $this->select;
     }
 
@@ -260,10 +288,48 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->select($columns);
     }
 
+    /**
+     * Check if entity has relation
+     *
+     * @param string $relation
+     *
+     * @return $this
+     */
+    public function has($relation)
+    {
+        $this->model = $this->model->has($relation);
+        return $this;
+    }
+    /**
+     * Load relations
+     *
+     * @param array|string $relations
+     *
+     * @return $this
+     */
+    public function with($relations)
+    {
+        $this->model = $this->model->with($relations);
+        return $this;
+    }
+    /**
+     * Add subselect queries to count the relations.
+     *
+     * @param  mixed $relations
+     * @return $this
+     */
+    public function withCount($relations)
+    {
+        $this->model = $this->model->withCount($relations);
+        return $this;
+    }
+
     public function __call($name, $arguments)
     {
         $this->applyCriteria();
         $res = call_user_func_array([$this->model, $name], $arguments);
+        $this->resetModel();
+
         return $res;
     }
 

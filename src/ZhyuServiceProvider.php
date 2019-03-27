@@ -8,6 +8,7 @@
 
 namespace Zhyu;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
@@ -32,6 +33,11 @@ class ZhyuServiceProvider extends ServiceProvider
         {
             return new \Zhyu\Helpers\ZhyuGate;
         });
+
+        $this->app->bind('zhyuUrl', function()
+        {
+            return new \Zhyu\Helpers\ZhyuUrl;
+        });
     }
 
     public function boot(){
@@ -48,6 +54,8 @@ class ZhyuServiceProvider extends ServiceProvider
             __DIR__.'/lang/tw' => resource_path('lang/tw'),
             __DIR__.'/assets/public_js' => public_path('js'),
         ], 'zhyu');
+
+        View::composer('blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
     }
 
     /**
