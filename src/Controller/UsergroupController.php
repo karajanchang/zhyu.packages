@@ -97,7 +97,6 @@ class UsergroupController extends ZhyuController
         try {
             $model = $this->repository->find($id);
 
-            @$title = (string) $model;
             return parent::view(null, $model, ['title' => $title]);
         }catch (\Exception $e){
 
@@ -147,8 +146,8 @@ class UsergroupController extends ZhyuController
     {
         $this->authorize('admin.usergroups.destroy');
 
-        $can_not_delete_ids = exploade(',', env('ZHYU_ADMIN_GROUP_CAN_NOT_DELETE'));
-        abort_if(in_array($id, $can_not_delete_ids), 403);
+        $can_not_delete_ids = explode(',', env('ZHYU_ADMIN_GROUP_CAN_NOT_DELETE'));
+        abort_if(in_array($id, $can_not_delete_ids), 423);
 
         $this->repository->delete($id);
 
@@ -178,7 +177,7 @@ class UsergroupController extends ZhyuController
     public function privSave($id, Request $request, UsergroupPermissionRepository $permissionRepository){
         $this->validate($request, $this->rules_priv());
 
-        $usergroup = $this->repository->find($id);
+        //$usergroup = $this->repository->find($id);
         $all = $request->all();
 
 
