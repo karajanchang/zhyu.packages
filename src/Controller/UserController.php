@@ -18,6 +18,7 @@ class UserController extends ZhyuController
     {
         $this->middleware(['web', 'auth', 'checklogin']);
         $this->makeRepository();
+        $this->setRoute('admin.users');
     }
 
     public function repository(){
@@ -44,12 +45,11 @@ class UserController extends ZhyuController
         }
         $this->authorize('admin.users.index');
         $model = $this->repository->makeModel();
-        $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
+        $name = $this->table ? $this->table : $model->getTable();
+        $datatablesService = DatatablesFactoryApp::bind($name);
 
         $obj = ZhyuUrl::decode($query);
-        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('resources.index').'\'">返回</button>' : null;
-
-        $this->setRoute('admin.users');
+        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.users.index').'\'">返回</button>' : null;
 
         return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
     }
@@ -127,7 +127,7 @@ class UserController extends ZhyuController
     {
         $this->authorize('admin.users.edit');
 
-        $rules = method_exists($this, 'rules_edit') ? $this->rules_edit() : $this->rules();
+        $rules = method_exists($this, 'rules_edit') ? $this->rules_edit($id) : $this->rules($id);
         $this->validate($request, $rules);
         $this->repository->update($id, $request->all());
 
@@ -150,22 +150,23 @@ class UserController extends ZhyuController
     }
 
     public function rules(){
+        $unique = is_null($id) ? 'unique:user,email' : 'unique:user,email,'.$id;
 
         return [
-            'parent_id' => ['nullable', 'numeric'],
-            'name' => 'required',
-            'route' => 'nullable',
-            'orderby' => ['nullable', 'numeric'],
-            'icon_css' => ['nullable', 'string'],
+            'usergroup_id' => ['required', 'numeric'],
+            'email' => ['required', 'email', $unique],
+            'name' => ['required', 'string'],
+            'nickname' => ['required', 'string'],
+            'is_online' => ['nullable', 'numeric'],
         ];
     }
 
     public function priv($id, UserPermissionRepository $permissionRepository){
         $model = $this->repository->find($id);
         $permissions = $permissionRepository->findWhere([
-            'usergroup_id' => $id,
+            'user_id' => $id,
         ]);
-        $return_url = route('admin.usergroups.index');
+        $return_url = route('admin.users.index');
 
         return $this->view('priv', $model, ['title' => $model->name. ' 權限', 'table' => 'priv', 'permissions' => $permissions, 'return_url' => $return_url ]);
     }

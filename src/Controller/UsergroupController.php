@@ -1,7 +1,6 @@
 <?php
 namespace Zhyu\Controller;
 
-use App\Usergroup;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Log;
@@ -53,7 +52,6 @@ class UsergroupController extends ZhyuController
 
         $obj = ZhyuUrl::decode($query);
         $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.usergroups.index').'\'">返回</button>' : null;
-
 
         return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
     }
@@ -131,7 +129,7 @@ class UsergroupController extends ZhyuController
     {
         $this->authorize('admin.usergroups.edit');
 
-        $rules = method_exists($this, 'rules_edit') ? $this->rules_edit() : $this->rules();
+        $rules = method_exists($this, 'rules_edit') ? $this->rules_edit($id) : $this->rules($id);
         $this->validate($request, $rules);
         $this->repository->update($id, $request->all());
 
@@ -156,11 +154,12 @@ class UsergroupController extends ZhyuController
         return $this->responseJson('success');
     }
 
-    public function rules(){
+    public function rules($id = null){
+        $unique = is_null($id) ? 'unique:usergroup,name' : 'unique:usergroup,name,'.$id;
 
         return [
             'parent_id' => ['nullable', 'numeric'],
-            'name' => 'required',
+            'name' => ['required', $unique],
             'is_online' => ['nullable', 'numeric'],
             'nologin' => ['nullable', 'numeric'],
         ];

@@ -201,7 +201,6 @@ class Controller extends BaseController
         foreach($compacts as $key => $val){
             $returns[$key] = $val;
         }
-
         return view()->first([$view, 'vendor.zhyu.form'], $returns);
     }
 
