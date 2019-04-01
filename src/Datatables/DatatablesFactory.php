@@ -17,6 +17,8 @@ class DatatablesFactory {
     public static function bind(string $name = null){
         $systems = [
             'resources' => \Zhyu\Datatables\Units\ResourceDatatables::class,
+            'user' => \Zhyu\Datatables\Units\UserDatatables::class,
+            'usergroup' => \Zhyu\Datatables\Units\UsergroupDatatables::class,
         ];
 
         if(key_exists($name, $systems)) {

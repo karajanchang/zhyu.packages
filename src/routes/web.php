@@ -18,4 +18,14 @@ Route::get('/logout', function() {
     return Redirect::to('/');
 })->middleware('web')->name('logout');
 
-Route::resource('/resources', 'Zhyu\Controller\ResourceController');
+
+Route::group(['prefix' => '/admin', 'middleware' => ['web', 'auth'], 'as' =>  'admin.'  ], function () {
+    Route::resource('/resources', 'Zhyu\Controller\ResourceController');
+    Route::get('/usergroups/{id}/priv', 'Zhyu\Controller\UsergroupController@priv')->name('usergroups.priv');
+    Route::post('/usergroups/{id}/priv', 'Zhyu\Controller\UsergroupController@privSave')->name('usergroups.priv');
+    Route::get('/users/{id}/priv', 'Zhyu\Controller\UserController@priv')->name('users.priv');
+    Route::post('/users/{id}/priv', 'Zhyu\Controller\UserController@privSave')->name('users.priv');
+    Route::resource('/usergroups', 'Zhyu\Controller\UsergroupController');
+    Route::resource('/users', 'Zhyu\Controller\UserController');
+});
+

@@ -196,7 +196,13 @@ class Controller extends BaseController
             //exit;
         }
 
-        return view()->first([$view, 'vendor.zhyu.form'], compact('route', 'table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl'));
+        $compacts = compact('route','table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl');
+        $returns = $params;
+        foreach($compacts as $key => $val){
+            $returns[$key] = $val;
+        }
+
+        return view()->first([$view, 'vendor.zhyu.form'], $returns);
     }
 
     public function responseJson($message, $status = 200){

@@ -8,7 +8,8 @@ class FactoryDecorate {
 			throw new \Exception('This class can not callable: '.$which);
 		}
 		app()->bind(InterfaceDecorate::class, function($app) use($which){
-			return new $which;
+//			return new $which;
+            return app()->make($which);
 		});
 		return app()->make(InterfaceDecorate::class);
 	}

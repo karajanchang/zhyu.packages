@@ -143,6 +143,21 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
+     * Delete multiple entities by given criteria.
+     *
+     * @param array $where
+     *
+     * @return int
+     */
+    public function deleteWhere(array $where){
+        $this->applyConditions($where);
+        $deleted = $this->model->delete();
+        $this->resetModel();
+
+        return $deleted;
+    }
+
+    /**
      * @param $id
      * @param array $columns
      * @return mixed
@@ -167,10 +182,27 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
-        $rows = $this->model->where($attribute, '=', $value)->first($columns);
+        $row = $this->model->where($attribute, '=', $value)->first($columns);
         $this->resetModel();
 
-        return $rows;
+        return $row;
+    }
+
+    /**
+     * Find data by multiple fields
+     *
+     * @param array $where
+     * @param array $columns
+     *
+     * @return mixed
+     */
+    public function findWhere(array $where, $columns = ['*']){
+        $this->applyCriteria();
+        $this->applyConditions($where);
+        $model = $this->model->get($columns);
+        $this->resetModel();
+
+        return $model;
     }
 
     /**
@@ -322,6 +354,24 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     {
         $this->model = $this->model->withCount($relations);
         return $this;
+    }
+
+    /**
+     * Applies the given where conditions to the model.
+     *
+     * @param array $where
+     * @return void
+     */
+    protected function applyConditions(array $where)
+    {
+        foreach ($where as $field => $value) {
+            if (is_array($value)) {
+                list($field, $condition, $val) = $value;
+                $this->model = $this->model->where($field, $condition, $val);
+            } else {
+                $this->model = $this->model->where($field, '=', $value);
+            }
+        }
     }
 
     public function __call($name, $arguments)

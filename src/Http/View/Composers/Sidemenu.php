@@ -44,10 +44,7 @@ class Sidemenu
             $children[$parent->id][] = $row;
         });
         $parents = collect($parents)->sortByDesc('orderby');
-        //dump($parents);
-        //$children = collect($children);
         $children = $rows;
-        //dd($children);
         $view->with('parents', $parents);
         $view->with('children', $children);
     }

@@ -1,15 +1,12 @@
 @extends("vendor.zhyu.layouts.main")
 
 @push("css_plugins")
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bower_components/datatables/jquery.dataTables.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bower_components/sweetalert/sweetalert.css') }}" />
 @endpush
 
 
 @push("js")
-    <script src="{{ asset('plugins/bower_components/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/bower_components/bootstrap-select/bootstrap-select.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('plugins/bower_components/sweetalert/sweetalert.min.js') }}"></script>
 @endpush
@@ -56,7 +53,6 @@
                                 try{
                                     location.href = redirectAfterPut;
                                 }catch(e) {
-                                    location.href = '{{ route(${$model_name}->getTable().'.index') }}';
                                 }
                             });
                             @else
@@ -67,7 +63,7 @@
                                 try{
                                     location.href = redirectAfterPost;
                                 }catch(e) {
-                                    location.href = '{{ route(${$model_name}->getTable().'.index') }}';
+                                    location.href = '{{ $route.'.index' }}';
                                 }
                             });
                     @endif
@@ -108,7 +104,7 @@
             <div class="col-md-12">
                 <div class="white-box">
                     <div class="table-responsive" id="app">
-                        @@includeFirst( [ "blades.$table", "vendor.zhyu.$table"])
+                        @includeFirst( [ "blades.$table", "vendor.zhyu.$table"])
                     </div>
                 </div>
             </div>

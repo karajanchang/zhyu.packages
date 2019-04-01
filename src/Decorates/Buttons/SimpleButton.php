@@ -18,6 +18,11 @@ class SimpleButton extends AbstractDecorate implements InterfaceDecorate
 	
     public function __toString()
     {
-        return '<a href="'.$this->renderUrl().'" class="'.$this->renderCss().'" data-toggle="tooltip" data-original-title="'.$this->getText().'" title="'.$this->getTitle().'"><i class="'.$this->getIcss().'" '.$this->renderAttribute().'></i></a>';
+        try {
+            return '<a href="'.$this->renderUrl().'" class="'.$this->renderCss().'" data-toggle="tooltip" data-original-title="'.$this->getText().'" title="'.$this->getTitle().'"><i class="'.$this->getIcss().'" '.$this->renderAttribute().'></i></a>';
+        }catch (\Exception $e){
+            $msg = env('APP_DEBUG')===true ? $e->getMessage() : '';
+            return $msg;
+        }
     }
 }

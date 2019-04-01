@@ -5,7 +5,7 @@ namespace Zhyu\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Zhyu\Facades\ZhyuUrl;
 
-class Resources extends JsonResource
+class Usergroup extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,14 +22,14 @@ class Resources extends JsonResource
             'text' => 'modify',
             'title' => $this->name,
         ]);
-        $modButton->setUrl(route('admin.resources.edit', ['id' => $this->id], false));
+        $modButton->setUrl(route('admin.usergroups.edit', ['id' => $this->id], false));
 
         $delButton = app()->make('button.destroy', [
             'data' => $this,
             'text' => 'delete',
             'title' => $this->name,
         ]);
-        $delUrl = route('admin.resources.destroy', ['id' => $this->id], false);
+        $delUrl = route('admin.usergroups.destroy', ['id' => $this->id], false);
         $delButton->pushAttributes([ 'onclick' => "SwalAlter.delete('".$delUrl."', '刪除', '刪除此筆資料： ".$this->name." - ".$this->route."', '確認刪除')"]);
 
         $nextButton = null;
@@ -39,17 +39,20 @@ class Resources extends JsonResource
                 'text' => 'view',
                 'title' => $this->name,
             ]);
-            $nextUrl = route('admin.resources.index', false) . 'query=' . ZhyuUrl::encode('parent_id', '=', $this->id);
+            $nextUrl = route('admin.usergroups.index', false) . 'query=' . ZhyuUrl::encode('parent_id', '=', $this->id);
             $nextButton->setUrl($nextUrl, false);
         }
+
+        $privButton = app()->make('button.create', [
+            'text' => '權限設定',
+            'url' => route('admin.usergroups.priv', [ 'usergroup' => $this->id ]),
+        ]);
 
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'route' => $this->route,
-            'orderby' => $this->orderby,
-            'icon_css' => '<i class="'.$this->icon_css.'"></i>',
-            'buttons' => (string) $modButton. '&nbsp;' . (string) $delButton . '&nbsp;'. (string) $nextButton,
+            'nologin' => $this->nologin,
+            'buttons' => (string) $modButton. '&nbsp;' . (string) $delButton . '&nbsp;'. (string) $nextButton . '&nbsp;'. $privButton,
         ];
     }
 }

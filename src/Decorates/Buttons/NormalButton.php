@@ -14,10 +14,15 @@ use Zhyu\Decorates\TraitDecorate;
 
 class NormalButton extends AbstractDecorate implements InterfaceDecorate
 {
-	use TraitDecorate;
-	
+    use TraitDecorate;
+
     public function __toString()
     {
-        return '<a href="'.$this->renderUrl().'" class="'.$this->renderCss().'" style="margin:10px" '.$this->renderTitle().'><i class="'.$this->getIcss().'" '.$this->renderAttribute().'></i>'.$this->getText().'</a>';
+        try {
+            return '<a href="' . $this->renderUrl() . '" class="' . $this->renderCss() . '" style="margin:10px" ' . $this->renderTitle() . '><i class="' . $this->getIcss() . '" ' . $this->renderAttribute() . '></i>' . $this->getText() . '</a>';
+        }catch (\Exception $e){
+            $msg = env('APP_DEBUG')===true ? $e->getMessage() : '';
+            return $msg;
+        }
     }
 }

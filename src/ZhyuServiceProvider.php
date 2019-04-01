@@ -17,7 +17,7 @@ class ZhyuServiceProvider extends ServiceProvider
 {
     public function register(){
         $this->app->bind('button.create', function ($app, $params) {
-            return new NormalButton($params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
+            return new NormalButton(@$params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
         });
         $this->app->bind('button.edit', function ($app, $params) {
             return new SimpleButton($params['data'], @$params['url'], 'btn btn-info btn-circle btn-sm m-l-5', 'ti-pencil-alt', null, $params['text'], @$params['title']);
@@ -31,12 +31,12 @@ class ZhyuServiceProvider extends ServiceProvider
 
         $this->app->bind('zhyuGate', function()
         {
-            return new \Zhyu\Helpers\ZhyuGate;
+            return app()->make(\Zhyu\Helpers\ZhyuGate::class);
         });
 
         $this->app->bind('zhyuUrl', function()
         {
-            return new \Zhyu\Helpers\ZhyuUrl;
+            return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
         });
     }
 
@@ -47,13 +47,16 @@ class ZhyuServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/blades', 'zhyu');
 
         $this->publishes([
-            __DIR__.'/Http/Resources' => app_path('Http/Resources'),
             __DIR__.'/blades' => resource_path('views/vendor/zhyu'),
             __DIR__.'/assets/js' => resource_path('js'),
             __DIR__.'/lang/en' => resource_path('lang/en'),
             __DIR__.'/lang/tw' => resource_path('lang/tw'),
             __DIR__.'/assets/public_js' => public_path('js'),
         ], 'zhyu');
+
+        $this->publishes([
+            __DIR__.'/Http/Resources' => app_path('Http/Resources'),
+        ], 'zhyu:view');
 
         View::composer('blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
     }

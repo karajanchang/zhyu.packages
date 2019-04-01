@@ -20,9 +20,11 @@ class RepositoryApp{
     public static function bind($name){
         $systems = [
             'resources' => \Zhyu\Repositories\Eloquents\ResourceRepository::class,
+            'user' => \Zhyu\Repositories\Eloquents\UserRepository::class,
+            'usergroup' => \Zhyu\Repositories\Eloquents\UsergroupRepository::class,
         ];
         if(key_exists($name, $systems)){
-            $class = $systems['resources'];
+            $class = $systems[$name];
         }else {
             $class = config('repository.' . self::parseName($name));
             if (strlen($class) == 0) {

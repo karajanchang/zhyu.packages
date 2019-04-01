@@ -1,11 +1,11 @@
 <?php
 
-namespace Zhyu\Http\Resources;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Zhyu\Facades\ZhyuUrl;
 
-class Resources extends JsonResource
+class User extends JsonResource
 {
     /**
      * Transform the resource into an array.

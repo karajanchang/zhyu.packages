@@ -8,4 +8,15 @@ return [
             ],
         ],
     ],
+    'user' => [
+        'ajax' => [
+            \Zhyu\Repositories\Criterias\Common\OrderByIdAesc::class,
+        ],
+    ],
+    'usergroup' => [
+        'ajax' => [
+            \Zhyu\Repositories\Criterias\Usergroups\IsParent::class,
+            \Zhyu\Repositories\Criterias\Common\OrderByIdAesc::class,
+        ],
+    ],
 ];

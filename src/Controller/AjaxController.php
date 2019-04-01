@@ -75,7 +75,7 @@ class AjaxController extends ZhyuController
 
         if(count($request_query)) {
             foreach ($request_query as $query) {
-                $params = explode(',', $query);
+                $params = explode(':', $query);
                 if(count($params)) {
                     $key = array_search($params[0], $selectColumns);
                     if(isset($key) && $key>0 ) {
@@ -86,7 +86,6 @@ class AjaxController extends ZhyuController
                         }
                     }
                 }
-
             }
         }
         if(count($cols)) {
@@ -108,18 +107,34 @@ class AjaxController extends ZhyuController
 
         $res = $repository->paginate($this->getLimit());
 
-
         //--wrap data
         $rname = str_replace('_', '', ucwords($model, '_'));
         $cname = '\App\Http\Resources\\'.$rname.'Collection';
-
+        $cname2 = '\Zhyu\Http\Resources\\'.$rname.'Collection';
         try{
             if(file_exists(app_path('Http/Resources/'.$rname.'Collection.php'))) {
                 $res = new $cname($res);
+
+                return $res;
             }
+            if(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))) {
+                $res = new $cname2($res);
+
+                return $res;
+            }
+
         }catch(\Exception $e){
             throw new \Exception(' Resource initial fail: '.$cname);
         }
-        return $res;
+
+        $total = $res->total();
+
+        return [
+            'draw' => request()->input('draw'),
+            'recordsTotal' => $total,
+            'recordsFiltered' => $total,
+            'data' =>  $res->items(),
+        ];
+
     }
 }

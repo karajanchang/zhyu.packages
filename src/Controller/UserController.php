@@ -5,10 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Zhyu\Datatables\DatatablesFactoryApp;
 use Zhyu\Controller\Controller as ZhyuController;
-use Zhyu\Repositories\Eloquents\ResourceRepository;
+use Zhyu\Repositories\Eloquents\UserPermissionRepository;
+use Zhyu\Repositories\Eloquents\UserRepository;
 use Zhyu\Facades\ZhyuUrl;
 
-class ResourceController extends ZhyuController
+class UserController extends ZhyuController
 {
 
     protected $repository;
@@ -17,12 +18,11 @@ class ResourceController extends ZhyuController
     {
         $this->middleware(['web', 'auth', 'checklogin']);
         $this->makeRepository();
-        $this->setRoute('admin.resources');
     }
 
     public function repository(){
 
-        return ResourceRepository::class;
+        return UserRepository::class;
     }
 
 
@@ -41,14 +41,15 @@ class ResourceController extends ZhyuController
     {
         $query = request()->input('query');
         if(!isset($query)){
-            return redirect()->to('/admin/resources?query=parent_id:whereNull');
         }
-        $this->authorize('admin.resources.index');
+        $this->authorize('admin.users.index');
         $model = $this->repository->makeModel();
         $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
 
         $obj = ZhyuUrl::decode($query);
-        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.resources.index').'\'">返回</button>' : null;
+        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('resources.index').'\'">返回</button>' : null;
+
+        $this->setRoute('admin.users');
 
         return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
     }
@@ -60,7 +61,7 @@ class ResourceController extends ZhyuController
      */
     public function create()
     {
-        $this->authorize('superadmin-only');
+        $this->authorize('admin.users.create');
 
         return parent::view(null, $this->repository->makeModel());
     }
@@ -72,7 +73,7 @@ class ResourceController extends ZhyuController
      */
     public function store(Request $request)
     {
-        $this->authorize('superadmin-only');
+        $this->authorize('admin.users.create');
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_create() : $this->rules();
         $this->validate($request, $rules);
@@ -89,7 +90,7 @@ class ResourceController extends ZhyuController
      */
     public function show($id)
     {
-        $this->authorize('superadmin-only');
+        $this->authorize('admin.users.create');
 
         try {
             $model = $this->repository->find($id);
@@ -109,7 +110,7 @@ class ResourceController extends ZhyuController
      */
     public function edit($id, $title = null)
     {
-        $this->authorize('superadmin-only');
+        $this->authorize('admin.users.edit');
 
         $model = $this->repository->find($id);
 
@@ -124,7 +125,7 @@ class ResourceController extends ZhyuController
      */
     public function update($id, Request $request)
     {
-        $this->authorize('superadmin-only');
+        $this->authorize('admin.users.edit');
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_edit() : $this->rules();
         $this->validate($request, $rules);
@@ -141,7 +142,7 @@ class ResourceController extends ZhyuController
      */
     public function destroy($id)
     {
-        $this->authorize('superadmin-only');
+        $this->authorize('admin.users.destroy');
 
         $this->repository->delete($id);
 
@@ -159,5 +160,44 @@ class ResourceController extends ZhyuController
         ];
     }
 
+    public function priv($id, UserPermissionRepository $permissionRepository){
+        $model = $this->repository->find($id);
+        $permissions = $permissionRepository->findWhere([
+            'usergroup_id' => $id,
+        ]);
+        $return_url = route('admin.usergroups.index');
 
+        return $this->view('priv', $model, ['title' => $model->name. ' 權限', 'table' => 'priv', 'permissions' => $permissions, 'return_url' => $return_url ]);
+    }
+
+    public function privSave($id, Request $request, UserPermissionRepository $permissionRepository){
+        $this->validate($request, $this->rules_priv());
+
+        $user = $this->repository->find($id);
+        $all = $request->all();
+
+
+        if($all['isin']==1) {
+            $permissionRepository->create([
+                'user_id' => $id,
+                'act' => $all['act'],
+                'resource_id' => $all['resource_id'],
+            ]);
+        }else{
+            $permissionRepository->deleteWhere([
+                'user_id' => $id,
+                'act' => $all['act'],
+                'resource_id' => $all['resource_id'],
+            ]);
+        }
+        return 'success';
+    }
+
+    public function rules_priv(){
+        return [
+            'isin' => [ 'required', 'numeric' ],
+            'act' => [ 'required', 'string' ],
+            'resource_id' => ['required', 'numeric'],
+        ];
+    }
 }
