@@ -6,7 +6,7 @@
  * Time: 16:33
  */
 
-namespace App\Http\Resources;
+namespace Zhyu\Http\Resources;
 
 class ResourcesCollection extends \Zhyu\Resources\DatatableCollection
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace Zhyu\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Zhyu\Facades\ZhyuUrl;
