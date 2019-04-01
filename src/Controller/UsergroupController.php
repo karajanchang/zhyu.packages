@@ -51,7 +51,7 @@ class UsergroupController extends ZhyuController
         $datatablesService = DatatablesFactoryApp::bind($name);
 
         $obj = ZhyuUrl::decode($query);
-        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.usergroups.index').'\'">返回</button>' : null;
+        $title = isset($obj[2]) ? (string) $model->find($obj[2]) : null;
 
         return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
     }
