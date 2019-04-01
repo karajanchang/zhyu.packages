@@ -2,7 +2,7 @@
 
 @prepend('js')
     <script>
-        //var redirectAfterDelete = '/logistics';
+        var redirectAfterPut = '{{ route('admin.users.index') }}';
     </script>
 @endprepend
 
