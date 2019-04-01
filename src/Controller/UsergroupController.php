@@ -44,13 +44,15 @@ class UsergroupController extends ZhyuController
     {
         $query = request()->input('query');
         if(!isset($query)){
+            return redirect()->to(route('admin.usergroups.index').'?query=parent_id:=:0');
         }
         $this->authorize('admin.usergroups.index');
         $model = $this->repository->makeModel();
-        $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
+        $name = $this->table ? $this->table : $model->getTable();
+        $datatablesService = DatatablesFactoryApp::bind($name);
 
         $obj = ZhyuUrl::decode($query);
-        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.user.index').'\'">返回</button>' : null;
+        $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.usergroups.index').'\'">返回</button>' : null;
 
 
         return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
