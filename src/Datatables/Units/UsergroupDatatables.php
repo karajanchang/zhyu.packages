@@ -24,6 +24,11 @@ class UsergroupDatatables extends AbstractDatatables implements DatatablesInterf
                     'css' => [ 'text-center' ],
                     'cols_css' => [ 'text-center' ],
                 ],
+                'is_online' => [
+                    'attributes' => [],
+                    'css' => [ 'text-center' ],
+                    'cols_css' => [ 'text-center' ],
+                ],
                 'nologin' => [
                     'attributes' => [],
                     'css' => [ 'text-center' ],

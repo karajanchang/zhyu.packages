@@ -51,7 +51,8 @@ class Usergroup extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'nologin' => $this->nologin,
+            'nologin' => $this->nologin==1 ? 'V' : '',
+            'is_online' => $this->is_online==1 ? 'V' : '',
             'buttons' => (string) $modButton. '&nbsp;' . (string) $delButton . '&nbsp;'. (string) $nextButton . '&nbsp;'. $privButton,
         ];
     }

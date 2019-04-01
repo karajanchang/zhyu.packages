@@ -4,6 +4,7 @@ namespace Zhyu\Controller;
 use App\Usergroup;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Log;
 use Zhyu\Datatables\DatatablesFactoryApp;
 use Zhyu\Controller\Controller as ZhyuController;
 use Zhyu\Repositories\Eloquents\UsergroupPermissionRepository;
@@ -155,9 +156,8 @@ class UsergroupController extends ZhyuController
         return [
             'parent_id' => ['nullable', 'numeric'],
             'name' => 'required',
-            'route' => 'nullable',
-            'orderby' => ['nullable', 'numeric'],
-            'icon_css' => ['nullable', 'string'],
+            'is_online' => ['nullable', 'numeric'],
+            'nologin' => ['nullable', 'numeric'],
         ];
     }
 
