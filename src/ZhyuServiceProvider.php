@@ -41,10 +41,22 @@ class ZhyuServiceProvider extends ServiceProvider
     }
 
     public function boot(){
+        $must_exists_classes = [
+            \App\User::class,
+            \App\Usergroup::class,
+        ];
+        foreach($must_exists_classes as $class){
+            if(!class_exists($class)) {
+                throw new \Exception('this file must exists: ' . $class);
+            }
+        }
+
+
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         $this->loadTranslationsFrom(__DIR__.'/lang', 'zhyu');
 
         $this->loadViewsFrom(__DIR__.'/blades', 'zhyu');
+        $this->loadMigrationsFrom(__DIR__.'/databases/migrations');
 
         $this->publishes([
             __DIR__.'/blades' => resource_path('views/vendor/zhyu'),
