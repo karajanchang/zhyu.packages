@@ -149,7 +149,7 @@ class UserController extends ZhyuController
         return $this->responseJson('success');
     }
 
-    public function rules(){
+    public function rules($id = null){
         $unique = is_null($id) ? 'unique:user,email' : 'unique:user,email,'.$id;
 
         return [

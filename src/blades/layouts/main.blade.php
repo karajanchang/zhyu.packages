@@ -39,7 +39,7 @@
 <div id="wrapper">
 
 @include("blocks.nav")
-@include("blocks.sidemenu")
+@includeFirst(["blocks.sidemenu", "vendor.zhyu.blocks.sidemenu"])
 
 <!-- Page Content -->
     <div id="page-wrapper">
