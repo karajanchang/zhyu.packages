@@ -37,7 +37,7 @@ class ZhyuGate
         });
 
 
-        if(Schema::hasTable('resources')) {
+        if(Schema::hasTable('resources') && Schema::hasTable('user_permissions') && Schema::hasTable('usergroup_permissions')) {
             $resources = $this->resourceRepository->findWhere([
                 ['parent_id', '>', '0']
             ]);
