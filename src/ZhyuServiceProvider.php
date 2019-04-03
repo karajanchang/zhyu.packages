@@ -9,6 +9,7 @@
 namespace Zhyu;
 
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
@@ -70,7 +71,9 @@ class ZhyuServiceProvider extends ServiceProvider
             __DIR__.'/Http/Resources' => app_path('Http/Resources'),
         ], 'zhyu:view');
 
-        View::composer('blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
+        if(Schema::hasTable('resources')) {
+            View::composer('blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
+        }
     }
 
     /**
