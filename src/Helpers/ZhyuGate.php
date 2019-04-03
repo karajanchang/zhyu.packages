@@ -31,7 +31,7 @@ class ZhyuGate
     {
         Gate::before(function($user, $ability){
             $user_ids = explode(',', env('ZHYU_ADMIN_USER_IDS'));
-            if(in_array($user->id, $user_ids)){
+            if(is_array($user_ids) && in_array($user->id, $user_ids)){
                 return true;
             }
         });

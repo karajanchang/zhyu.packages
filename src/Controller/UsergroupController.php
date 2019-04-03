@@ -147,7 +147,9 @@ class UsergroupController extends ZhyuController
         $this->authorize('admin.usergroups.destroy');
 
         $can_not_delete_ids = explode(',', env('ZHYU_ADMIN_GROUP_CAN_NOT_DELETE'));
-        abort_if(in_array($id, $can_not_delete_ids), 423);
+        if(is_array($can_not_delete_ids)) {
+            abort_if(in_array($id, $can_not_delete_ids), 423);
+        }
 
         $this->repository->delete($id);
 
