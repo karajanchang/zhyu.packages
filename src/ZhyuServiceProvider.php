@@ -72,7 +72,7 @@ class ZhyuServiceProvider extends ServiceProvider
         ], 'zhyu:view');
 
         if(Schema::hasTable('resources')) {
-            View::composer('blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
+            View::composer('vendor.zhyu.blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
         }
     }
 

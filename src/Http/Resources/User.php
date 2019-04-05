@@ -32,12 +32,13 @@ class User extends JsonResource
         $delUrl = route('admin.users.destroy', ['id' => $this->id], false);
         $delButton->pushAttributes([ 'onclick' => "SwalAlter.delete('".$delUrl."', '刪除', '刪除此筆資料： ".$this->name." - ".$this->route."', '確認刪除')"]);
 
-
-
-        $privButton = app()->make('button.create', [
-            'text' => '權限設定',
-            'url' => route('admin.users.priv', [ 'user' => $this->id ]),
-        ]);
+        $privButton = '';
+        if(env('ZHYU_ADMIN_USER_PREMISSIONS_OPEN', false)===true) {
+            $privButton = app()->make('button.create', [
+                'text' => '權限設定',
+                'url' => route('admin.users.priv', ['user' => $this->id]),
+            ]);
+        }
 
         return [
             'id' => $this->id,
