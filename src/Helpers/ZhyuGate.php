@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Schema;
 use Zhyu\Repositories\Eloquents\ResourceRepository;
 use Zhyu\Repositories\Eloquents\UsergroupPermissionRepository;
 use Zhyu\Repositories\Eloquents\UserPermissionRepository;
+use Illuminate\Support\Facades\Log;
 
 class ZhyuGate
 {
@@ -32,6 +33,7 @@ class ZhyuGate
         Gate::before(function($user, $ability){
             $user_ids = explode(',', env('ZHYU_ADMIN_USER_IDS'));
             if(is_array($user_ids) && in_array($user->id, $user_ids)){
+
                 return true;
             }
         });
@@ -52,13 +54,16 @@ class ZhyuGate
                 $permissions = $userPermissions->where('resource_id', $resource->id);
                 if ($permissions->count() > 0) {
                     $permissions->map(function ($permission) use ($resource, $parent_route, $userPermissions, $usergroupPermissions) {
-                        $name = $parent_route . $resource->route . '.' . $permission->act;
+                        $name = $this->resolveName($parent_route, $resource->route, $permission->act);
+
                         Gate::define($name, function ($user) use ($resource, $permission, $userPermissions, $usergroupPermissions) {
                             $user_pers = $userPermissions->where('user_id', $user->id);
                             if ($user_pers->count() > 0) {
+
                                 return $user_pers->where('resource_id', $resource->id)->where('act', $permission->act)->count() > 0 ? true : false;
                             } else {
                                 $usergroup_pers = $usergroupPermissions->where('usergroup_id', $user->usergroup->id);
+
                                 return $usergroup_pers->where('resource_id', $resource->id)->where('act', $permission->act)->count() > 0 ? true : false;
                             }
                         });
@@ -68,14 +73,26 @@ class ZhyuGate
                 $permissions = $usergroupPermissions->where('resource_id', $resource->id);
                 if ($permissions->count() > 0) {
                     $permissions->map(function ($permission) use ($resource, $parent_route, $usergroupPermissions) {
-                        $name = $parent_route . $resource->route . '.' . $permission->act;
+                        $name = $this->resolveName($parent_route, $resource->route, $permission->act);
+                        //Log::info('route: '.$name);
                         Gate::define($name, function ($user) use ($resource, $permission, $usergroupPermissions) {
                             $usergroup_pers = $usergroupPermissions->where('usergroup_id', $user->usergroup->id);
+
                             return $usergroup_pers->where('resource_id', $resource->id)->where('act', $permission->act)->count() > 0 ? true : false;
                         });
                     });
                 }
             }
+        }
+    }
+
+    private function resolveName($parent_route, $resource_route, $act){
+        if(strlen($resource_route)>0) {
+
+            return $parent_route.$resource_route.'.'.$act;
+        }else{
+
+            return $parent_route.$act;
         }
     }
 }
