@@ -5,8 +5,9 @@
         </div>
 
         @php
-            $all_permissions = Cache::remember(env('APP_TYPE').'ZhyuUserOwnPermissions', now()->addMinutes(60), function(){
-                return auth()->user()->permissions();
+            $user = auth()->user();
+            $all_permissions = Cache::remember(env('APP_TYPE').'ZhyuUser'.$user->id.'OwnPermissions', now()->addMinutes(60), function() use($user){
+                return $user->permissions();
             });
             $currentRoute = Route::currentRouteName();
         @endphp
