@@ -1,6 +1,7 @@
 <?php
 namespace Zhyu\Repositories\Eloquents;
 
+use Illuminate\Support\Facades\Cache;
 use Zhyu\Repositories\Contracts\CriteriaInterface;
 use Zhyu\Repositories\Criterias\Criteria;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
