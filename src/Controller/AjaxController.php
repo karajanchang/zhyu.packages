@@ -116,11 +116,12 @@ class AjaxController extends ZhyuController
                 $res = new $cname($res);
 
                 return $res;
-            }
-            if(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))) {
+            }elseif(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))){
                 $res = new $cname2($res);
 
                 return $res;
+            }else{
+            
             }
 
         }catch(\Exception $e){

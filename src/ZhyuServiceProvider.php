@@ -52,7 +52,6 @@ class ZhyuServiceProvider extends ServiceProvider
             }
         }
 
-
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         $this->loadTranslationsFrom(__DIR__.'/lang', 'zhyu');
 
