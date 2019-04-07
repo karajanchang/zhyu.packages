@@ -1,6 +1,7 @@
 <?php
 namespace Zhyu\Repositories\Eloquents;
 
+use Illuminate\Support\Facades\Cache;
 use Zhyu\Repositories\Contracts\CriteriaInterface;
 use Zhyu\Repositories\Criterias\Criteria;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
@@ -96,6 +97,19 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
         return $rows;
     }
+	
+	/**
+	 * @param array $columns
+	 * @param string $cacheKey
+	 * @param int $seconds
+	 * @return mixed
+	 */
+	public function allCache($columns = array('*'), $cacheKey, $seconds = 600) {
+		$rows = Cache::remember($cacheKey, $seconds, function() use($columns){
+			return $this->all($columns);
+		});
+		return $rows;
+	}
 
     /**
      * @param int $perPage
@@ -204,6 +218,25 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
         return $model;
     }
+	
+	/**
+	 * Find data by multiple fields
+	 *
+	 * @param array $where
+	 * @param array $columns
+	 * @param string $cache_key
+	 * @param int $seconds
+	 *
+	 * @return mixed
+	 */
+	public function findWhereCache(array $where, $columns = ['*'], $cache_key, $seconds = 600){
+		$model = Cache::remember($cache_key, $seconds, function() use($where, $columns){
+			
+			return $this->findWhere($where, $columns);
+		});
+		
+		return $model;
+	}
 
     /**
      * @return $this
