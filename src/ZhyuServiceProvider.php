@@ -11,11 +11,23 @@ namespace Zhyu;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Zhyu\Commands\MakeCrudCommand;
+use Zhyu\Commands\MakeRepositoryCommand;
+use Zhyu\Commands\MakeResourceCollectionCommand;
+use Zhyu\Commands\MakeResourceCommand;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
 
 class ZhyuServiceProvider extends ServiceProvider
 {
+    protected $commands = [
+        MakeCrudCommand::class,
+        MakeRepositoryCommand::class,
+        MakeResourceCommand::class,
+        MakeResourceCollectionCommand::class,
+        MakeDatatableCommand::class,
+    ];
+
     public function register(){
         $this->app->bind('button.create', function ($app, $params) {
             return new NormalButton(@$params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
@@ -52,7 +64,6 @@ class ZhyuServiceProvider extends ServiceProvider
             }
         }
 
-
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         $this->loadTranslationsFrom(__DIR__.'/lang', 'zhyu');
 
@@ -73,6 +84,10 @@ class ZhyuServiceProvider extends ServiceProvider
 
         if(Schema::hasTable('resources')) {
             View::composer('vendor.zhyu.blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
+        }
+
+        if ($this->app->runningInConsole()) {
+            $this->commands($this->commands);
         }
     }
 

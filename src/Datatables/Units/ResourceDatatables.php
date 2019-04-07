@@ -9,7 +9,16 @@ use Zhyu\Model\Resource;
 class ResourceDatatables extends AbstractDatatables implements DatatablesInterface
 {
     public function model(){
-        return new Resource();
+        return Resource::class;
+    }
+
+    /**
+     * Set custom act.
+     *
+     * @return string
+     */
+    public function act(){
+        return 'ajax';
     }
 
     public function config(){

@@ -9,7 +9,16 @@ use App\Usergroup;
 class UsergroupDatatables extends AbstractDatatables implements DatatablesInterface
 {
     public function model(){
-        return new Usergroup();
+        return Usergroup::class;
+    }
+
+    /**
+     * Set custom act.
+     *
+     * @return string
+     */
+    public function act(){
+        return 'ajax';
     }
 
     public function config(){

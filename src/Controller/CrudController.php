@@ -23,15 +23,26 @@ abstract class CrudController extends ZhyuController
     {
         $this->middleware(['web', 'auth', 'checklogin']);
         $this->makeRepository();
+        $this->makeRoute();
     }
 
     abstract public function repository();
 
-    abstract public function rules();
+    abstract public function rules($id = null);
 
     private function makeRepository(){
         $repository = app()->make($this->repository());
         return $this->repository = $repository;
+    }
+
+    private function makeRoute(){
+        if(method_exists($this, 'route')){
+            return ;
+        }
+        $route = $this->route();
+        if(strlen($route)>0) {
+            $this->setRoute($route);
+        }
     }
 
 
@@ -42,6 +53,8 @@ abstract class CrudController extends ZhyuController
      */
     public function index()
     {
+        $this->authorize($this->getRoute().'.index');
+
         $model = $this->repository->makeModel();
         $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
         return $this->view('index', $model, ['datatablesService' => $datatablesService]);
@@ -54,6 +67,8 @@ abstract class CrudController extends ZhyuController
      */
     public function create()
     {
+        $this->authorize($this->getRoute().'.create');
+
         return parent::view(null, $this->repository->makeModel());
     }
 
@@ -64,6 +79,8 @@ abstract class CrudController extends ZhyuController
      */
     public function store(Request $request)
     {
+        $this->authorize($this->getRoute().'.create');
+
         $rules = method_exists($this, 'rules_edit') ? $this->rules_create() : $this->rules();
         $this->validate($request, $rules);
         $this->repository->create($request->all());
@@ -78,6 +95,8 @@ abstract class CrudController extends ZhyuController
      */
     public function show($id)
     {
+        $this->authorize($this->getRoute().'.index');
+
         try {
             $model = $this->repository->find($id);
             return parent::view(null, $model, ['title' => $title]);
@@ -94,6 +113,8 @@ abstract class CrudController extends ZhyuController
      */
     public function edit($id, $title = null)
     {
+        $this->authorize($this->getRoute().'.edit');
+
         $model = $this->repository->find($id);
         return parent::view(null, $model, ['title' => $title]);
     }
@@ -106,8 +127,9 @@ abstract class CrudController extends ZhyuController
      */
     public function update($id, Request $request)
     {
+        $this->authorize($this->getRoute().'.edit');
 
-        $rules = method_exists($this, 'rules_edit') ? $this->rules_edit() : $this->rules();
+        $rules = method_exists($this, 'rules_edit') ? $this->rules_edit($id) : $this->rules($id);
 
         $this->validate($request, $rules);
 
@@ -124,6 +146,8 @@ abstract class CrudController extends ZhyuController
      */
     public function destroy($id)
     {
+        $this->authorize($this->getRoute().'.destroy');
+
         $this->repository->delete($id);
         return $this->responseJson('success');
     }

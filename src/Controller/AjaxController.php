@@ -94,12 +94,12 @@ class AjaxController extends ZhyuController
         }
     }
 
-    public function index($model, $key, $limit = 50)
+    public function index($model, $act, $resource = null)
     {
         RepositoryApp::bind($model);
         $repository = app()->make(RepositoryInterface::class);
 
-        CriteriaApp::ajaxBind($repository, $model.'.'.$key);
+        CriteriaApp::ajaxBind($repository, $model.'.'.$act);
 
         $this->currentPage();
         $this->search($repository);
@@ -108,7 +108,8 @@ class AjaxController extends ZhyuController
         $res = $repository->paginate($this->getLimit());
 
         //--wrap data
-        $rname = str_replace('_', '', ucwords($model, '_'));
+        $resource_name = is_null($resource) ? $model : $resource;
+        $rname = str_replace('_', '', ucwords($resource_name, '_'));
         $cname = '\App\Http\Resources\\'.$rname.'Collection';
         $cname2 = '\Zhyu\Http\Resources\\'.$rname.'Collection';
         try{
@@ -116,11 +117,12 @@ class AjaxController extends ZhyuController
                 $res = new $cname($res);
 
                 return $res;
-            }
-            if(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))) {
+            }elseif(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))){
                 $res = new $cname2($res);
 
                 return $res;
+            }else{
+
             }
 
         }catch(\Exception $e){

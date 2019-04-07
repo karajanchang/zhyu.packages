@@ -21,17 +21,19 @@ class JsCreate {
         return $this->model = $model;
     }
 
-    public function init($config, $varName = 'table', $custom_ajax = null){
+    public function init($config, $varName = 'table', array $model_act){
         if(isset($config['id'])){
             $this->id = $config['id'];
         }
-        $this->ajax = route('ajax', [ 'model' => class_basename($this->model->getTable()), 'act' => 'ajax' ]);
-        if(isset($config['ajax'])){
-            $this->ajax = $config['ajax'];
+
+        if(!is_array($model_act)){
+            throw new \Exception('Please set act() in datables Class');
         }
-        if(!is_null($custom_ajax)){
-            $this->ajax = $custom_ajax;
+
+        if(isset($model_act['model']) && isset($model_act['act']) ){
+            $this->ajax = route('ajax', $model_act);
         }
+
         $query = request()->query();
         if(isset($query['query'])) {
             $this->ajax .= '?query=' . $query['query'];

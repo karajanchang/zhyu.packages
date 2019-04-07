@@ -1,0 +1,35 @@
+<?php
+namespace DummyNamespace;
+
+use Zhyu\Controller\CrudController;
+use App\Repositories\DummyRepository;
+use Zhyu\Repositories\Eloquents\Repository;
+
+class DummyClass extends CrudController{
+
+    /**
+     * Set the repository class.
+     *
+     * @return Repository
+     */
+    public function repository(){
+        return DummyRepository::class;
+    }
+    
+    /**
+     * Set the validate rules.
+     *
+     * @property integer $id
+     *
+     * @return array
+     */
+    public function rules($id = null){
+        return [
+
+        ];
+    }
+    
+    public function route(){
+        return 'DummyRoute';
+    }
+}

@@ -6,7 +6,7 @@
  * Time: 05:28
  */
 
-Route::get('/ajax/{model}-{key}/{limit?}', 'Zhyu\Controller\AjaxController@index')->name('ajax');
+Route::get('/ajax/{model}-{act}/{resource?}', 'Zhyu\Controller\AjaxController@index')->name('ajax');
 
 Route::get('/lang/{locale}', function ($locale) {
     session()->put('locale', $locale);
