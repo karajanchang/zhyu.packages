@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Zhyu\Commands\MakeCrudCommand;
+use Zhyu\Commands\MakeDatatableCommand;
 use Zhyu\Commands\MakeRepositoryCommand;
 use Zhyu\Commands\MakeResourceCollectionCommand;
 use Zhyu\Commands\MakeResourceCommand;

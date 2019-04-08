@@ -8,8 +8,6 @@
 
 namespace Zhyu\Controller;
 
-use App\Driver;
-use App\Task;
 use Illuminate\Pagination\Paginator;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;

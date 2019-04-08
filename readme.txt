@@ -32,5 +32,5 @@ Others:
 
 Commands:
     php artisan make:repository {repository} --m={model}
-    php artisan make:crud AAAController --r={repository} --m={model} --route={route} --resource={resource} --act={act}
+    php artisan make:crud AAAController --r={repository} --m={model} --datatable={datatable} --route={route} --resource={resource} --act={act}
     *datatable ajax url: /ajax-{model}-{act}

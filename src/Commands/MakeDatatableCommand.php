@@ -121,9 +121,9 @@ class MakeDatatableCommand extends GeneratorCommand
 
         $stub = parent::replaceClass($stub, $name);
 
+        $stub = str_replace('DummyModel', $this->modelName, $stub);
         $stub = str_replace('DummyAct', $this->actName, $stub);
         $stub = str_replace('DummyResource', $this->resourceName, $stub);
-        $stub = str_replace('DummyModel', $this->modelName, $stub);
 
         return $stub;
     }

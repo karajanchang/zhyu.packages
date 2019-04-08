@@ -14,6 +14,13 @@ use Symfony\Component\Console\Exception\InvalidOptionException;
 class MakeCrudCommand extends GeneratorCommand
 {
     /**
+     * The name of the datatable.
+     *
+     * @var string
+     */
+    private $datatableName = '';
+
+    /**
      * The name of the model.
      *
      * @var string
@@ -53,7 +60,7 @@ class MakeCrudCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:crud {name} {--r=} {--m=} {--route=} {--resource=}';
+    protected $signature = 'make:crud {name} {--r=} {--m=} {--datatable=} {--route=} {--resource=} {--act=}';
 
     /**
      * The console command name.
@@ -105,6 +112,9 @@ class MakeCrudCommand extends GeneratorCommand
         if(!$this->option('m')){
             throw new InvalidOptionException('Missing required option --m for model name');
         }
+        if(!$this->option('datatable')){
+            throw new InvalidOptionException('Missing required option --datatable for datatable name');
+        }
         if(!$this->option('route')){
             throw new InvalidOptionException('Missing required option --route for route name');
         }
@@ -118,6 +128,10 @@ class MakeCrudCommand extends GeneratorCommand
 
         $this->repositoryName = ucwords($this->option('r'));
         $this->modelName = ucwords($this->option('m'));
+        $this->datatableName = ucwords($this->option('datatable'));
+        if(!stristr($this->datatableName, 'datatable')){
+            $this->datatableName.='Datatable';
+        }
         $this->routeName = $this->option('route');
         $this->resourceName = ucwords($this->option('resource'));
         $this->actName = ucwords($this->option('act'));
@@ -144,7 +158,6 @@ class MakeCrudCommand extends GeneratorCommand
 
         parent::handle();
     }
-
 
     /**
      * Replace the Model name for the given stub.
