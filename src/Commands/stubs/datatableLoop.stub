@@ -1,0 +1,6 @@
+
+                '{DummyColumn}' => [
+                    'attributes' => [],
+                    'css' => [ 'text-center' ],
+                    'cols_css' => [ 'text-center' ],
+                ],
