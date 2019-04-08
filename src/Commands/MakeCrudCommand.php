@@ -162,6 +162,9 @@ class MakeCrudCommand extends GeneratorCommand
             '--resource' => $this->resourceName,
         ]);
 
+        $this->info('Done. Append '.$this->modelName.'.'.$this->actName.' in /config/criteria.php, if have need.');
+
+
         parent::handle();
     }
 
@@ -185,6 +188,23 @@ class MakeCrudCommand extends GeneratorCommand
         $stub = str_replace('DummyRoute', $this->routeName, $stub);
 
         return $stub;
+    }
+
+    /**
+     * write to /config/criteria.php
+     *
+     * @return null
+     */
+    protected function writeCriteria(){
+        /*
+         *
+        use Larapack\ConfigWriter\Repository;
+        $config = new Repository('criteria');
+        $vars = $config->get($this->modelName);
+        $vars[$this->actName] = [];
+        $config->set($this->modelName, $vars);
+        $config->save();
+        */
     }
 
 
