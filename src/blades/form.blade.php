@@ -63,7 +63,7 @@
                                 try{
                                     location.href = redirectAfterPost;
                                 }catch(e) {
-                                    location.href = '{{ $route.'.index' }}';
+                                    location.href = '{{ route($route.'.index') }}';
                                 }
                             });
                     @endif
