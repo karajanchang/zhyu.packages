@@ -136,6 +136,11 @@ class MakeCrudCommand extends GeneratorCommand
         $this->resourceName = ucwords($this->option('resource'));
         $this->actName = ucwords($this->option('act'));
 
+        //--make model class
+        $this->call('make:model', [
+            'name' => $this->modelName,
+        ]);
+
         //---make repository class
         $this->call('make:repository', [
             'name' => $this->repositoryName,
