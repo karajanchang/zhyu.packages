@@ -128,7 +128,7 @@ class MakeDatatableCommand extends GeneratorCommand
         $stub = str_replace('DummyResource', $this->resourceName, $stub);
 
         $loop = $this->getReplaceLoop($stub);
-        $stub = str_replace('DummyLoop', $loop, $stub);
+        $stub = str_replace('DummyLoop,', $loop, $stub);
 
 
         return $stub;

@@ -18,7 +18,8 @@
     "php": ">=5.6.0",
     "illuminate/support": ">=5.6.0",
     "illuminate/database": ">=5.6.0",
-    "illuminate/auth": ">=5.6.0"
+    "illuminate/auth": ">=5.6.0",
+    "larapack/config-writer": "1.*"
   },
   "autoload": {
     "psr-4": {

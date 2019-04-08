@@ -47,7 +47,7 @@ class DummyClass extends AbstractDatatables implements DatatablesInterface{
             'searchable_cols' => [],
             'no_orderable_cols' => [],
             'cols_display' => [
-                DummyLoop
+                DummyLoop,
                 'buttons' => [
             'title' => '',
         ],

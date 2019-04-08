@@ -150,6 +150,7 @@ class MakeCrudCommand extends GeneratorCommand
         //---make resource class
         $this->call('make:res', [
             'name' => $this->resourceName,
+            '--m' => $this->modelName,
             '--route' => $this->routeName,
         ]);
 
