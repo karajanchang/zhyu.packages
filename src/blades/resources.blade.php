@@ -85,7 +85,7 @@ if(isset($resource->parent_id) && $resource->parent_id>0){
         <div class="form-actions m-t-10">
 
             <button type="submit" class="btn btn-info m-r-10"> <i class="fa fa-check"></i> 送出{{ $b }}</button>
-            <a href="javascript:;" class="btn btn-default" onclick="location.href='{{ route('resources.index').$query }}'">取消</a>
+            <a href="javascript:;" class="btn btn-default" onclick="location.href='{{ route('admin.resources.index').$query }}'">取消</a>
         </div>
 
     </div>
