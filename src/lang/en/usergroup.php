@@ -1,6 +1,6 @@
 <?php
 return [
-    'index' => 'Admin',
+    'index' => 'Admin Group',
     'parent' => 'Parent',
     'name' => 'Name',
     'nologin' => 'can not login',

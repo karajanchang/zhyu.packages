@@ -79,7 +79,9 @@ class UsergroupController extends ZhyuController
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_create() : $this->rules();
         $this->validate($request, $rules);
-        $this->repository->create($request->all());
+
+        $all = $this->filter($request->all());
+        $this->repository->create($all);
 
         return $this->responseJson('success');
     }
@@ -165,6 +167,18 @@ class UsergroupController extends ZhyuController
             'is_online' => ['nullable', 'numeric'],
             'nologin' => ['nullable', 'numeric'],
         ];
+    }
+
+    public function filter($all){
+        $all['nologin'] = isset($all['nologin']) ? $all['nologin'] : 0;
+        $all['is_supervisor'] = isset($all['is_supervisor']) ? $all['is_supervisor'] : 0;
+        $all['is_online'] = isset($all['is_online']) ? $all['is_online'] : 0;
+        $all['parent_id'] = 0;
+        $all['project_type'] = 0;
+        $all['createtime'] = date('Y-m-d H:i:s');
+        $all['updatetime'] = date('Y-m-d H:i:s');
+
+        return $all;
     }
 
     public function priv($id, UsergroupPermissionRepository $permissionRepository){

@@ -57,6 +57,7 @@ abstract class CrudController extends ZhyuController
 
         $model = $this->repository->makeModel();
         $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
+
         return $this->view('index', $model, ['datatablesService' => $datatablesService]);
     }
 
@@ -83,7 +84,17 @@ abstract class CrudController extends ZhyuController
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_create() : $this->rules();
         $this->validate($request, $rules);
-        $this->repository->create($request->all());
+
+        if(method_exists($this, 'filter_create')) {
+            $all = $this->filter_create($request->all());
+        }elseif(method_exists($this, 'filter')) {
+            $all = $this->filter($request->all());
+        }else{
+            $all = $request->all();
+        }
+
+        $this->repository->create($all);
+
         return $this->responseJson('success');
     }
 
@@ -133,7 +144,15 @@ abstract class CrudController extends ZhyuController
 
         $this->validate($request, $rules);
 
-        $this->repository->update($id, $request->all());
+        if(method_exists($this, 'filter_edit')) {
+            $all = $this->filter_edit($request->all());
+        }elseif(method_exists($this, 'filter')) {
+            $all = $this->filter($request->all());
+        }else{
+            $all = $request->all();
+        }
+
+        $this->repository->update($id, $all);
 
         return $this->responseJson('success');
     }
