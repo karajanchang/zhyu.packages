@@ -25,8 +25,11 @@ Second: Rules
             ?query=parent_id:whereNull
 
 Others:
-    2.create reoureces route
+    1.create reoureces route
     /resources
+
+    2.In Contorller you can create these function to validate or filter request
+        rules() rules_create() rules_edit() filter() filter_create() filter_edit()
 
 
 

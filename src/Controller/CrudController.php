@@ -110,7 +110,7 @@ abstract class CrudController extends ZhyuController
 
         try {
             $model = $this->repository->find($id);
-            return parent::view(null, $model, ['title' => $title]);
+            return parent::view(null, $model, ['title' => (string) $model]);
         }catch (\Exception $e){
             return $this->responseJson($e, 500);
         }
