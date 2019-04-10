@@ -19,6 +19,11 @@ use Zhyu\Commands\MakeResourceCommand;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
 
+use Zhyu\ReportMedia\CSVReport;
+use Zhyu\ReportMedia\ExcelReport;
+use Zhyu\ReportMedia\PdfReport;
+
+
 class ZhyuServiceProvider extends ServiceProvider
 {
     protected $commands = [
@@ -52,9 +57,29 @@ class ZhyuServiceProvider extends ServiceProvider
         {
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
         });
+
+
+        $configPath = __DIR__.'/config/report-generator.php';
+        $this->mergeConfigFrom($configPath, 'zhyu');
+        $this->app->bind('pdf.report', function ($app) {
+            return new PdfReport ($app);
+        });
+        $this->app->bind('excel.report', function ($app) {
+            return new ExcelReport ($app);
+        });
+        $this->app->bind('csv.report', function ($app) {
+            return new CSVReport ($app);
+        });
+        $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
+
+        $this->registerAliases();
     }
 
     public function boot(){
+        if ($this->isLumen()) {
+            require_once 'Lumen.php';
+        }
+
         $must_exists_classes = [
             \App\User::class,
             \App\Usergroup::class,
@@ -77,6 +102,7 @@ class ZhyuServiceProvider extends ServiceProvider
             __DIR__.'/lang/en' => resource_path('lang/en'),
             __DIR__.'/lang/tw' => resource_path('lang/tw'),
             __DIR__.'/assets/public_js' => public_path('js'),
+            __DIR__.'/config/report-generator.php' => config_path('report-generator.php'),
         ], 'zhyu');
 
         $this->publishes([
@@ -104,4 +130,26 @@ class ZhyuServiceProvider extends ServiceProvider
         ];
     }
 
+    /**
+     * Register aliases.
+     *
+     * @return null
+     */
+    protected function registerAliases()
+    {
+        if (class_exists('Illuminate\Foundation\AliasLoader')) {
+            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+            $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
+            $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
+            $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
+            $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
+            $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
+
+        }
+    }
+
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen');
+    }
 }
