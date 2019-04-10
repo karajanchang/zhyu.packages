@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Facade;
 
 class PdfReport extends Facade
 {
-    protected static function getFacadeAccessor() { return 'pef.report'; }
+    protected static function getFacadeAccessor() { return 'pdf.report'; }
 
 }
