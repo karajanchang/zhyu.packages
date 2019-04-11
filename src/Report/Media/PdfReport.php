@@ -6,10 +6,10 @@
  * Time: 17:01
  */
 
-namespace Zhyu\ReportMedia;
+namespace Zhyu\Report\Media;
 
 
-use Zhyu\ReportGenerator;
+use Zhyu\Report\ReportGenerator;
 
 class PdfReport extends ReportGenerator
 {
@@ -42,7 +42,7 @@ class PdfReport extends ReportGenerator
             try {
                 $pdf = \App::make('dompdf.wrapper');
             } catch (\ReflectionException $e) {
-                throw new \Exception('Please install either barryvdh/laravel-snappy or laravel-dompdf to generate PDF Report!');
+                throw new \Exception('Please install either barryvdh/laravel-snappy or laravel-dompdf to generate PDF ZhyuReport!');
             }
         }
         return $pdf->loadHTML($html)->setPaper($this->paper, $orientation);

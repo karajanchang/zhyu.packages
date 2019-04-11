@@ -6,11 +6,11 @@
  * Time: 17:01
  */
 
-namespace Zhyu\ReportMedia;
+namespace Zhyu\Report\Media;
 
 
 use App, Closure;
-use Zhyu\ReportGenerator;
+use Zhyu\Report\ReportGenerator;
 
 class ExcelReport extends ReportGenerator
 {

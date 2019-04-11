@@ -6,11 +6,11 @@
  * Time: 17:01
  */
 
-namespace Zhyu\ReportMedia;
+namespace Zhyu\Report\Media;
 
 use League\Csv\Writer;
 use App, Closure, Exception;
-use Zhyu\ReportGenerator;
+use Zhyu\Report\ReportGenerator;
 
 class CSVReport extends ReportGenerator
 {
@@ -18,7 +18,7 @@ class CSVReport extends ReportGenerator
     public function download($filename)
     {
         if (!class_exists(Writer::class)) {
-            throw new Exception('Please install league/csv to generate CSV Report!');
+            throw new Exception('Please install league/csv to generate CSV ZhyuReport!');
         }
         $csv = Writer::createFromFileObject(new \SplTempFileObject());
         if ($this->showMeta) {

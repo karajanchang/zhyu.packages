@@ -32,7 +32,7 @@ class DatatablesFactory {
         }
         //dd($className);
         if($className==TestDatatables::class){
-            throw new \Exception('Please create datatables map in config/datatables.php');
+            throw new \Exception('Please create mapping datatables map in config/datatables.php');
         }
         App::bind(DatatablesInterface::class, $className);
     }

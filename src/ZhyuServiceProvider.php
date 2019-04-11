@@ -19,9 +19,11 @@ use Zhyu\Commands\MakeResourceCommand;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
 
-use Zhyu\ReportMedia\CSVReport;
-use Zhyu\ReportMedia\ExcelReport;
-use Zhyu\ReportMedia\PdfReport;
+use Zhyu\Report\Media\CSVReport;
+use Zhyu\Report\Media\ExcelReport;
+use Zhyu\Report\Media\PdfReport;
+use Zhyu\Report\ReportFactory;
+use Zhyu\Report\ReportService;
 
 
 class ZhyuServiceProvider extends ServiceProvider
@@ -56,6 +58,16 @@ class ZhyuServiceProvider extends ServiceProvider
         $this->app->bind('zhyuUrl', function()
         {
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
+        });
+
+        $this->app->bind('zhyuReport', function($app, $name)
+        {
+            if(!isset($name) || strlen($name)==0){
+                throw new \Exception('Please provider one class for report to bind');
+            }
+            ReportFactory::bind($name);
+            $service = App::make(ReportService::class);
+            return $service;
         });
 
 
