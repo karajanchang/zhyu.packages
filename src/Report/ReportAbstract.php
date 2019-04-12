@@ -9,6 +9,9 @@
 namespace Zhyu\Report;
 
 
+use Zhyu\Facades\CsvReport;
+use Zhyu\Facades\PdfReport;
+
 abstract class ReportAbstract
 {
     public function fire($type='pdf', $filename = null){

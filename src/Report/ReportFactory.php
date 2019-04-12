@@ -22,6 +22,6 @@ class ReportFactory
         if($className=='abc'){
             throw new \Exception('Please create mapping class in config/reports.php');
         }
-        App::bind(ReportInterface::class, $className);
+        app()->bind(ReportInterface::class, $className);
     }
 }

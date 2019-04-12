@@ -50,6 +50,11 @@ class ZhyuServiceProvider extends ServiceProvider
             return new SimpleButton($params['data'], @$params['url'], 'btn btn-danger btn-circle btn-sm m-l-5', 'ti-trash', null, $params['text'], @$params['title']);
         });
 
+        $this->app->bind('zhyuDate', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuDate::class);
+        });
+
         $this->app->bind('zhyuGate', function()
         {
             return app()->make(\Zhyu\Helpers\ZhyuGate::class);
@@ -60,13 +65,13 @@ class ZhyuServiceProvider extends ServiceProvider
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
         });
 
-        $this->app->bind('zhyuReport', function($app, $name)
+        $this->app->bind('zhyuReport', function($app, array $params)
         {
-            if(!isset($name) || strlen($name)==0){
+            if(!isset($params['name']) || strlen($params['name'])==0){
                 throw new \Exception('Please provider one class for report to bind');
             }
-            ReportFactory::bind($name);
-            $service = App::make(ReportService::class);
+            ReportFactory::bind($params['name']);
+            $service = app()->make(ReportService::class);
             return $service;
         });
 
