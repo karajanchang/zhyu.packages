@@ -19,10 +19,11 @@ class ReportService
     public function __construct(ReportInterface $report)
     {
         $this->report = $report;
+        \Debugbar::disable();
     }
 
     public function fire($type='pdf', $filename = null){
-        $this->report->fire($type, $filename);
+        return $this->report->fire($type, $filename);
     }
 
 }
