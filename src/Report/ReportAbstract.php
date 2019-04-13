@@ -15,8 +15,25 @@ use Zhyu\Repositories\Criterias\Common\OrderByCustom;
 
 abstract class ReportAbstract
 {
+	protected $orderby_col;
     private $limit = 0;
+	
+	/**
+	 * @return mixed
+	 */
+	public function getOrderbyCol() {
+		return $this->orderby_col;
+	}
+	/**
+	 * @param mixed $orderby_col
+	 */
+	public function setOrderbyCol($orderby_col) {
+		$this->orderby_col = $orderby_col;
+		
+		return $this;
+	}
 
+		
     /**
      * @return mixed
      */
@@ -54,7 +71,7 @@ abstract class ReportAbstract
 	
 	protected function orderby(){
 		$this->orderby = isset($this->params['orderby']) ? $this->params['orderby'] : 'desc';
-		$criteria = new OrderByCustom('tasks_count', $this->orderby);
+		$criteria = new OrderByCustom($this->orderby_col, $this->orderby);
 		$this->repository->pushCriteria($criteria);
 	}
 	protected function limit(){
