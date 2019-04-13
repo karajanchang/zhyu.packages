@@ -16,6 +16,7 @@ use Zhyu\Commands\MakeDatatableCommand;
 use Zhyu\Commands\MakeRepositoryCommand;
 use Zhyu\Commands\MakeResourceCollectionCommand;
 use Zhyu\Commands\MakeResourceCommand;
+use Zhyu\Commands\MakeReportCommand;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
 
@@ -34,6 +35,7 @@ class ZhyuServiceProvider extends ServiceProvider
         MakeResourceCommand::class,
         MakeResourceCollectionCommand::class,
         MakeDatatableCommand::class,
+	    MakeReportCommand::class,
     ];
 
     public function register(){
@@ -161,7 +163,6 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
-
         }
     }
 
