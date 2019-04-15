@@ -40,14 +40,14 @@ class MakeDatatableCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:datatable {name} {--m=} {--act=} {--resource=}';
+    protected $signature = 'zhyu:datatable {name} {--m=} {--act=} {--resource=}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:datatable';
+    protected $name = 'zhyu:datatable';
 
     /**
      * The console command description.

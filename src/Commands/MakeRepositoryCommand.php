@@ -25,14 +25,14 @@ class MakeRepositoryCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:repository {name} {--m=}';
+    protected $signature = 'zhyu:repository {name} {--m=}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:repository';
+    protected $name = 'zhyu:repository';
 
     /**
      * The console command description.

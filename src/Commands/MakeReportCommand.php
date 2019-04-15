@@ -25,14 +25,14 @@ class MakeReportCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:report {name} {--r=}';
+    protected $signature = 'zhyu:report {name} {--r=}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:report';
+    protected $name = 'zhyu:report';
 
     /**
      * The console command description.
