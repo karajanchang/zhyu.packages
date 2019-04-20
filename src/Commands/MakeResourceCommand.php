@@ -33,14 +33,14 @@ class MakeResourceCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:res {name} {--route=} {--m=}';
+    protected $signature = 'zhyu:resource {name} {--route=} {--m=}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:res';
+    protected $name = 'zhyu:resource';
 
     /**
      * The console command description.

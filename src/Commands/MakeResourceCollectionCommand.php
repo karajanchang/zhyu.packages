@@ -19,14 +19,14 @@ class MakeResourceCollectionCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:rcollection {name}';
+    protected $signature = 'zhyu:rcollection {name}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:rcollection';
+    protected $name = 'zhyu:rcollection';
 
     /**
      * The console command description.

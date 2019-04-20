@@ -60,14 +60,14 @@ class MakeCrudCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:crud {name} {--r=} {--m=} {--datatable=} {--route=} {--resource=} {--act=}';
+    protected $signature = 'zhyu:crud {name} {--r=} {--m=} {--datatable=} {--route=} {--resource=} {--act=}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'make:crud';
+    protected $name = 'zhyu:crud';
 
     /**
      * The console command description.
@@ -142,20 +142,20 @@ class MakeCrudCommand extends GeneratorCommand
         ]);
 
         //---make repository class
-        $this->call('make:repository', [
+        $this->call('zhyu:repository', [
             'name' => $this->repositoryName,
             '--m' => $this->modelName,
         ]);
 
         //---make resource class
-        $this->call('make:res', [
+        $this->call('zhyu:resource', [
             'name' => $this->resourceName,
             '--m' => $this->modelName,
             '--route' => $this->routeName,
         ]);
 
         //---make datatable class
-        $this->call('make:datatable', [
+        $this->call('zhyu:datatable', [
             'name' => $this->datatableName,
             '--m' => $this->modelName,
             '--act' => $this->actName,

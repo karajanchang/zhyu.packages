@@ -12,7 +12,7 @@ use League\Csv\Writer;
 use App, Closure, Exception;
 use Zhyu\Report\ReportGenerator;
 
-class CSVReport extends ReportGenerator
+class CsvReport extends ReportGenerator
 {
     protected $showMeta = false;
     public function download($filename)
@@ -47,6 +47,7 @@ class CSVReport extends ReportGenerator
             }
             $ctr++;
         }
+	    $csv->setOutputBOM("\xEF\xBB\xBF");
         $csv->output($filename . '.csv');
     }
     private function formatRow($result)

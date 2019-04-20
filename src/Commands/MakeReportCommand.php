@@ -11,42 +11,42 @@ use InvalidArgumentException;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 
-class MakeRepositoryCommand extends GeneratorCommand
+class MakeReportCommand extends GeneratorCommand
 {
     /**
-     * The name of the model.
+     * The name of the Repository.
      *
      * @var string
      */
-    private $modelName = '';
+    private $repositoryName = '';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'zhyu:repository {name} {--m=}';
+    protected $signature = 'zhyu:report {name} {--r=}';
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'zhyu:repository';
+    protected $name = 'zhyu:report';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new repository class';
+    protected $description = 'Create a report class';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Repository';
+    protected $type = 'Report';
 
     /**
      * Get the stub file for the generator.
@@ -55,7 +55,7 @@ class MakeRepositoryCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__.'/stubs/repository.stub';
+        return __DIR__.'/stubs/report.stub';
     }
 
     /**
@@ -66,25 +66,29 @@ class MakeRepositoryCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Repositories';
+        return $rootNamespace.'\Reports';
     }
 
     public function handle()
     {
-        if(!$this->option('m')){
-            throw new InvalidOptionException('Missing required option --m for model name');
+        if(!$this->option('r')){
+            throw new InvalidOptionException('Missing required option --r for repository name');
         }
-        $this->modelName = ucwords($this->option('m'));
+        if(!$this->option('act')){
+            throw new InvalidOptionException('Missing required option --act for act name');
+        }
+        $this->repositoryName = ucwords($this->option('r'));
+        //--make model class
+        $this->info('Done. modify '.$this->name.' in /app/Reports/.');
 
         parent::handle();
     }
-
 
     /**
      * Replace the Model name for the given stub.
      *
      * @param  string  $stub
-     * @param  string  $m
+     * @param  string  $name
      * @return string
      */
     protected function replaceClass($stub, $name)
@@ -94,9 +98,9 @@ class MakeRepositoryCommand extends GeneratorCommand
         }
 
         $stub = parent::replaceClass($stub, $name);
-
-        return str_replace('DummyModel', $this->modelName, $stub);
+        $stub = str_replace('DummyRepository', $this->repositoryName, $stub);
+        
+        return $stub;
     }
-
 
 }

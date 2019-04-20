@@ -44,7 +44,7 @@
       "aliases": {
         "PdfReport": "Zhyu\\Facades\\PdfReport",
         "ExcelReport": "Zhyu\\Facades\\ExcelReport",
-        "CSVReport": "Zhyu\\Facades\\CSVReport::class"
+        "CsvReport": "Zhyu\\Facades\\CsvReport::class"
       }
     }
   },

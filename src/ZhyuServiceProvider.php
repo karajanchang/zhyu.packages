@@ -16,10 +16,11 @@ use Zhyu\Commands\MakeDatatableCommand;
 use Zhyu\Commands\MakeRepositoryCommand;
 use Zhyu\Commands\MakeResourceCollectionCommand;
 use Zhyu\Commands\MakeResourceCommand;
+use Zhyu\Commands\MakeReportCommand;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
 
-use Zhyu\Report\Media\CSVReport;
+use Zhyu\Report\Media\CsvReport;
 use Zhyu\Report\Media\ExcelReport;
 use Zhyu\Report\Media\PdfReport;
 use Zhyu\Report\ReportFactory;
@@ -34,6 +35,7 @@ class ZhyuServiceProvider extends ServiceProvider
         MakeResourceCommand::class,
         MakeResourceCollectionCommand::class,
         MakeDatatableCommand::class,
+	    MakeReportCommand::class,
     ];
 
     public function register(){
@@ -85,7 +87,7 @@ class ZhyuServiceProvider extends ServiceProvider
             return new ExcelReport ($app);
         });
         $this->app->bind('csv.report', function ($app) {
-            return new CSVReport ($app);
+            return new CsvReport ($app);
         });
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
 
@@ -161,7 +163,6 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
-
         }
     }
 
