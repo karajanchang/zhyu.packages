@@ -191,7 +191,22 @@ class UserController extends ZhyuController
                 'resource_id' => $all['resource_id'],
             ]);
         }
+
+        $this->clearCache($id);
+
         return 'success';
+    }
+
+    private function clearCache($user_id){
+        try {
+            $key = env('APP_TYPE') . 'ZhyuUser' . $user_id . 'OwnPermissions';
+            Cache::forget($key);
+
+            $key = env('APP_TYPE') . 'ZhyuAllUsergroupPermissions';
+            Cache::forget($key);
+        }catch (\Exception $e){
+            Log::info('Errors occoured: '.__CLASS__.' - '.$e->getMessage());
+        }
     }
 
     public function rules_priv(){

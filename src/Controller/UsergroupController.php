@@ -211,7 +211,27 @@ class UsergroupController extends ZhyuController
                 'resource_id' => $all['resource_id'],
             ]);
         }
+
+        $this->clearCache($id);
+
         return 'success';
+    }
+
+    private function clearCache($usergroup_id){
+        try {
+            $users = $this->repository->find($usergroup_id)->users;
+            if(count($users)){
+                $users->map(function($user){
+                    $key = env('APP_TYPE') . 'ZhyuUser' . $user->id . 'OwnPermissions';
+                    Cache::forget($key);
+                });
+            }
+
+            $key = env('APP_TYPE') . 'ZhyuAllUsergroupPermissions';
+            Cache::forget($key);
+        }catch (\Exception $e){
+            Log::info('Errors occoured: '.__CLASS__.' - '.$e->getMessage());
+        }
     }
 
     public function rules_priv(){
