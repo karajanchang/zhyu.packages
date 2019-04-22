@@ -9,6 +9,7 @@
 namespace Zhyu\Model\Traits;
 
 use App\Usergroup;
+use Zhyu\Model\UserPermission;
 
 trait UserTrait
 {
