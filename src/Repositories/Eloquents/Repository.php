@@ -390,6 +390,19 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
+     * Add wherein.
+     *
+     * @param  array $ins
+     * @return $this
+     */
+    public function whereIn($col, array $ins)
+    {
+        $this->model = $this->model->whereIn($col, $ins);
+        return $this;
+    }
+
+
+    /**
      * Applies the given where conditions to the model.
      *
      * @param array $where
