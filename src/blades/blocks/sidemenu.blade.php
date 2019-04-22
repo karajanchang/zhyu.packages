@@ -64,7 +64,6 @@
                     @endif
                 @endforeach
             </ul>
-            <ul><li><span class="mdi mdi-logout-variant"></span> <a href="{{ route('logout') }}" class="text-justify" style="color: #CCC;">登出</a></li></ul>
         @endif
     </div>
 </div>
