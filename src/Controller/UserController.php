@@ -1,6 +1,7 @@
 <?php
 namespace Zhyu\Controller;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Zhyu\Datatables\DatatablesFactoryApp;
