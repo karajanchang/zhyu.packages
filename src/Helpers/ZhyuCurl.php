@@ -26,8 +26,11 @@ class ZhyuCurl
             'Content-Type: application/json'
         ];
         if(count($auth)){
-            $header = array_merge($header, $auth);
+            foreach($auth as $key => $str){
+                $header[] = $key.': '.$str;
+            }
         }
+
         return $header;
     }
 
@@ -108,7 +111,7 @@ class ZhyuCurl
         $ch = self::init($this->url);
 
         if(is_null($this->method)){
-            $ch = $this->method($method);
+            $ch = $this->method();
         }
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
@@ -124,10 +127,12 @@ class ZhyuCurl
         $ch = self::init($this->url);
 
         curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+        //curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header($this->auth));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+
 
         $data = $this->output();
 
