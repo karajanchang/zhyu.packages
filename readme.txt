@@ -51,3 +51,9 @@ Commands:
         *datatable ajax url: /ajax-{model}-{act}
 
 
+Facades:
+    1.ZhyuCurl
+      ZhyuCurl::url($url)->auth(array $auth)->json($params, true);
+      ZhyuCurl::url($url)->post($params);
+      ZhyuCurl::url($url)->get();
+

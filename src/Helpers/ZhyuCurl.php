@@ -12,10 +12,10 @@ namespace Zhyu\Helpers;
 class ZhyuCurl
 {
     private $ch = null;
-    private $url='';
+    private $url = null;
     private $auth = [];
 
-    public function __construct($url, array $auth = []){
+    public function __construct($url = null, array $auth = []){
         $this->url = $url;
         $this->auth = $auth;
     }
