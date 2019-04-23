@@ -67,13 +67,18 @@ class ZhyuServiceProvider extends ServiceProvider
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
         });
 
+        $this->app->bind('zhyuCurl', function($app, array $params)
+        {
+            return $app->make(\Zhyu\Helpers\ZhyuCurl::class, $params);
+        });
+
         $this->app->bind('zhyuReport', function($app, array $params)
         {
             if(!isset($params['name']) || strlen($params['name'])==0){
                 throw new \Exception('Please provider one class for report to bind');
             }
             ReportFactory::bind($params['name']);
-            $service = app()->make(ReportService::class);
+            $service = $app->make(ReportService::class);
             return $service;
         });
 
@@ -160,6 +165,7 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
             $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
             $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
+            $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
