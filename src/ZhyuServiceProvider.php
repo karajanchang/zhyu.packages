@@ -35,7 +35,7 @@ class ZhyuServiceProvider extends ServiceProvider
         MakeResourceCommand::class,
         MakeResourceCollectionCommand::class,
         MakeDatatableCommand::class,
-	    MakeReportCommand::class,
+        MakeReportCommand::class,
     ];
 
     public function register(){
@@ -109,7 +109,7 @@ class ZhyuServiceProvider extends ServiceProvider
             \App\Usergroup::class,
         ];
         foreach($must_exists_classes as $class){
-            if(!class_exists($class)) {
+            if(env('ZHYU_RESOURCE_ENABLE', false)===true && !class_exists($class)) {
                 throw new \Exception('this file must exists: ' . $class);
             }
         }
@@ -133,7 +133,7 @@ class ZhyuServiceProvider extends ServiceProvider
             __DIR__.'/Http/Resources' => app_path('Http/Resources'),
         ], 'zhyu:view');
 
-        if(Schema::hasTable('resources')) {
+        if(env('ZHYU_RESOURCE_ENABLE', false) && Schema::hasTable('resources')) {
             View::composer('vendor.zhyu.blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
         }
 
