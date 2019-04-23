@@ -62,7 +62,7 @@ class ZhyuCurl
         }
         $this->method = 'post';
 
-        return $this;
+        return $ch;
     }
 
     public function json($postData, $is_assoc = true){
