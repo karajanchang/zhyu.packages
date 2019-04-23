@@ -11,11 +11,12 @@ namespace Zhyu\Helpers;
 
 class ZhyuCurl
 {
-    private $ch = null;
-    private $url = null;
+    private static $ch = null;
+    private $url='';
     private $auth = [];
+    private $method = null;
 
-    public function __construct($url = null, array $auth = []){
+    public function __construct($url = '', array $auth = []){
         $this->url = $url;
         $this->auth = $auth;
     }
@@ -40,16 +41,42 @@ class ZhyuCurl
         return $this;
     }
 
+    public function method($method = 'post'){
+        $ch = self::init($this->url);
+
+        Switch(strtolower($method)){
+            case 'patch':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+                break;
+
+            case 'put':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                break;
+
+            case 'delete':
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                break;
+
+            default:
+                curl_setopt($ch, CURLOPT_POST, true);
+        }
+        $this->method = 'post';
+
+        return $this;
+    }
+
     public function json($postData, $is_assoc = true){
+        $ch = self::init($this->url);
 
-        $this->init();
+        if(is_null($this->method)){
+            $ch = $this->method();
+        }
+        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header($this->auth));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
 
-        curl_setopt_array($this->ch, array(
-            CURLOPT_POST => TRUE,
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_HTTPHEADER => $this->header($this->auth),
-            CURLOPT_POSTFIELDS => json_encode($postData),
-        ));
 
         $data = $this->output();
         if($data===FALSE){
@@ -62,10 +89,28 @@ class ZhyuCurl
     }
 
     public function post($postData){
-        $this->init();
+        return $this->_post($postData, 'post');
+    }
 
-        curl_setopt($this->ch, CURLOPT_URL, $this->url);
-        curl_setopt($this->ch, CURLOPT_POST, true);
+    public function put($postData){
+        return $this->_post($postData, 'put');
+    }
+
+    public function patch($postData){
+        return $this->_post($postData, 'patch');
+    }
+
+    public function delete($postData){
+        return $this->_post($postData, 'delete');
+    }
+
+    public function _post($postData, $method){
+        $ch = self::init($this->url);
+
+        if(is_null($this->method)){
+            $ch = $this->method();
+        }
+        curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt($this->ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
@@ -76,13 +121,13 @@ class ZhyuCurl
     }
 
     public function get() {
-        $this->init();
+        $ch = self::init($this->url);
 
-        curl_setopt($this->ch, CURLOPT_AUTOREFERER, TRUE);
-        curl_setopt($this->ch, CURLOPT_HEADER, 0);
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($this->ch, CURLOPT_URL, $this->url);
-        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $this->url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 
 
         $data = $this->output();
@@ -90,13 +135,16 @@ class ZhyuCurl
         return $data;
     }
 
-    private function init(){
-        $this->ch = curl_init($this->url);
+    private static function init($url){
+        if(self::$ch===null) {
+            self::$ch = curl_init($url);
+        }
+        return self::$ch;
     }
 
     private function output(){
-        $data = curl_exec($this->ch);
-        curl_close($this->ch);
+        $data = curl_exec(self::$ch);
+        curl_close(self::$ch);
 
         return $data;
     }
