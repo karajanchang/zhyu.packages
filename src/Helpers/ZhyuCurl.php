@@ -14,12 +14,10 @@ class ZhyuCurl
     private $ch = null;
     private $url='';
     private $auth = [];
-    private $is_assoc = true;
 
-    public function __construct($url, array $auth = [], $is_assoc = true){
+    public function __construct($url, array $auth = []){
         $this->url = $url;
         $this->auth = $auth;
-        $this->is_assoc = $is_assoc;
     }
 
     private function header(array $auth = []){
@@ -32,7 +30,17 @@ class ZhyuCurl
         return $header;
     }
 
-    public function json($postData){
+    public function url($url){
+        $this->url = $url;
+        return $this;
+    }
+
+    public function auth(array $auth){
+        $this->auth = $auth;
+        return $this;
+    }
+
+    public function json($postData, $is_assoc = true){
 
         $this->init();
 
@@ -48,7 +56,7 @@ class ZhyuCurl
             return curl_error($this->ch);
         }
 
-        $responseData = json_decode($data, $this->is_assoc);
+        $responseData = json_decode($data, $is_assoc);
 
         return $responseData;
     }
