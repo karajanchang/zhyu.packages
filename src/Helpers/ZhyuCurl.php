@@ -108,7 +108,7 @@ class ZhyuCurl
         $ch = self::init($this->url);
 
         if(is_null($this->method)){
-            $ch = $this->method();
+            $ch = $this->method($method);
         }
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
@@ -128,7 +128,6 @@ class ZhyuCurl
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-
 
         $data = $this->output();
 

@@ -53,7 +53,10 @@ Commands:
 
 Facades:
     1.ZhyuCurl
-      ZhyuCurl::url($url)->auth(array $auth)->json($params, true);
-      ZhyuCurl::url($url)->post($params);
-      ZhyuCurl::url($url)->get();
+        $data = ZhyuCurl::url($url)->method($method)->json($params);
+        $data = ZhyuCurl::url($url)->post($params);
+        $data = ZhyuCurl::url($url)->put($params);
+        $data = ZhyuCurl::url($url)->patch($params);
+        $data = ZhyuCurl::url($url)->delete($params);
+        $data = ZhyuCurl::url($url)->get($params);
 
