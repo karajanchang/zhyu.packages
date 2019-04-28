@@ -69,21 +69,21 @@ class ZhyuCurl
     }
 
     public function json($postData, $is_assoc = true){
-        $ch = self::init($this->url);
+        self::init($this->url);
 
         if(is_null($this->method)){
-            $ch = $this->method();
+            $this->method();
         }
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header($this->auth));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
+        curl_setopt(self::$ch, CURLOPT_URL, $this->url);
+        curl_setopt(self::$ch, CURLOPT_HTTPHEADER, $this->header($this->auth));
+        curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt(self::$ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt(self::$ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
 
 
         $data = $this->output();
         if($data===FALSE){
-            return curl_error($this->ch);
+            return curl_error(self::$ch);
         }
 
         $responseData = json_decode($data, $is_assoc);
@@ -108,17 +108,20 @@ class ZhyuCurl
     }
 
     public function _post($postData, $method){
-        $ch = self::init($this->url);
+        self::init($this->url);
 
         if(is_null($this->method)){
-            $ch = $this->method();
+            $this->method($method);
         }
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($postData));
-        curl_setopt($this->ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
+        curl_setopt(self::$ch, CURLOPT_URL, $this->url);
+        curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt(self::$ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt(self::$ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
 
         $data = $this->output();
+        if($data===FALSE){
+            return curl_error(self::$ch);
+        }
 
         return $data;
     }
