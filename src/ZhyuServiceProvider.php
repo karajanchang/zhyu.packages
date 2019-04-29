@@ -39,7 +39,7 @@ class ZhyuServiceProvider extends ServiceProvider
     ];
 
     public function register(){
-        if(!$this->isLumen()) {
+        if(!$this->isLumen() && env('ZHYU_USE_ADMIN_FUNCTIONS', false) === true) {
             $this->app->bind('button.create', function ($app, $params) {
                 return new NormalButton(@$params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
             });
@@ -106,37 +106,39 @@ class ZhyuServiceProvider extends ServiceProvider
             require_once 'Lumen.php';
         }else {
 
-            $must_exists_classes = [
-                \App\User::class,
-                \App\Usergroup::class,
-            ];
-            foreach ($must_exists_classes as $class) {
-                if (env('ZHYU_RESOURCE_ENABLE', false) === true && !class_exists($class)) {
-                    throw new \Exception('this file must exists: ' . $class);
+            if(env('ZHYU_USE_ADMIN_FUNCTIONS', false) === true) {
+                $must_exists_classes = [
+                    \App\User::class,
+                    \App\Usergroup::class,
+                ];
+                foreach ($must_exists_classes as $class) {
+                    if (env('ZHYU_RESOURCE_ENABLE', false) === true && !class_exists($class)) {
+                        throw new \Exception('this file must exists: ' . $class);
+                    }
                 }
-            }
 
-            $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
-            $this->loadTranslationsFrom(__DIR__ . '/lang', 'zhyu');
+                $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
+                $this->loadTranslationsFrom(__DIR__ . '/lang', 'zhyu');
 
-            $this->loadViewsFrom(__DIR__ . '/blades', 'zhyu');
-            $this->loadMigrationsFrom(__DIR__ . '/databases/migrations');
+                $this->loadViewsFrom(__DIR__ . '/blades', 'zhyu');
+                $this->loadMigrationsFrom(__DIR__ . '/databases/migrations');
 
-            $this->publishes([
-                __DIR__ . '/blades' => resource_path('views/vendor/zhyu'),
-                __DIR__ . '/assets/js' => resource_path('js'),
-                __DIR__ . '/lang/en' => resource_path('lang/en'),
-                __DIR__ . '/lang/tw' => resource_path('lang/tw'),
-                __DIR__ . '/assets/public_js' => public_path('js'),
-                __DIR__ . '/config/report-generator.php' => config_path('report-generator.php'),
-            ], 'zhyu');
+                $this->publishes([
+                    __DIR__ . '/blades' => resource_path('views/vendor/zhyu'),
+                    __DIR__ . '/assets/js' => resource_path('js'),
+                    __DIR__ . '/lang/en' => resource_path('lang/en'),
+                    __DIR__ . '/lang/tw' => resource_path('lang/tw'),
+                    __DIR__ . '/assets/public_js' => public_path('js'),
+                    __DIR__ . '/config/report-generator.php' => config_path('report-generator.php'),
+                ], 'zhyu');
 
-            $this->publishes([
-                __DIR__ . '/Http/Resources' => app_path('Http/Resources'),
-            ], 'zhyu:view');
+                $this->publishes([
+                    __DIR__ . '/Http/Resources' => app_path('Http/Resources'),
+                ], 'zhyu:view');
 
-            if (env('ZHYU_RESOURCE_ENABLE', false) && Schema::hasTable('resources')) {
-                View::composer('vendor.zhyu.blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
+                if (env('ZHYU_RESOURCE_ENABLE', false) && Schema::hasTable('resources')) {
+                    View::composer('vendor.zhyu.blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
+                }
             }
         }
 
