@@ -83,11 +83,14 @@ class ZhyuCurl
 
         $data = $this->output();
         if($data===FALSE){
-            return curl_error(self::$ch);
+            $error = curl_error(self::$ch);
+	        $this->close();
+	        
+	        return $error;
         }
-
+	    $this->close();
         $responseData = json_decode($data, $is_assoc);
-
+		
         return $responseData;
     }
 
@@ -119,9 +122,14 @@ class ZhyuCurl
         curl_setopt(self::$ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
 
         $data = $this->output();
+        $this->close();
         if($data===FALSE){
-            return curl_error(self::$ch);
+            $error = curl_error(self::$ch);
+            $this->close();
+            
+            return $error;
         }
+	    $this->close();
 
         return $data;
     }
@@ -138,6 +146,13 @@ class ZhyuCurl
 
 
         $data = $this->output();
+        if($data===FALSE){
+            $error = curl_error(self::$ch);
+            $this->close();
+            
+            return $error;
+        }
+	    $this->close();
 
         return $data;
     }
@@ -151,8 +166,12 @@ class ZhyuCurl
 
     private function output(){
         $data = curl_exec(self::$ch);
-        curl_close(self::$ch);
 
         return $data;
+    }
+    
+    private function close(){
+	    curl_close(self::$ch);
+	    self::$ch = null;
     }
 }
