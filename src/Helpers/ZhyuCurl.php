@@ -171,7 +171,9 @@ class ZhyuCurl
     }
     
     private function close(){
-	    curl_close(self::$ch);
-	    self::$ch = null;
+        if(!is_null(self::$ch)) {
+            curl_close(self::$ch);
+            self::$ch = null;
+        }
     }
 }
