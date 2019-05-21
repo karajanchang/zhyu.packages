@@ -128,12 +128,34 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
+     * @param null
+     * @return array
+     */
+    public function columns(){
+
+        return Schema::getColumnListing($this->model->getTable());
+    }
+
+    /**
+     * @param array
+     * @return array
+     */
+    private function filterData($data){
+        $columns = $this->columns();
+        $diff = array_diff($data, $columns);
+        array_walk($diff, function($value, $key) use(&$data){
+            unset($data[$key]);
+        });
+
+        return $data;
+    }
+    /**
      * @param array $data
      * @return mixed
      */
     public function create(array $data) {
 
-        return $this->model->create($data);
+        return $this->model->create($this->filterData($data));
     }
 
     /**
@@ -144,7 +166,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     public function update($id, array $data, $attribute="id") {
 
-        return $this->model->where($attribute, '=', $id)->update($data);
+        return $this->model->where($attribute, '=', $id)->update($this->filterData($data));
     }
 
     /**

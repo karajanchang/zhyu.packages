@@ -1,6 +1,7 @@
 {
   "name": "zhyu/packages",
   "description": "some tools for laravel",
+  "license": "MIT",
   "keywords": [
     "laravel",
     "repository",
@@ -35,7 +36,7 @@
   },
   "extra": {
      "branch-alias": {
-       "dev-master": "0.2.4-dev"
+       "dev-master": "0.2.5-dev"
     },
     "laravel": {
        "providers": [
