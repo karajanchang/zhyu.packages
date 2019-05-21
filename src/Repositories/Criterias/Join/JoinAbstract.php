@@ -52,6 +52,7 @@ abstract class JoinAbstract extends Criteria
         }
 
         $query = $model->join($join_table, $table.'.'.$foreign_key, '=', $join_table.'.id');
+        self::$origin_model = null;
         return $query;
     }
 
