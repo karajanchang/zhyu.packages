@@ -142,9 +142,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     private function filterData($data){
         $columns = $this->columns();
-        $diff = array_diff($data, $columns);
-        array_walk($diff, function($value, $key) use(&$data){
-            unset($data[$key]);
+        array_walk($data, function($value, $key) use($columns, &$data){
+            if(!in_array($key, $columns)) {
+                unset($data[$key]);
+            }
         });
 
         return $data;
