@@ -175,6 +175,7 @@ class UserController extends ZhyuController
             ];
         }
     }
+
     private function filter($values){
         $rows = [];
         foreach($values as $key => $value){
@@ -187,6 +188,10 @@ class UserController extends ZhyuController
                 $rows[$key] = $value;
             }
         }
+        $rows['site_id'] = 1;
+        $rows['createtime'] = date('Y-m-d H:i:s');
+        $rows['updatetime'] = date('Y-m-d H:i:s');
+        $rows['is_need_login'] = 0;
 
         return $rows;
     }
