@@ -103,7 +103,7 @@ class ZhyuServiceProvider extends ServiceProvider
 
         $this->app->bind('Ip', function()
         {
-            return app()->make(\Zhyu\Helpers\Tools\Ip::class);
+            return app()->make(\Zhyu\Tools\Ip::class);
         });
 
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');

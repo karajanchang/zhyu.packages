@@ -1,5 +1,5 @@
 <?php
-namespace Zhyu\Helpers\Tools;
+namespace Zhyu\Tools;
 
 class Ip
 {

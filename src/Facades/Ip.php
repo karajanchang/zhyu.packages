@@ -1,6 +1,6 @@
 <?php
 
-namespace Twdd\Facades;
+namespace Zhyu\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
