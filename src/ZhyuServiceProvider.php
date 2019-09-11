@@ -184,7 +184,7 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
-            $loader->alias('Ip', \Twdd\Facades\Ip::class);
+            $loader->alias('Ip', \Zhyu\Facades\Ip::class);
         }
     }
 
