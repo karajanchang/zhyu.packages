@@ -81,6 +81,7 @@ class ZhyuServiceProvider extends ServiceProvider
             }
             ReportFactory::bind($params['name']);
             $service = $app->make(ReportService::class);
+
             return $service;
         });
 
@@ -88,14 +89,23 @@ class ZhyuServiceProvider extends ServiceProvider
         $configPath = __DIR__.'/config/report-generator.php';
         $this->mergeConfigFrom($configPath, 'zhyu');
         $this->app->bind('pdf.report', function ($app) {
+
             return new PdfReport ($app);
         });
         $this->app->bind('excel.report', function ($app) {
+
             return new ExcelReport ($app);
         });
         $this->app->bind('csv.report', function ($app) {
+
             return new CsvReport ($app);
         });
+
+        $this->app->bind('Ip', function()
+        {
+            return app()->make(\Zhyu\Helpers\Tools\Ip::class);
+        });
+
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
 
         $this->registerAliases();
@@ -174,6 +184,7 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
+            $loader->alias('Ip', \Twdd\Facades\Ip::class);
         }
     }
 
