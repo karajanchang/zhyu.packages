@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Facade;
 
 class ZhyuCurl extends Facade
 {
-    protected static function getFacadeAccessor() { return 'zhyuCurl'; }
+    protected static function getFacadeAccessor() { return 'ZhyuCurl'; }
 
 }
