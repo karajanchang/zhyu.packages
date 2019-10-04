@@ -1,18 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: david
- * Date: 2019-03-26
- * Time: 13:29
- */
 
 namespace Zhyu\Facades;
-
 
 use Illuminate\Support\Facades\Facade;
 
 class ZhyuDate extends Facade
 {
-    protected static function getFacadeAccessor() { return 'zhyuDate'; }
-
+    protected static function getFacadeAccessor()
+    {
+        return 'ZhyuDate';
+    }
 }
