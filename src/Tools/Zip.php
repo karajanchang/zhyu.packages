@@ -13,6 +13,7 @@ class Zip {
 				//echo 'names: '.zip_entry_name($entry).'<br />';
 				if(zip_entry_open($zip, $entry)){
 					$content = zip_entry_read($entry, zip_entry_filesize($entry));
+
 					return $content;
 				}
 			}

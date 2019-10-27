@@ -93,6 +93,10 @@ class ZhyuServiceProvider extends ServiceProvider
 
             return $service;
         });
+        $this->app->bind('ZhyuTool', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuTool::class);
+        });
         $this->app->bind('ZhyuUrl', function()
         {
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
@@ -184,6 +188,7 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ZhyuDate', \Zhyu\Facades\ZhyuDate::class);
             $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
+            $loader->alias('ZhyuTool', \Zhyu\Facades\ZhyuTool::class);
             $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
             $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
         }

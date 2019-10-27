@@ -3,7 +3,7 @@ namespace Zhyu\Tools;
 
 class Ip
 {
-    function get()
+    public function get()
     {
         // Get real visitor IP behind CloudFlare network
         if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
