@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Twdd\Helpers;
+namespace Zhyu\Helpers;
 
 
 use Illuminate\Support\Collection;
