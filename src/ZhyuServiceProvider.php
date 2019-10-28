@@ -111,8 +111,6 @@ class ZhyuServiceProvider extends ServiceProvider
         });
 
 
-
-
         $configPath = __DIR__.'/config/report-generator.php';
         $this->mergeConfigFrom($configPath, 'zhyu');
 
