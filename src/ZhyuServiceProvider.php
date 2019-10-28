@@ -58,22 +58,27 @@ class ZhyuServiceProvider extends ServiceProvider
 
             return new CsvReport ($app);
         });
+
         $this->app->bind('excel.report', function ($app) {
 
             return new ExcelReport ($app);
         });
+
         $this->app->bind('Ip', function()
         {
             return app()->make(\Zhyu\Tools\Ip::class);
         });
+
         $this->app->bind('pdf.report', function ($app) {
 
             return new PdfReport ($app);
         });
+
         $this->app->bind('ZhyuCurl', function($app, array $params)
         {
             return $app->make(\Zhyu\Helpers\ZhyuCurl::class, $params);
         });
+
         $this->app->bind('ZhyuDate', function()
         {
             return app()->make(\Zhyu\Helpers\ZhyuDate::class);
@@ -189,6 +194,7 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('Ip', \Zhyu\Facades\Ip::class);
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
+            $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
             $loader->alias('ZhyuDate', \Zhyu\Facades\ZhyuDate::class);
             $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
             $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
