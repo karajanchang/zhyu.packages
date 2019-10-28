@@ -83,6 +83,7 @@ class ZhyuServiceProvider extends ServiceProvider
         {
             return app()->make(\Zhyu\Helpers\ZhyuGate::class);
         });
+
         $this->app->bind('ZhyuReport', function($app, array $params)
         {
             if(!isset($params['name']) || strlen($params['name'])==0){
@@ -93,6 +94,12 @@ class ZhyuServiceProvider extends ServiceProvider
 
             return $service;
         });
+
+        $this->app->bind('ZhyuTool', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuTool::class);
+        });
+
         $this->app->bind('ZhyuUrl', function()
         {
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
@@ -183,9 +190,10 @@ class ZhyuServiceProvider extends ServiceProvider
             $loader->alias('Ip', \Zhyu\Facades\Ip::class);
             $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ZhyuDate', \Zhyu\Facades\ZhyuDate::class);
-            $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
-            $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
             $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
+            $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
+            $loader->alias('ZhyuTool', \Zhyu\Facades\ZhyuTool::class);
+            $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
         }
     }
 
