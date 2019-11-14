@@ -148,7 +148,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param array
      * @return array
      */
-    private function filterData($data){
+    public function filterData($data){
         $columns = $this->columns();
         array_walk($data, function($value, $key) use($columns, &$data){
             if(!in_array($key, $columns)) {
@@ -158,6 +158,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
         return $data;
     }
+
     /**
      * @param array $data
      * @return mixed
@@ -166,6 +167,16 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
         return $this->model->create($this->filterData($data));
     }
+
+    /**
+     * @param array $data
+     * @return integer
+     */
+    public function insertGetId(array $data) {
+
+        return $this->model->insertGetId($this->filterData($data));
+    }
+
 
     /**
      * @param $id
