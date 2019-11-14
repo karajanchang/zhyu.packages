@@ -54,48 +54,69 @@ class ZhyuServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->bind('zhyuDate', function()
-        {
-            return app()->make(\Zhyu\Helpers\ZhyuDate::class);
+        $this->app->bind('csv.report', function ($app) {
+
+            return new CsvReport ($app);
         });
 
-        $this->app->bind('zhyuGate', function()
-        {
-            return app()->make(\Zhyu\Helpers\ZhyuGate::class);
+        $this->app->bind('excel.report', function ($app) {
+
+            return new ExcelReport ($app);
         });
 
-        $this->app->bind('zhyuUrl', function()
+        $this->app->bind('Ip', function()
         {
-            return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
+            return app()->make(\Zhyu\Tools\Ip::class);
         });
 
-        $this->app->bind('zhyuCurl', function($app, array $params)
+        $this->app->bind('pdf.report', function ($app) {
+
+            return new PdfReport ($app);
+        });
+
+        $this->app->bind('ZhyuCurl', function($app, array $params)
         {
             return $app->make(\Zhyu\Helpers\ZhyuCurl::class, $params);
         });
 
-        $this->app->bind('zhyuReport', function($app, array $params)
+        $this->app->bind('ZhyuDate', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuDate::class);
+        });
+
+        $this->app->bind('ZhyuGate', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuGate::class);
+        });
+
+        $this->app->bind('ZhyuReport', function($app, array $params)
         {
             if(!isset($params['name']) || strlen($params['name'])==0){
                 throw new \Exception('Please provider one class for report to bind');
             }
             ReportFactory::bind($params['name']);
             $service = $app->make(ReportService::class);
+
             return $service;
         });
+
+        $this->app->bind('ZhyuTool', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuTool::class);
+        });
+
+        $this->app->bind('ZhyuUrl', function()
+        {
+            return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
+        });
+
+
 
 
         $configPath = __DIR__.'/config/report-generator.php';
         $this->mergeConfigFrom($configPath, 'zhyu');
-        $this->app->bind('pdf.report', function ($app) {
-            return new PdfReport ($app);
-        });
-        $this->app->bind('excel.report', function ($app) {
-            return new ExcelReport ($app);
-        });
-        $this->app->bind('csv.report', function ($app) {
-            return new CsvReport ($app);
-        });
+
+
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
 
         $this->registerAliases();
@@ -168,12 +189,15 @@ class ZhyuServiceProvider extends ServiceProvider
     {
         if (class_exists('Illuminate\Foundation\AliasLoader')) {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+
+            $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
+            $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
+            $loader->alias('Ip', \Zhyu\Facades\Ip::class);
+            $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
+            $loader->alias('ZhyuDate', \Zhyu\Facades\ZhyuDate::class);
             $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
             $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
             $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
-            $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
-            $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
-            $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
         }
     }
 

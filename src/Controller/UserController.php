@@ -78,7 +78,7 @@ class UserController extends ZhyuController
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_create() : $this->rules();
         $this->validate($request, $rules);
-        $this->repository->create($request->all());
+        $this->repository->create( $this->filter($request->all() ));
 
         return $this->responseJson('success');
     }
@@ -96,7 +96,7 @@ class UserController extends ZhyuController
         try {
             $model = $this->repository->find($id);
 
-            return parent::view(null, $model, ['title' => $title]);
+            return parent::view(null, $model, ['title' => (String) $model]);
         }catch (\Exception $e){
 
             return $this->responseJson($e, 500);
@@ -130,7 +130,7 @@ class UserController extends ZhyuController
 
         $rules = method_exists($this, 'rules_edit') ? $this->rules_edit($id) : $this->rules($id);
         $this->validate($request, $rules);
-        $this->repository->update($id, $request->all());
+        $this->repository->update($id, $this->filter( $request->all() ));
 
         return $this->responseJson('success');
     }
@@ -153,13 +153,47 @@ class UserController extends ZhyuController
     public function rules($id = null){
         $unique = is_null($id) ? 'unique:user,email' : 'unique:user,email,'.$id;
 
-        return [
-            'usergroup_id' => ['required', 'numeric'],
-            'email' => ['required', 'email', $unique],
-            'name' => ['required', 'string'],
-            'nickname' => ['required', 'string'],
-            'is_online' => ['nullable', 'numeric'],
-        ];
+        if(is_null($id)) {
+
+            return [
+                'usergroup_id' => ['required', 'numeric'],
+                'email' => ['required', 'email', $unique],
+                'name' => ['required', 'string'],
+                'nickname' => ['required', 'string'],
+                'is_online' => ['nullable', 'numeric'],
+                'password' => ['required', 'confirmed', 'min:6'],
+            ];
+        }else{
+
+            return [
+                'usergroup_id' => ['required', 'numeric'],
+                'email' => ['required', 'email', $unique],
+                'name' => ['required', 'string'],
+                'nickname' => ['required', 'string'],
+                'is_online' => ['nullable', 'numeric'],
+                'password' => ['nullable', 'confirmed'],
+            ];
+        }
+    }
+
+    private function filter($values){
+        $rows = [];
+        foreach($values as $key => $value){
+            if($key=='password_confirmation') {
+                continue;
+            }
+            if($key=='password' && strlen($value)>0) {
+                $rows[$key] = md5($value);
+            }else{
+                $rows[$key] = $value;
+            }
+        }
+        $rows['site_id'] = 1;
+        $rows['createtime'] = date('Y-m-d H:i:s');
+        $rows['updatetime'] = date('Y-m-d H:i:s');
+        $rows['is_need_login'] = 0;
+
+        return $rows;
     }
 
     public function priv($id, UserPermissionRepository $permissionRepository){

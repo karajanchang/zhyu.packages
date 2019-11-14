@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Facade;
 
 class ZhyuReport extends Facade
 {
-    protected static function getFacadeAccessor() { return 'zhyuReport'; }
+    protected static function getFacadeAccessor() { return 'ZhyuReport'; }
 
 }

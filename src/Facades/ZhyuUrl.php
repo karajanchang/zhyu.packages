@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Facade;
 
 class ZhyuUrl extends Facade
 {
-    protected static function getFacadeAccessor() { return 'zhyuUrl'; }
+    protected static function getFacadeAccessor() { return 'ZhyuUrl'; }
 
 }

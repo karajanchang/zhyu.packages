@@ -16,13 +16,14 @@
     }
   ],
   "require": {
-    "php": ">=5.6.0",
-    "illuminate/auth": ">=5.6.0",
-    "illuminate/config": ">=5.6.0",
-    "illuminate/database": ">=5.6.0",
-    "illuminate/support": ">=5.6.0",
+    "php": ">=7.2.0",
+    "illuminate/auth": "^6.0",
+    "illuminate/config": "^6.0",
+    "illuminate/database": "^6.0",
+    "illuminate/support": "^6.0",
     "maatwebsite/excel": "^3.1",
-    "league/csv": "^9.2"
+    "league/csv": "^9.2",
+    "laravel/helpers": "^1.1"
   },
   "autoload": {
      "psr-4": {

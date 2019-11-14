@@ -15,6 +15,7 @@ class ZhyuCurl
     private $url='';
     private $auth = [];
     private $method = null;
+    private $timeout = null;
 
     public function __construct($url = '', array $auth = []){
         $this->url = $url;
@@ -44,6 +45,11 @@ class ZhyuCurl
         return $this;
     }
 
+    public function timeout(int $timeout){
+        $this->timeout = $timeout;
+    }
+
+
     public function method($method = 'post'){
         $ch = self::init($this->url);
 
@@ -63,12 +69,13 @@ class ZhyuCurl
             default:
                 curl_setopt($ch, CURLOPT_POST, true);
         }
+
         $this->method = 'post';
 
         return $ch;
     }
 
-    public function json($postData, $is_assoc = true){
+    public function json($postData, $is_assoc = true, int $timeout = null){
         self::init($this->url);
 
         if(is_null($this->method)){
@@ -79,7 +86,7 @@ class ZhyuCurl
         curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(self::$ch, CURLOPT_POSTFIELDS, json_encode($postData));
         curl_setopt(self::$ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
-
+        curl_setopt(self::$ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
 
         $data = $this->output();
         if($data===FALSE){
@@ -94,29 +101,30 @@ class ZhyuCurl
         return $responseData;
     }
 
-    public function post($postData){
-        return $this->_post($postData, 'post');
+    public function post($postData, int $timeout = null){
+        return $this->_post($postData, 'post', $timeout);
     }
 
-    public function put($postData){
-        return $this->_post($postData, 'put');
+    public function put($postData, int $timeout = null){
+        return $this->_post($postData, 'put', $timeout);
     }
 
-    public function patch($postData){
-        return $this->_post($postData, 'patch');
+    public function patch($postData, int $timeout = null){
+        return $this->_post($postData, 'patch', $timeout);
     }
 
-    public function delete($postData){
-        return $this->_post($postData, 'delete');
+    public function delete($postData, int $timeout = null){
+        return $this->_post($postData, 'delete', $timeout);
     }
 
-    public function _post($postData, $method){
+    public function _post($postData, $method, int $timeout = null){
         self::init($this->url);
 
         if(is_null($this->method)){
             $this->method($method);
         }
         curl_setopt(self::$ch, CURLOPT_URL, $this->url);
+        curl_setopt(self::$ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
         curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(self::$ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt(self::$ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
@@ -134,7 +142,7 @@ class ZhyuCurl
         return $data;
     }
 
-    public function get() {
+    public function get(int $timeout = null) {
         $ch = self::init($this->url);
 
         curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
@@ -143,6 +151,7 @@ class ZhyuCurl
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
 
 
         $data = $this->output();

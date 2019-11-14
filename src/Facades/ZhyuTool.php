@@ -11,8 +11,8 @@ namespace Zhyu\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class ZhyuCurl extends Facade
+class ZhyuTool extends Facade
 {
-    protected static function getFacadeAccessor() { return 'ZhyuCurl'; }
+    protected static function getFacadeAccessor() { return 'ZhyuTool'; }
 
 }

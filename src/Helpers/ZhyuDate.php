@@ -9,6 +9,8 @@
 namespace Zhyu\Helpers;
 
 
+use Carbon\Carbon;
+
 class ZhyuDate
 {
     function validateDate($date, $format = 'Y-m-d')
@@ -30,6 +32,34 @@ class ZhyuDate
         }else{
             $day = $day - 1;
             return $this->getValidateDate($year, $month, $day, $hour, $minute);
+        }
+    }
+
+    //---檢查日期字串是否正確
+    public function check(string $date, string $delimiter = '-') : bool{
+        $date = trim($date);
+        if(strlen($date)==0){
+
+            return false;
+        }
+
+        $dates = explode($delimiter, $date);
+        if(count($dates)!=3){
+
+            return false;
+        }
+
+        try{
+            $carbon = Carbon::parse($date);
+            if($carbon->year == $dates[0]){
+
+                return true;
+            }
+
+            return false;
+        }catch(\Exception $e) {
+
+            return false;
         }
     }
 }

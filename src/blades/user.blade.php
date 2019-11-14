@@ -78,6 +78,27 @@ if(isset($id) && $id>0){
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="control-label">{{ __('user.password') }}</label>
+                    <input type="password" id="password" class="form-control" v-model="form.password">
+                    <span class="help text-danger" v-if="form.errors.has('password')" v-text="form.errors.get('password')"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="control-label">{{ __('user.password_confirmation') }}</label>
+                    <input type="password" id="password_confirmation" class="form-control" v-model="form.password_confirmation">
+                    <span class="help text-danger" v-if="form.errors.has('password_confirmation')" v-text="form.errors.get('password_confirmation')"></span>
+                </div>
+            </div>
+        </div>
+
+
 
 
 

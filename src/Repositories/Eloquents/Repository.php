@@ -84,6 +84,14 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->makeModel();
     }
 
+    /*
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
     /**
      * @param array $columns
      * @return mixed
@@ -424,7 +432,6 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->model = $this->model->whereIn($col, $ins);
         return $this;
     }
-
 
     /**
      * Applies the given where conditions to the model.
