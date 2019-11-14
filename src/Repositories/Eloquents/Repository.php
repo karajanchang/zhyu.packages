@@ -381,7 +381,8 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     public function select($columns = ['*']){
-        $this->select($columns);
+        $this->model = $this->model->select($columns);
+        return $this;
     }
 
     /**
