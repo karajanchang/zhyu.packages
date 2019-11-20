@@ -22,7 +22,7 @@ class Usergroup extends JsonResource
             'text' => 'modify',
             'title' => $this->name,
         ]);
-        $modButton->setUrl(route('admin.usergroups.edit', ['id' => $this->id], false));
+        $modButton->setUrl(route('admin.usergroups.edit', ['usergroup' => $this->id], false));
 
         $delButton = app()->make('button.destroy', [
             'data' => $this,
@@ -45,7 +45,7 @@ class Usergroup extends JsonResource
 
         $privButton = app()->make('button.create', [
             'text' => '權限設定',
-            'url' => route('admin.usergroups.priv', [ 'usergroup' => $this->id ]),
+            'url' => route('admin.usergroups.priv', [ 'id' => $this->id ]),
         ]);
 
         return [
