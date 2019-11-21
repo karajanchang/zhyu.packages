@@ -20,6 +20,7 @@ abstract class JoinAbstract extends Criteria
 
     public function __construct()
     {
+        self::$origin_model = null;
         $this->makeJoinModel();
     }
     public static function originModel($model){
@@ -52,7 +53,7 @@ abstract class JoinAbstract extends Criteria
         }
 
         $query = $model->join($join_table, $table.'.'.$foreign_key, '=', $join_table.'.id');
-        self::$origin_model = null;
+        //self::$origin_model = null;
         return $query;
     }
 
