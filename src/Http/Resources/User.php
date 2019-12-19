@@ -22,14 +22,14 @@ class User extends JsonResource
             'text' => 'modify',
             'title' => $this->name,
         ]);
-        $modButton->setUrl(route('admin.users.edit', ['id' => $this->id], false));
+        $modButton->setUrl(route('admin.users.edit', ['user' => $this->id], false));
 
         $delButton = app()->make('button.destroy', [
             'data' => $this,
             'text' => 'delete',
             'title' => $this->name,
         ]);
-        $delUrl = route('admin.users.destroy', ['id' => $this->id], false);
+        $delUrl = route('admin.users.destroy', ['user' => $this->id], false);
         $delButton->pushAttributes([ 'onclick' => "SwalAlter.delete('".$delUrl."', '刪除', '刪除此筆資料： ".$this->name." - ".$this->route."', '確認刪除')"]);
 
         $privButton = '';

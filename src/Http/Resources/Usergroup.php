@@ -29,7 +29,7 @@ class Usergroup extends JsonResource
             'text' => 'delete',
             'title' => $this->name,
         ]);
-        $delUrl = route('admin.usergroups.destroy', ['id' => $this->id], false);
+        $delUrl = route('admin.usergroups.destroy', ['usergroup' => $this->id], false);
         $delButton->pushAttributes([ 'onclick' => "SwalAlter.delete('".$delUrl."', '刪除', '刪除此筆資料： ".$this->name." - ".$this->route."', '確認刪除')"]);
 
         $nextButton = null;
