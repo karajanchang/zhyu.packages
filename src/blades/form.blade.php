@@ -19,10 +19,16 @@
 
 @php
     try{
-        $columns = Schema::getColumnListing(${$model_name}->getTable());
+        $table = ${$model_name}->getTable();
+        $columns = Schema::getColumnListing($table);
         $tmps = [];
         foreach($columns as $column){
-            $tmps[] = $column.": `".old($column, ${$model_name}->$column)."`";
+			if($column!='password'){
+                $tmps[] = $column.": `".old($column, ${$model_name}->$column)."`";
+            }else{
+				$tmps[] = "password: ``";
+				$tmps[] = "password_confirmation: ``";
+            }
         }
         $tmp_str = join(',', $tmps);
 

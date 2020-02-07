@@ -190,7 +190,7 @@ class Controller extends BaseController
         }
         $addOrUpdateUrl = '';
         try {
-            $addOrUpdateUrl = isset($model->id) ? route($route . '.update', ['id' => $model->id]) : route($route . '.store');
+            $addOrUpdateUrl = isset($model->id) ? route($route . '.update', ['id' => $model->id, $table => $model]) : route($route . '.store');
         }catch(\Exception $e) {
             //dump($view);
             //exit;
