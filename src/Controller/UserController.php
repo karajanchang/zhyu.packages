@@ -188,6 +188,11 @@ class UserController extends ZhyuController
                 $rows[$key] = $value;
             }
         }
+
+        if(empty($values['password'])){
+            unset($rows['password']);
+        }
+
         $rows['site_id'] = 1;
         $rows['createtime'] = date('Y-m-d H:i:s');
         $rows['updatetime'] = date('Y-m-d H:i:s');
