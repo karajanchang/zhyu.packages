@@ -7,5 +7,5 @@ return [
     'email' => 'E-Mail',
     'is_online' => '有效',
     'password' => '密碼',
-    'password_confirmation' => '忘記密碼',
+    'password_confirmation' => '確認密碼',
 ];
