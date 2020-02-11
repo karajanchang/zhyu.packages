@@ -154,7 +154,7 @@ class ZhyuServiceProvider extends ServiceProvider
                 ], 'zhyu');
 
                 $this->publishes([
-                    __DIR__ . '/Http/Resources' => app_path('Http/Resources'),
+                    __DIR__ . '/Resources/vendor/Resources' => app_path('Http/Resources'),
                 ], 'zhyu:view');
 
                 if (env('ZHYU_RESOURCE_ENABLE', false) && Schema::hasTable('resources')) {
