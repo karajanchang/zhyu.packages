@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhyu\Http\Resources;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Zhyu\Facades\ZhyuUrl;
@@ -22,14 +22,14 @@ class Resources extends JsonResource
             'text' => 'modify',
             'title' => $this->name,
         ]);
-        $modButton->setUrl(route('admin.resources.edit', [ 'resource' => $this->id ], false));
+        $modButton->setUrl(route('admin.resources.edit', ['resource' => $this], false));
 
         $delButton = app()->make('button.destroy', [
             'data' => $this,
             'text' => 'delete',
             'title' => $this->name,
         ]);
-        $delUrl = route('admin.resources.destroy', [ 'resource' => $this->id ], false);
+        $delUrl = route('admin.resources.destroy', ['resource' => $this], false);
         $delButton->pushAttributes([ 'onclick' => "SwalAlter.delete('".$delUrl."', '刪除', '刪除此筆資料： ".$this->name." - ".$this->route."', '確認刪除')"]);
 
         $nextButton = null;
