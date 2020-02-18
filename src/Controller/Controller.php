@@ -13,8 +13,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Zhyu\Datatables\DatatablesFactoryApp;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -188,13 +188,8 @@ class Controller extends BaseController
         if($view == 'index'){
             $view = 'vendor.zhyu.index';
         }
-        $addOrUpdateUrl = '';
-        try {
-            $addOrUpdateUrl = isset($model->id) ? route($route . '.update', ['id' => $model->id, $table => $model]) : route($route . '.store');
-        }catch(\Exception $e) {
-            //dump($view);
-            //exit;
-        }
+        $addOrUpdateUrl = $this->getAddOrUpdateUrl($model, $table, $route);
+
 
         $compacts = compact('route','table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl');
         $returns = $params;
@@ -209,5 +204,25 @@ class Controller extends BaseController
             $message = $message->getMessage();
         }
         return response()->json([ 'message' => $message ], $status);
+    }
+
+    private function getAddOrUpdateUrl($model, $table, $route) : string {
+        $addOrUpdateUrl = '';
+        if(!empty($model->id)){
+            try{
+                $addOrUpdateUrl = route($route.'.update', [ $table => $model->id, $table => $model]);
+            }catch (\Exception $e){
+                $name = substr($table, 0, (strlen($table)-1) );
+                try{
+                    $addOrUpdateUrl = route($route.'.update', [ $name => $model->id, $table => $model]);
+                }catch (\Exception $e){
+                    Log::error('Zhyu Controller error: ', [$e]);
+                }
+            }
+        }else{
+            $addOrUpdateUrl = route($route.'.store');
+        }
+
+        return $addOrUpdateUrl;
     }
 }
