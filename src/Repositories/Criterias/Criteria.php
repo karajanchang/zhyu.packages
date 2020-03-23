@@ -8,6 +8,7 @@
 
 namespace Zhyu\Repositories\Criterias;
 
+use Illuminate\Database\Eloquent\Builder;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 
 
@@ -18,5 +19,10 @@ abstract class Criteria {
      * @param RepositoryInterface $repository
      * @return mixed
      */
-    public abstract function apply($model, RepositoryInterface $repository);
+    public abstract function apply(Builder $model, RepositoryInterface $repository);
+
+    protected function getTable(Builder $model){
+
+        return $model->getModel()->getTable();
+    }
 }

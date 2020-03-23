@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Zhyu\Tools\Csv;
 use Zhyu\Tools\Ip;
 use Zhyu\Tools\PlusMinusConvert;
+use Zhyu\Tools\UrlMakeQuery;
 use Zhyu\Tools\Zip;
 
 class ZhyuTool
@@ -36,6 +37,16 @@ class ZhyuTool
         $app = app(PlusMinusConvert::class);
 
         return $app->run($number);
+    }
+
+    public function urlMakeQuery(string $divide = null){
+        if(!empty($divide)){
+            $app = app(UrlMakeQuery::class, ['divide' => $divide]);
+        }else{
+            $app = app(UrlMakeQuery::class);
+        }
+
+        return $app;
     }
 
     public function zip(){

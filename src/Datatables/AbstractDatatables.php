@@ -51,6 +51,7 @@ abstract class AbstractDatatables
     {
         $this->jsCreate->model($this->model);
         $config = $this->config();
+
         return $this->jsCreate->init($config, $varName, $this->makeModelAct());
 
     }

@@ -16,7 +16,9 @@ class OrderByIdAsc extends Criteria
 {
     public function apply($model, RepositoryInterface $repository)
     {
-        $query = $model->orderby('id', 'asc');
+        $table_name = $this->getTable($model);
+        $query = $model->orderby($table_name.'.id', 'asc');
+
         return $query;
     }
 

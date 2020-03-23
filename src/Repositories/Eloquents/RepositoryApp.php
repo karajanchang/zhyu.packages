@@ -33,6 +33,7 @@ class RepositoryApp{
             }
         }
         app()->bind(RepositoryInterface::class, function($app) use($class){
+
             return new $class($app, new Collection());
         });
     }

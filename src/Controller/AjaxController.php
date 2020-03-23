@@ -18,6 +18,7 @@ use Zhyu\Controller\Controller as ZhyuController;
 
 class AjaxController extends ZhyuController
 {
+    private $divide = '#';
 
     public function __construct()
     {
@@ -60,9 +61,17 @@ class AjaxController extends ZhyuController
         }
     }
 
+    private function parseFristColumn($param){
+        $p = explode('.', $param);
+        $last = count($p) - 1;
+
+        return $p[$last];
+    }
+
     private function query(RepositoryInterface $repository){
         $query = request()->input('query');
         if(is_null($query)){
+
             return ;
         }
         $request_query = explode('*', $query);
@@ -73,13 +82,20 @@ class AjaxController extends ZhyuController
 
         if(count($request_query)) {
             foreach ($request_query as $query) {
-                $params = explode(':', $query);
+                $params = explode($this->divide, $query);
                 if(count($params)) {
-                    $key = array_search($params[0], $selectColumns);
+                    $key = array_search($this->parseFristColumn($params[0]), $selectColumns);
                     if(isset($key) && $key>0 ) {
                         $col = $oColumns[$key];
                         array_shift($params);
+                        //dump('params '.$col, $params);
                         if(isset($col)) {
+                            //---看是不是array []
+                            if(strstr($params[1], '[') && strstr($params[1], ']')){
+                                $params[1] = str_replace('[', '', $params[1]);
+                                $params[1] = str_replace(']', '', $params[1]);
+                                $params[1] = explode(',', $params[1]);
+                            }
                             array_push($cols, [$col, $params]);
                         }
                     }
@@ -87,16 +103,20 @@ class AjaxController extends ZhyuController
             }
         }
         if(count($cols)) {
+            //dump($cols);
             $criteria = new WhereByCustom($cols);
             $repository->pushCriteria($criteria);
         }
+//        $query = $repository->toSql();
+//        dump($query);
+//        $bindings = $repository->getBindings();
+//        dump($bindings);
     }
 
     public function index($model, $act, $resource = null)
     {
         RepositoryApp::bind($model);
         $repository = app()->make(RepositoryInterface::class);
-
         CriteriaApp::ajaxBind($repository, $model.'.'.$act);
 
         $this->currentPage();
@@ -110,9 +130,12 @@ class AjaxController extends ZhyuController
         $rname = str_replace('_', '', ucwords($resource_name, '_'));
         $cname = '\App\Http\Resources\\'.$rname.'Collection';
         $cname2 = '\Zhyu\Http\Resources\\'.$rname.'Collection';
+        //dd($rname);
+        //dump('model: '.$model.', act: '.$act.', resource: '.$resource.', $rname: '.$rname);
         try{
             if(file_exists(app_path('Http/Resources/'.$rname.'Collection.php'))) {
                 $res = new $cname($res);
+                //dd($res);
 
                 return $res;
             }elseif(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))){

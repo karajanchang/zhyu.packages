@@ -16,7 +16,9 @@ class OrderByIdDesc extends Criteria
 {
     public function apply($model, RepositoryInterface $repository)
     {
-        $query = $model->orderby('id', 'desc');
+        $table_name = $this->getTable($model);
+        $query = $model->orderby($table_name.'.id', 'desc');
+
         return $query;
     }
 

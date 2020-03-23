@@ -40,17 +40,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
-                    @php
-                        echo app()->make('button.create', [
-        	                'data' => null,
-	                        'url' =>
-	                            [
-	                            	$route.'.create'
-	                            ],
-	                        'text' => 'add',
-	                        //'title' => 'add'
-                        ]);
-                    @endphp
+                    @includeFirst([ @$box_create_blade, 'zhyu::blocks.box1'])
+
                     <div class="table-responsive" id="app">
                         {!! $datatablesService->table() !!}
                     </div>

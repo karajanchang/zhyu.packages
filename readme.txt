@@ -20,9 +20,9 @@ First: How to install?
 Second: Rules
 
     1.datatable ajax url parameters rules
-        /ajax/{model}-{key}/{limit?}?query=UserName:=:david*UserPhone:=:0233223333
-            ?query=parent_id:=:0
-            ?query=parent_id:whereNull
+        /ajax/{model}-{key}/{limit?}?query=UserName#=#david*UserPhone#=#0233223333
+            ?query=parent_id#=#0
+            ?query=parent_id#whereNull
 
 Others:
     1.create reoureces route

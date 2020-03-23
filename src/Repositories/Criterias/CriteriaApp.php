@@ -30,6 +30,7 @@ class CriteriaApp{
         $systems = ['resources.ajax'];
 
         $criterias = config('criteria.' . $name);
+
         if (is_null($criterias) || count($criterias) == 0) {
             $file = base_path('vendor/zhyu/packages/src/config/criteria.php');
             if(in_array($name, $systems) && file_exists($file)){
@@ -62,8 +63,11 @@ class CriteriaApp{
         $orders = request()->input('order');
 
         $parseColumns = $repository->getSelect(true);
+//        dump($columns);
+//        dump($orders);
+//        dd($parseColumns);
 
-        if(count($columns) && count($orders) && $draw){
+        if(is_array($columns) && is_array($orders) && count($columns) && count($orders) && $draw){
             foreach($orders as $order) {
                 $key = $order['column'];
                 if(isset($columns[$key]['data'])) {

@@ -16,7 +16,8 @@ class OrderByOrderbyDesc extends Criteria
 {
     public function apply($model, RepositoryInterface $repository)
     {
-        $query = $model->orderby('orderby', 'desc');
+        $table_name = $this->getTable($model);
+        $query = $model->orderby($table_name.'.orderby', 'desc');
         return $query;
     }
 

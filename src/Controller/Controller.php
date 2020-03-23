@@ -141,6 +141,8 @@ class Controller extends BaseController
         $model_name = $this->returnClassBaseName($model);
         ${$model_name} = $model;
 
+        $title = $this->titleFromModelOrParams($model, $params);
+
         if(isset($params['table']) && strlen($params['table'])>0){
             $table = $params['table'];
         }else{
@@ -161,26 +163,11 @@ class Controller extends BaseController
             $route = $table;
         }
 
-        /*
-        if(isset($params['title']) && strlen($params['title'])>0){
-            $title = $params['title'];
-        }else{
-            $title = $this->title;
-        }
-        */
-        try {
-            $title = (string) $model;
-
-        }catch(\Exception $e){
-            $title = null;
-        }
-
-        if(is_null($title)){
-            $title = $params['title'];
-        }
+        $id = null;
         if(isset($model->id)){
             $id = $model->id;
         }
+
         $datatablesService = null;
         if(isset($params['datatablesService'])){
             $datatablesService = $params['datatablesService'];
@@ -190,19 +177,39 @@ class Controller extends BaseController
         }
         $addOrUpdateUrl = $this->getAddOrUpdateUrl($model, $table, $route);
 
-
         $compacts = compact('route','table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl');
         $returns = $params;
         foreach($compacts as $key => $val){
             $returns[$key] = $val;
         }
+
         return view()->first([$view, 'vendor.zhyu.form'], $returns);
+    }
+
+    private function titleFromModelOrParams(Model $model, array $params) : string{
+        if(!empty($params['title'])){
+            $this->setTitle($params['title']);
+
+            return $params['title'];
+        }
+
+        try {
+            $title = (string) $model;
+            $this->setTitle($title);
+
+            return $title;
+        }catch(\Exception $e){
+            $title = '';
+        }
+
+        return $title;
     }
 
     public function responseJson($message, $status = 200){
         if($message instanceof \Exception){
             $message = $message->getMessage();
         }
+
         return response()->json([ 'message' => $message ], $status);
     }
 
@@ -220,7 +227,10 @@ class Controller extends BaseController
                 }
             }
         }else{
-            $addOrUpdateUrl = route($route.'.store');
+            try{
+                $addOrUpdateUrl = route($route.'.store');
+            }catch (\Exception $e){
+            }
         }
 
         return $addOrUpdateUrl;

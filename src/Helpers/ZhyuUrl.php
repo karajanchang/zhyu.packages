@@ -11,14 +11,16 @@ namespace Zhyu\Helpers;
 
 class ZhyuUrl
 {
+    private $divide = '#';
+
     public function encode(... $params)
     {
 
-        return join(':', $params);
+        return join($this->divide, $params);
     }
     public function decode($query){
 
-        return explode(':', $query);
+        return explode($this->divide, $query);
     }
 
     public function multiEncode(array $multi_params){
@@ -41,7 +43,7 @@ class ZhyuUrl
         }
 
         return array_map(function($var){
-            return explode(':', $var);
+            return explode($this->divide, $var);
         }, $p);
     }
 }
