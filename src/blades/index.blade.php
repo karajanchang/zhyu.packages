@@ -20,6 +20,23 @@
         var table = '';
         {!! $datatablesService->js() !!}
 
+        @if(isset($errors) && count($errors))
+        @php
+            $errorString = '';
+            foreach($errors->all() as $err){
+                $errorString.=$err;
+            }
+        @endphp
+        $.toast({
+            heading: '失敗!',
+            text: '{{ $errorString }}',
+            position: 'top-right',
+            loaderBg: '#ff6849',
+            icon: 'error',
+            hideAfter: 6000,
+            stack: 6
+        });
+        @endif
     </script>
 @endpush
 
