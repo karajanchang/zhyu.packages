@@ -23,12 +23,12 @@ if (!function_exists('QueryIfExist')) {
         if($bool > 0){
             if(!is_null($callback)) {
                 if(function_exists($callback)){
+                    $value = QueryColValue($query, $col, $table);
 
-                    return call_user_func($callback, [$query, $column]);
+                    return call_user_func($callback, $value);
                 }
 
                 if($bool==1){
-
                     return QueryIfArrayEual($query, $col, $callback);
                 }
                 if($bool==2) {
