@@ -39,6 +39,8 @@ class ZhyuServiceProvider extends ServiceProvider
     ];
 
     public function register(){
+        $this->loadFunctions();
+
         if(!$this->isLumen() && env('ZHYU_USE_ADMIN_FUNCTIONS', false) === true) {
             $this->app->bind('button.create', function ($app, $params) {
                 return new NormalButton(@$params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
@@ -165,6 +167,12 @@ class ZhyuServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands($this->commands);
+        }
+    }
+
+    protected function loadFunctions(){
+        foreach (glob(__DIR__.'/functions/*.php') as $filename) {
+            require_once $filename;
         }
     }
 

@@ -9,6 +9,7 @@
 namespace Zhyu\Controller;
 
 use Illuminate\Pagination\Paginator;
+use Zhyu\Facades\ZhyuTool;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
 use Zhyu\Repositories\Criterias\Common\WhereByCustom;
@@ -74,6 +75,22 @@ class AjaxController extends ZhyuController
 
             return ;
         }
+        $cols = [];
+        /*
+        $request_query = ZhyuTool::urlMakeQuery('#')->decode($query);
+        if(isset($request_query) && count($request_query)){
+            foreach ($request_query as $col => $params) {
+                array_push($cols, [$col, $params]);
+            }
+        }
+        */
+
+        $cols = ZhyuTool::urlMakeQuery('#')->decode($query);
+        //dump('BBBBBBBBBBBBB');
+        //dd($cols);
+        //dd($cols);
+        /*
+        dd($p);
         $request_query = explode('*', $query);
 
         $cols = [];
@@ -102,6 +119,7 @@ class AjaxController extends ZhyuController
                 }
             }
         }
+        */
         if(count($cols)) {
             //dump($cols);
             $criteria = new WhereByCustom($cols);

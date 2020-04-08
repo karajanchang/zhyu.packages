@@ -36,8 +36,9 @@ class UrlMakeQuery{
         }
         $vars = [];
         $query = urldecode($query);
-        //dump($query);
+
         $rows = explode('*', $query);
+        //dump($rows);
         foreach($rows as $row){
             $array = $this->parse2Array($row);
             if(count($array)==0) continue;
@@ -45,7 +46,6 @@ class UrlMakeQuery{
             $key = key($array);
             $vars[$key] = $array[$key];
         }
-        //dump($rows);
 
         return $vars;
     }
@@ -53,11 +53,10 @@ class UrlMakeQuery{
     private function parse2Array($string) : array{
         $rs = explode($this->divide, $string);
         $ess = explode('.', $rs[0]);
-        if(count($ess)>1){
-            $key = $ess[1];
-        }else{
-            $key = $ess[0];
-        }
+        $len = count($ess);
+        $key = $ess[($len-1)];
+        //dump($rs);
+        //dump('key='.$key);
 
         if(count($rs)==3) {
             if(strstr($rs[2], '[') && strstr($rs[2], ']') ){
@@ -65,9 +64,17 @@ class UrlMakeQuery{
                 $rs[2] = str_replace(']', '', $rs[2]);
                 $rs[2] = explode(',', $rs[2]);
             }
-            $var = [ $key => $rs[2]];
+            //dump($rs[2]);
+            $var = [
+                $rs[0] => [
+                    $rs[1], $rs[2]
+                ]
+            ];
+            //dd('parse2Array', $var);
         }elseif(count($rs)==2) {
-            $var = [ $key => $rs[0]];
+            $var = [
+                $rs[0] =>  $rs[1]
+            ];
         }else{
             $var = [];
         }
