@@ -9,6 +9,9 @@
 namespace Zhyu\Helpers;
 
 
+use Zhyu\Errors\CurlError;
+use Zhyu\Errors\CurlTimeout;
+
 class ZhyuCurl
 {
     private static $ch = null;
@@ -91,13 +94,13 @@ class ZhyuCurl
         $data = $this->output();
         if($data===FALSE){
             $error = curl_error(self::$ch);
-	        $this->close();
-	        
-	        return $error;
+            $this->close();
+
+            return $error;
         }
-	    $this->close();
+        $this->close();
         $responseData = json_decode($data, $is_assoc);
-		
+
         return $responseData;
     }
 
@@ -129,15 +132,7 @@ class ZhyuCurl
         curl_setopt(self::$ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt(self::$ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0');
 
-        $data = $this->output();
-        $this->close();
-        if($data===FALSE){
-            $error = curl_error(self::$ch);
-            $this->close();
-            
-            return $error;
-        }
-	    $this->close();
+        $data = $this->data();
 
         return $data;
     }
@@ -153,15 +148,33 @@ class ZhyuCurl
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
 
+        $data = $this->data();
 
+
+
+        return $data;
+    }
+
+    private function data(){
         $data = $this->output();
+        $error_no = curl_errno(self::$ch);
+        $error = curl_error(self::$ch);
+
+
         if($data===FALSE){
             $error = curl_error(self::$ch);
+            $error_no = curl_errno(self::$ch);
             $this->close();
-            
-            return $error;
+            if ($error_no == 28) {
+
+                throw new CurlTimeout($error, 28);
+            } else {
+
+                throw new CurlError($error, $error_no);
+            }
         }
-	    $this->close();
+
+        $this->close();
 
         return $data;
     }
@@ -178,7 +191,7 @@ class ZhyuCurl
 
         return $data;
     }
-    
+
     private function close(){
         if(!is_null(self::$ch)) {
             curl_close(self::$ch);
