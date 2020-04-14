@@ -49,69 +49,40 @@ if (!function_exists('QueryIfArrayEual')) {
         if(is_array($query[$column])){
             $key = count($query[$column])-1;
 
-            return RemoveUnwantTagsFromValue($query[$column][$key]) == $callback;
+            return $query[$column][$key] == $callback;
         }
 
-        return RemoveUnwantTagsFromValue($query[$column]) == $callback;
+        return $query[$column] == $callback;
     }
 }
 
-if (!function_exists('QueryColValue')) {
-    function QueryColValue(array $query, string $col, string $table = null)
-    {
-        if (empty($col)) {
+function QueryColValue(array $query, string $col, string $table = null){
+    if(empty($col)){
 
-            throw new \Exception('Please enter parameter: col');
-        }
-        if (isset($query[$col])) {
-
-            return RemoveUnwantTagsFromValue($query[$col]);
-        }
-
-        $column = $table . '.' . $col;
-        if (isset($query[$column])) {
-
-            $b = QueryColValueArray($query, $column);
-
-            return $b;
-        }
-
-        return;
+        throw new \Exception('Please enter parameter: col');
     }
-}
-if (!function_exists('RemoveUnwantTagsFromValue')) {
-    function RemoveUnwantTagsFromValue($vals){
-        if(!is_array($vals)){
+    if(isset($query[$col])){
 
-            return $val;
-        }
-        $array = [];
-        $unwant_tags = ['>=', '<=', '=', '>', '<'];
-        foreach($vals as $val){
-            if(!in_array($val, $unwant_tags)){
-                array_push($array, $val);
-            }
-        }
-
-        return $array;
+        return $query[$col];
     }
+
+    $column = $table.'.'.$col;
+    if(isset($query[$column])){
+
+        $b = QueryColValueArray($query, $column);
+
+        return $b;
+    }
+
+    return ;
 }
 
-if (!function_exists('QueryColValueArray')) {
-    function QueryColValueArray($query, $column)
-    {
-        if (is_array($query[$column])) {
-            $key = count($query[$column]) - 1;
+function QueryColValueArray($query, $column){
+    if(is_array($query[$column])){
+        $key = count($query[$column])-1;
 
-            return $query[$column][$key];
-        }
-
-        return $query[$column];
+        return $query[$column][$key];
     }
-}
 
-if (!function_exists('QueryIsArray')) {
-    function QueryArrayMore($val){
-        return is_array($val) && count($val) >= 2 ? true : false;
-    }
+    return $query[$column];
 }
