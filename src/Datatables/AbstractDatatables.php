@@ -6,9 +6,9 @@ abstract class AbstractDatatables
 {
     private $tableCreate;
     private $jsCreate;
-    private $qa = null;
     public $model;
     public $ajax;
+    private $bindName;
 
     protected $values = [];
 
@@ -19,9 +19,21 @@ abstract class AbstractDatatables
         $this->makeModel();
     }
 
+    public function setBindName(string $bindName){
+        $this->bindName = urlencode($bindName);
+
+        return $this;
+    }
+
+    public function getBindName(){
+
+        return $this->bindName;
+    }
+
     private function makeModel(){
         $this->model = app()->make($this->model());
     }
+
     private function makeModelAct(){
         $act = strtolower($this->act());
         if(isset($act) && strlen($act)>0){
@@ -30,6 +42,7 @@ abstract class AbstractDatatables
                 'model' => $this->model->getTable(),
                 'act' => $act,
                 'resource' => $this->resource(),
+                'bindName' => $this->getBindName(),
             ];
         }
 
@@ -37,6 +50,7 @@ abstract class AbstractDatatables
             'model' => $this->model->getTable(),
             'act' => 'ajax',
             'resource' => $this->resource(),
+            'bindName' => $this->getBindName(),
         ];
     }
 
@@ -44,6 +58,7 @@ abstract class AbstractDatatables
     {
         $config = $this->config();
         $this->tableCreate->model($this->model);
+
         return $this->tableCreate->init($config);
     }
 

@@ -8,6 +8,7 @@
 
 namespace Zhyu\Repositories\Criterias;
 
+use Zhyu\Datatables\DatatablesInterface;
 use Zhyu\Repositories\Criterias\Common\OrderByCustom;
 use Zhyu\Repositories\Eloquents\Repository;
 
@@ -25,11 +26,22 @@ class CriteriaApp{
             $repository->pushCriteria(new $criteria);
         }
     }
+
+    private static function getCriterias($name, DatatablesInterface $dtTable = null){
+        if(!is_null($dtTable)){
+            $criterias = $dtTable->criteria();
+        }else {
+            $criterias = config('criteria.' . $name);
+        }
+
+        return $criterias;
+    }
+
     //---for ajax bind
-    public static function ajaxBind(Repository $repository, $name){
+    public static function ajaxBind(Repository $repository, string $name,  DatatablesInterface $dtTable = null){
         $systems = ['resources.ajax'];
 
-        $criterias = config('criteria.' . $name);
+        $criterias = self::getCriterias($name, $dtTable);
 
         if (is_null($criterias) || count($criterias) == 0) {
             $file = base_path('vendor/zhyu/packages/src/config/criteria.php');

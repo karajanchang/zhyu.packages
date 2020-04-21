@@ -16,6 +16,8 @@ class DatatablesFactoryApp
     public static function bind($name){
         DatatablesFactory::bind($name);
         $datatablesService = App::make(DatatablesService::class);
+        $datatablesService->bindName($name);
+        
         return $datatablesService;
     }
 }

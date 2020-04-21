@@ -14,6 +14,7 @@ use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
 use Zhyu\Repositories\Criterias\Common\WhereByCustom;
 use Zhyu\Repositories\Criterias\CriteriaApp;
+use Zhyu\Repositories\Eloquents\Repository;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
 use Zhyu\Controller\Controller as ZhyuController;
 
@@ -131,18 +132,34 @@ class AjaxController extends ZhyuController
 //        dump($bindings);
     }
 
+    private function getRepository($model, $act) : Repository{
+        $bindName = request()->input('bindName');
+        if (!empty($bindName)) {
+            $bindName = urldecode($bindName);
+            $className = config('datatables.' . $bindName);
+            $dtTable = app($className);
+            $model = app($dtTable->model())->getTable();
+            RepositoryApp::bind($model);
+            $repository = app()->make(RepositoryInterface::class);
+            CriteriaApp::ajaxBind($repository,$model . '.' . $act, $dtTable);
+        } else {
+            RepositoryApp::bind($model);
+            $repository = app()->make(RepositoryInterface::class);
+            CriteriaApp::ajaxBind($repository, $model . '.' . $act);
+        }
+
+        return $repository;
+    }
+
     public function index($model, $act, $resource = null)
     {
-        RepositoryApp::bind($model);
-        $repository = app()->make(RepositoryInterface::class);
-        CriteriaApp::ajaxBind($repository, $model.'.'.$act);
+        $repository = $this->getRepository($model, $act);
 
         $this->currentPage();
         $this->search($repository);
         $this->query($repository);
 
         $res = $repository->paginate($this->getLimit());
-
         //--wrap data
         $resource_name = is_null($resource) ? $model : $resource;
         $rname = str_replace('_', '', ucwords($resource_name, '_'));

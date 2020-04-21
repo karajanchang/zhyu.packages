@@ -36,7 +36,7 @@ class JsCreate {
 
         $query = request()->query();
         if(isset($query['query'])) {
-            $this->ajax .= '?query=' . $query['query'];
+            $this->ajax .= '&query=' . $query['query'];
         }
 
         if(isset($config['cols_display'])){
@@ -49,6 +49,7 @@ class JsCreate {
             array_push($this->no_orderable_cols, 'buttons');
         }
         $this->head($varName);
+
         return $this->js;
     }
     private function head($varName){
