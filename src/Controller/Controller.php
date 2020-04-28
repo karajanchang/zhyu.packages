@@ -137,7 +137,8 @@ class Controller extends BaseController
         return  strtolower(class_basename($class));
     }
 
-    protected function view($view = 'index', Model $model = null, $params = null){
+    protected function view($view = 'index', $params = null){
+        $model = null;
         $model_name = $this->returnClassBaseName($model);
         ${$model_name} = $model;
 
@@ -155,7 +156,7 @@ class Controller extends BaseController
             }
         }
         if(!isset($table)){
-            throw new \Exception('please provide table name first!!!');
+            //throw new \Exception('please provide table name first!!!');
         }
 
         $route = $this->getRoute();
@@ -175,6 +176,7 @@ class Controller extends BaseController
         if($view == 'index'){
             $view = 'vendor.zhyu.index';
         }
+        $table = null;
         $addOrUpdateUrl = $this->getAddOrUpdateUrl($model, $table, $route);
 
         $compacts = compact('route','table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl');
@@ -186,7 +188,7 @@ class Controller extends BaseController
         return view()->first([$view, 'vendor.zhyu.form'], $returns);
     }
 
-    private function titleFromModelOrParams(Model $model, array $params) : string{
+    private function titleFromModelOrParams(Model $model = null, array $params) : string{
         if(!empty($params['title'])){
             $this->setTitle($params['title']);
 
@@ -213,7 +215,7 @@ class Controller extends BaseController
         return response()->json([ 'message' => $message ], $status);
     }
 
-    private function getAddOrUpdateUrl($model, $table, $route) : string {
+    private function getAddOrUpdateUrl($model, $table = null, $route) : string {
         $addOrUpdateUrl = '';
         if(!empty($model->id)){
             try{
