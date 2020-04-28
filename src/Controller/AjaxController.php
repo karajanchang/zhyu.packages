@@ -9,6 +9,7 @@
 namespace Zhyu\Controller;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use Zhyu\Facades\ZhyuTool;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
@@ -29,33 +30,28 @@ class AjaxController extends ZhyuController
 
     private function currentPage(){
         $start = request()->input('start');
-        $start = is_null($start) ? 0 : $start;
-        $start = (int) $start;
+        $start = is_null($start) ? 0 : (int) $start;
 
         $limit = request()->input('length');
-        $limit = is_null($limit) ? 50 : $limit;
-        $limit = (int) $limit;
+        $limit = is_null($limit) ? 50 : (int) $limit;
         $this->setLimit($limit);
 
         $currentPage = ($start / $limit) + 1;
         Paginator::currentPageResolver(function () use ($currentPage) {
+
             return $currentPage;
         });
     }
 
     private function search(RepositoryInterface $repository){
         $search = request()->input('search');
-        if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2){
-            return ;
-        }
+        if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2) return ;
 
-        $oColumns = $repository->getSelect(false);
         $selectColumns = $repository->getSelect(true);
 
         $cols = [];
         foreach($selectColumns as $key => $column){
-            $col = $oColumns[$key];
-            array_push($cols, [$col, 'like binary', '%' . $search['value'] . '%']);
+            array_push($cols, [ DB::raw($key), 'like binary', '%' . $search['value'] . '%']);
         }
         if(count($cols)) {
             $criteria = new OrWhereByCustom($cols);
@@ -63,12 +59,14 @@ class AjaxController extends ZhyuController
         }
     }
 
+    /*
     private function parseFristColumn($param){
         $p = explode('.', $param);
         $last = count($p) - 1;
 
         return $p[$last];
     }
+    */
 
     private function query(RepositoryInterface $repository){
         $query = request()->input('query');
@@ -76,20 +74,7 @@ class AjaxController extends ZhyuController
 
             return ;
         }
-        $cols = [];
-        /*
-        $request_query = ZhyuTool::urlMakeQuery('#')->decode($query);
-        if(isset($request_query) && count($request_query)){
-            foreach ($request_query as $col => $params) {
-                array_push($cols, [$col, $params]);
-            }
-        }
-        */
-
-        $cols = ZhyuTool::urlMakeQuery('#')->decode($query);
-        //dump('BBBBBBBBBBBBB');
-        //dd($cols);
-        //dd($cols);
+        $cols = ZhyuTool::urlMakeQuery($this->divide)->decode($query);
         /*
         dd($p);
         $request_query = explode('*', $query);
@@ -122,7 +107,6 @@ class AjaxController extends ZhyuController
         }
         */
         if(count($cols)) {
-            //dump($cols);
             $criteria = new WhereByCustom($cols);
             $repository->pushCriteria($criteria);
         }
@@ -160,17 +144,17 @@ class AjaxController extends ZhyuController
         $this->query($repository);
 
         $res = $repository->paginate($this->getLimit());
+
         //--wrap data
         $resource_name = is_null($resource) ? $model : $resource;
         $rname = str_replace('_', '', ucwords($resource_name, '_'));
         $cname = '\App\Http\Resources\\'.$rname.'Collection';
         $cname2 = '\Zhyu\Http\Resources\\'.$rname.'Collection';
-        //dd($rname);
+
         //dump('model: '.$model.', act: '.$act.', resource: '.$resource.', $rname: '.$rname);
         try{
             if(file_exists(app_path('Http/Resources/'.$rname.'Collection.php'))) {
                 $res = new $cname($res);
-                //dd($res);
 
                 return $res;
             }elseif(file_exists(base_path('vendor/zhyu/packages/src/Http/Resources/'.$rname.'Collection.php'))){

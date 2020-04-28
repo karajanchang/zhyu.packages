@@ -21,7 +21,7 @@ interface CriteriaInterface {
      * @param bool $status
      * @return $this
      */
-    public function skipCriteria($status = true);
+    public function skipCriteria(bool $status = true);
 
     /**
      * @return mixed

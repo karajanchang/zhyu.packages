@@ -2,15 +2,17 @@
 namespace Zhyu\Repositories\Eloquents;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Zhyu\Repositories\Contracts\CriteriaInterface;
 use Zhyu\Repositories\Criterias\Criteria;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Exceptions\RepositoryException;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container as App;
 use Illuminate\Support\Facades\Schema;
+
 /**
  * Class Repository
  * @package Zhyu\Repositories\Eloquents
@@ -43,7 +45,6 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     protected $select = ['*'];
 
 
-
     /**
      * @param App $app
      * @param Collection $collection
@@ -67,13 +68,15 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return Model
      * @throws RepositoryException
      */
-    public function makeModel() {
+    public function makeModel() : Model{
         $model = $this->app->make($this->model());
 
         if (!$model instanceof Model)
             throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
 
-        return $this->model = $model;
+        $this->model = $model;
+
+        return $model;
     }
 
     /**
@@ -96,7 +99,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param array $columns
      * @return mixed
      */
-    public function all($columns = array('*')) {
+    public function all(array $columns = ['*']) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
@@ -105,32 +108,33 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
         return $rows;
     }
-	
-	/**
-	 * @param array $columns
-	 * @param string $cacheKey
-	 * @param int $seconds
-	 * @return mixed
-	 */
-	public function allCache($columns = array('*'), $cacheKey, $seconds = 600) {
-		$rows = Cache::remember($cacheKey, $seconds, function() use($columns){
-			return $this->all($columns);
-		});
-		return $rows;
-	}
+
+    /**
+     * @param array $columns
+     * @param string $cacheKey
+     * @param int $seconds
+     * @return mixed
+     */
+    public function allCache(array $columns = ['*'], string $cacheKey, int $seconds = 600) {
+        $rows = Cache::remember($cacheKey, $seconds, function() use($columns){
+            return $this->all($columns);
+        });
+
+        return $rows;
+    }
 
     /**
      * @param int $perPage
      * @param array $columns
      * @return mixed
      */
-    public function paginate($perPage = 15, $columns = array('*')) {
+    public function paginate(int $perPage = 15, array $columns = ['*']) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
-
-
+        //dd($this->model->toSql());
         $rows = $this->model->paginate($perPage, $columns);
         $this->resetModel();
+//        dump($rows);
 
         return $rows;
     }
@@ -139,7 +143,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param null
      * @return array
      */
-    public function columns(){
+    public function columns() : array{
 
         return Schema::getColumnListing($this->model->getTable());
     }
@@ -148,7 +152,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param array
      * @return array
      */
-    public function filterData($data){
+    public function filterData(array $data) : array{
         $columns = $this->columns();
         array_walk($data, function($value, $key) use($columns, &$data){
             if(!in_array($key, $columns)) {
@@ -163,7 +167,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param array $data
      * @return mixed
      */
-    public function create(array $data) {
+    public function create(array $data){
 
         return $this->model->create($this->filterData($data));
     }
@@ -179,21 +183,21 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
 
     /**
-     * @param $id
+     * @param int $id
      * @param array $data
      * @param string $attribute
      * @return mixed
      */
-    public function update($id, array $data, $attribute="id") {
+    public function update(int $id, array $data, string $attribute="id") {
 
         return $this->model->where($attribute, '=', $id)->update($this->filterData($data));
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return mixed
      */
-    public function delete($id) {
+    public function delete(int $id) {
 
         return $this->model->destroy($id);
     }
@@ -214,11 +218,11 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param array $columns
      * @return mixed
      */
-    public function find($id, $columns = array('*')) {
+    public function find(int $id, $columns = ['*']) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
@@ -229,12 +233,12 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
-     * @param $attribute
+     * @param string $attribute
      * @param $value
      * @param array $columns
      * @return mixed
      */
-    public function findBy($attribute, $value, $columns = array('*')) {
+    public function findBy(string $attribute, $value, array $columns = ['*']) {
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
 
@@ -252,7 +256,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      *
      * @return mixed
      */
-    public function findWhere(array $where, $columns = ['*']){
+    public function findWhere(array $where, array $columns = ['*']){
         $this->applyCriteria();
         $this->applyConditions($where);
         $model = $this->model->get($columns);
@@ -260,25 +264,25 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
         return $model;
     }
-	
-	/**
-	 * Find data by multiple fields
-	 *
-	 * @param array $where
-	 * @param array $columns
-	 * @param string $cache_key
-	 * @param int $seconds
-	 *
-	 * @return mixed
-	 */
-	public function findWhereCache(array $where, $columns = ['*'], $cache_key, $seconds = 600){
-		$model = Cache::remember($cache_key, $seconds, function() use($where, $columns){
-			
-			return $this->findWhere($where, $columns);
-		});
-		
-		return $model;
-	}
+
+    /**
+     * Find data by multiple fields
+     *
+     * @param array $where
+     * @param array $columns
+     * @param string $cache_key
+     * @param int $seconds
+     *
+     * @return mixed
+     */
+    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key, int $seconds = 600){
+        $model = Cache::remember($cache_key, $seconds, function() use($where, $columns){
+
+            return $this->findWhere($where, $columns);
+        });
+
+        return $model;
+    }
 
     /**
      * @return $this
@@ -293,7 +297,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param bool $status
      * @return $this
      */
-    public function skipCriteria($status = true){
+    public function skipCriteria(bool $status = true){
         $this->skipCriteria = $status;
 
         return $this;
@@ -344,21 +348,13 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
+     * @param bool $withParse
      * @return array
      */
-    public function getSelect($withParse = false): array
+    public function getSelect(bool $withParse = false): array
     {
         if($withParse===true){
-
-            return array_map(function($var){
-                $exps = explode('.', $var);
-                if(count($exps)==2) {
-
-                    return $exps[1];
-                }
-
-                return $var;
-            }, $this->select);
+            $this->select = $this->parseSelect($this->select);
         }
         if($this->select==['*']) {
             $this->select = Schema::getColumnListing($this->model->getTable());
@@ -375,24 +371,56 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $this->select = $select;
     }
 
-
-    public function applySelect(array $columns){
-        if($columns===['*'] && isset($this->select) && count($this->select)){
-            $columns = array_map(function($var){
-                $exps = explode('.', $var);
-                if(count($exps)==2) {
-                    return $var . ' as ' . $exps[1];
+    /*
+     * @param array $select
+     * @return array
+     */
+    private function parseSelect(array $select) : array{
+        $parse_select = [];
+        foreach($select as $key => $val){
+            if($val!='*') {
+                $exps = explode('.', $val);
+                $var = $val;
+                if (count($exps) == 2) {
+                    $var = $exps[1];
                 }
-                return $var;
-            }, $this->select);
+                if (is_int($key)) {
+                    $parse_select[$val] = $var;
+                } else {
+                    $parse_select[$key] = $val;
+                }
+            }
         }
-        $this->model->select($columns);
 
-        return $columns;
+        return $parse_select;
     }
 
-    public function select($columns = ['*']){
+    /**
+     * @param array $columns
+     * @return array
+     */
+    public function applySelect(array $columns) : array{
+        $parse_select = $this->parseSelect($this->select);
+        //dd($parse_select);
+        $rcolumns = ['*'];
+        if($columns===['*'] && isset($parse_select) && count($parse_select)){
+            $rcolumns = [];
+            foreach($parse_select as $key => $val){
+                array_push($rcolumns, DB::raw($key. ' as '.$val));
+            }
+        }
+        $this->model->select($rcolumns);
+
+        return $rcolumns;
+    }
+
+    /**
+     * @param array $columns
+     * @return $this
+     */
+    public function select(array $columns = ['*']){
         $this->model = $this->model->select($columns);
+
         return $this;
     }
 
@@ -403,9 +431,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      *
      * @return $this
      */
-    public function has($relation)
+    public function has(string $relation)
     {
         $this->model = $this->model->has($relation);
+
         return $this;
     }
     /**
@@ -418,6 +447,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function with($relations)
     {
         $this->model = $this->model->with($relations);
+
         return $this;
     }
     /**
@@ -429,18 +459,21 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     public function withCount($relations)
     {
         $this->model = $this->model->withCount($relations);
+
         return $this;
     }
 
     /**
      * Add wherein.
      *
-     * @param  array $ins
+     * @param int|string $col
+     * @param  array $in_array
      * @return $this
      */
-    public function whereIn($col, array $ins)
+    public function whereIn($col, array $in_array)
     {
-        $this->model = $this->model->whereIn($col, $ins);
+        $this->model = $this->model->whereIn($col, $in_array);
+
         return $this;
     }
 
@@ -464,9 +497,13 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
 
     public function __call($name, $arguments)
     {
-        $this->applyCriteria();
-        $res = call_user_func_array([$this->model, $name], $arguments);
-        $this->resetModel();
+        try {
+            $this->applyCriteria();
+            $res = call_user_func_array([$this->model, $name], $arguments);
+            $this->resetModel();
+        }catch (\Exception $e){
+            Log::error(__CLASS__.' exception: ', ['name' => $name, 'arguments' => $arguments]);
+        }
 
         return $res;
     }
