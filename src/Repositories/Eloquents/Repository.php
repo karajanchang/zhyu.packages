@@ -1,6 +1,7 @@
 <?php
 namespace Zhyu\Repositories\Eloquents;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -112,10 +113,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     /**
      * @param array $columns
      * @param string $cacheKey
-     * @param int $seconds
+     * @param int | Carbon $seconds
      * @return mixed
      */
-    public function allCache(array $columns = ['*'], string $cacheKey, int $seconds = 600) {
+    public function allCache(array $columns = ['*'], string $cacheKey, $seconds = 600) {
         $rows = Cache::remember($cacheKey, $seconds, function() use($columns){
             return $this->all($columns);
         });
@@ -271,11 +272,11 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param array $where
      * @param array $columns
      * @param string $cache_key
-     * @param int $seconds
+     * @param int | Carbon $seconds
      *
      * @return mixed
      */
-    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key, int $seconds = 600){
+    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key, $seconds = 600){
         $model = Cache::remember($cache_key, $seconds, function() use($where, $columns){
 
             return $this->findWhere($where, $columns);
