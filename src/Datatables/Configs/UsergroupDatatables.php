@@ -1,15 +1,15 @@
 <?php
 
-namespace Zhyu\Datatables\Units;
+namespace Zhyu\Datatables\Configs;
 
 use Zhyu\Datatables\AbstractDatatables;
 use Zhyu\Datatables\DatatablesInterface;
-use Zhyu\Model\Resource;
+use App\Usergroup;
 
-class ResourceDatatables extends AbstractDatatables implements DatatablesInterface
+class UsergroupDatatables extends AbstractDatatables implements DatatablesInterface
 {
     public function model(){
-        return Resource::class;
+        return Usergroup::class;
     }
 
     /**
@@ -21,11 +21,16 @@ class ResourceDatatables extends AbstractDatatables implements DatatablesInterfa
         return 'ajax';
     }
 
-    public function config(){
+    public function criteria(): array
+    {
+        return [];
+    }
+
+    public function config() : array{
         return [
             'id' =>  'myTable',
             'css' =>  [ 'table', 'manage-u-table', 'table-striped', 'dataTable', 'nowrap' ],
-            'searchable_cols' => [ 'name',  'route'],
+            'searchable_cols' => [ 'name', 'nologin'],
             'no_orderable_cols' => [],
             'cols_display' => [
                 'name' => [
@@ -33,17 +38,12 @@ class ResourceDatatables extends AbstractDatatables implements DatatablesInterfa
                     'css' => [ 'text-center' ],
                     'cols_css' => [ 'text-center' ],
                 ],
-                'route' => [
+                'is_online' => [
                     'attributes' => [],
                     'css' => [ 'text-center' ],
                     'cols_css' => [ 'text-center' ],
                 ],
-                'orderby' => [
-                    'attributes' => [],
-                    'css' => [ 'text-center' ],
-                    'cols_css' => [ 'text-center' ],
-                ],
-                'icon_css' => [
+                'nologin' => [
                     'attributes' => [],
                     'css' => [ 'text-center' ],
                     'cols_css' => [ 'text-center' ],

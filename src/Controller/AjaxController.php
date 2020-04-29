@@ -121,16 +121,20 @@ class AjaxController extends ZhyuController
         if (!empty($bindName)) {
             $bindName = urldecode($bindName);
             $className = config('datatables.' . $bindName);
-            $dtTable = app($className);
-            $model = app($dtTable->model())->getTable();
-            RepositoryApp::bind($model);
-            $repository = app()->make(RepositoryInterface::class);
-            CriteriaApp::ajaxBind($repository,$model . '.' . $act, $dtTable);
-        } else {
-            RepositoryApp::bind($model);
-            $repository = app()->make(RepositoryInterface::class);
-            CriteriaApp::ajaxBind($repository, $model . '.' . $act);
+            if (!is_null($className)) {
+                $dtTable = app($className);
+                $model = app($dtTable->model())->getTable();
+                RepositoryApp::bind($model);
+                $repository = app()->make(RepositoryInterface::class);
+                CriteriaApp::ajaxBind($repository, $model . '.' . $act, $dtTable);
+
+                return $repository;
+            }
         }
+
+        RepositoryApp::bind($model);
+        $repository = app()->make(RepositoryInterface::class);
+        CriteriaApp::ajaxBind($repository, $model . '.' . $act);
 
         return $repository;
     }

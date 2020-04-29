@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhyu\Datatables\Units;
+namespace Zhyu\Datatables\Configs;
 
 use Zhyu\Datatables\AbstractDatatables;
 use Zhyu\Datatables\DatatablesInterface;
@@ -21,7 +21,12 @@ class UserDatatables extends AbstractDatatables implements DatatablesInterface
         return 'ajax';
     }
 
-    public function config(){
+    public function criteria(): array
+    {
+        return [];
+    }
+
+    public function config() : array{
         return [
             'id' =>  'myTable',
             'css' =>  [ 'table', 'manage-u-table', 'table-striped', 'dataTable', 'nowrap' ],

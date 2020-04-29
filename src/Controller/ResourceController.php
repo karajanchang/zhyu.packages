@@ -50,7 +50,7 @@ class ResourceController extends ZhyuController
         $obj = ZhyuUrl::decode($query);
         $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.resources.index').'\'">返回</button>' : null;
 
-        return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
+        return $this->view('index', ['datatablesService' => $datatablesService, 'title' => $title]);
     }
 
     /**
@@ -94,7 +94,7 @@ class ResourceController extends ZhyuController
         try {
             $model = $this->repository->find($id);
 
-            return parent::view(null, $model, ['title' => $title]);
+            return parent::view(null, ['title' => $title]);
         }catch (\Exception $e){
 
             return $this->responseJson($e, 500);
@@ -111,9 +111,7 @@ class ResourceController extends ZhyuController
     {
         $this->authorize('superadmin-only');
 
-        $model = $this->repository->find($id);
-
-        return parent::view(null, $model, ['title' => $title]);
+        return parent::view(null, ['title' => $title]);
     }
 
     /**

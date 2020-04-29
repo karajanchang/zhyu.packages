@@ -10,9 +10,12 @@ namespace Zhyu\Controller;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Zhyu\Datatables\DatatablesService;
+use Zhyu\Facades\ZhyuTool;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
 use Illuminate\Support\Facades\Log;
 
@@ -25,15 +28,19 @@ class Controller extends BaseController
     protected $table = null;
     protected $route = null;
 
-
     protected $columns;
     protected $limit;
 
     protected $model;
 
+    protected $query;
+
     public function __construct()
     {
-        RepositoryApp::bind((new \ReflectionClass($this))->getShortName());
+        //$name = (new \ReflectionClass($this))->getShortName();
+        //dd($name);
+        //RepositoryApp::bind((new \ReflectionClass($this))->getShortName());
+        $this->initQueryFromRequest();
     }
 
     /**
@@ -133,19 +140,14 @@ class Controller extends BaseController
         $this->route = $route;
     }
 
-    public function returnClassBaseName($class){
-        return  strtolower(class_basename($class));
-    }
-
-    protected function view($view = 'index', $params = null){
-        $model = null;
-        $model_name = $this->returnClassBaseName($model);
-        ${$model_name} = $model;
-
-        $title = $this->titleFromModelOrParams($model, $params);
-
-        if(isset($params['table']) && strlen($params['table'])>0){
-            $table = $params['table'];
+    private function getTableNameFromParamsOrModel(DatatablesService $datatablesService = null, Model &$model = null) : string{
+        $table = '';
+        if(!is_null($datatablesService)){
+            try {
+                $model = app($datatablesService->getDatatables()->model());
+                $table = $model->getTable();
+            }catch (\Exception $e) {
+            }
         }else{
             if(!is_null($this->table)) {
                 $table = $this->table;
@@ -155,6 +157,32 @@ class Controller extends BaseController
                 }
             }
         }
+
+        return $table;
+    }
+
+    private function bladeAlias(&$view){
+        switch($view){
+            case 'index':
+                $view = 'vendor.zhyu.index';
+                break;
+            case 'priv':
+                $view = 'vendor.zhyu.priv';
+                break;
+            case 'form':
+                $view = 'vendor.zhyu.form';
+                break;
+            default:
+        }
+    }
+
+    protected function view($view = 'index', array $params = null, Model $model = null){
+        $title = $this->titleFromModelOrParams($model, $params);
+        $datatablesService = null;
+        if(isset($params['datatablesService'])){
+            $datatablesService = $params['datatablesService'];
+        }
+        $table = $this->getTableNameFromParamsOrModel($datatablesService, $model);
         if(!isset($table)){
             //throw new \Exception('please provide table name first!!!');
         }
@@ -169,23 +197,28 @@ class Controller extends BaseController
             $id = $model->id;
         }
 
-        $datatablesService = null;
-        if(isset($params['datatablesService'])){
-            $datatablesService = $params['datatablesService'];
-        }
-        if($view == 'index'){
-            $view = 'vendor.zhyu.index';
-        }
-        $table = null;
+        $this->bladeAlias($view);
+
         $addOrUpdateUrl = $this->getAddOrUpdateUrl($model, $table, $route);
 
-        $compacts = compact('route','table', 'title', 'id', 'datatablesService', 'model_name', $model_name, 'addOrUpdateUrl');
+        $compacts = compact('route','table', 'title', 'id', 'datatablesService', 'addOrUpdateUrl', 'model');
         $returns = $params;
         foreach($compacts as $key => $val){
             $returns[$key] = $val;
         }
+        $returns['query'] = $this->getQuery();
 
         return view()->first([$view, 'vendor.zhyu.form'], $returns);
+    }
+
+    /*
+     * @return void
+     */
+    private function initQueryFromRequest() : void{
+        $q = app(Request::class)->get('query');
+        if(is_null($q)) return ;
+        $query = ZhyuTool::urlMakeQuery('#')->decode($q);
+        $this->setQuery($query);
     }
 
     private function titleFromModelOrParams(Model $model = null, array $params) : string{
@@ -236,5 +269,31 @@ class Controller extends BaseController
         }
 
         return $addOrUpdateUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param mixed $query
+     */
+    public function setQuery($query): void
+    {
+        $this->query = $query;
+    }
+
+    public function parseQuery(string $route, string $redirect_query){
+        $query_string = app(Request::class)->get('query');
+        if(is_null($query_string)){
+
+            return redirect()->route($route, [ 'query' => urlencode($redirect_query)]);
+        }
+
+        return true;
     }
 }

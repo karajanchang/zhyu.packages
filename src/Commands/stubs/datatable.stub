@@ -19,6 +19,7 @@ class DummyClass extends AbstractDatatables implements DatatablesInterface{
      * @return BlacklistDriver4Member
      */
     public function model(){
+
         return DummyModel::class;
     }
 
@@ -28,6 +29,7 @@ class DummyClass extends AbstractDatatables implements DatatablesInterface{
      * @return string
      */
     public function act(){
+
         return 'DummyAct';
     }
 
@@ -37,10 +39,19 @@ class DummyClass extends AbstractDatatables implements DatatablesInterface{
      * @return string
      */
     public function resource(){
+
         return 'DummyResource';
     }
 
-    public function config(){
+    public function criteria(): array
+    {
+        return [
+
+        ];
+    }
+
+    public function config() : array{
+        
         return [
             'id' =>  'myTable',
             'css' =>  [ 'table', 'manage-u-table', 'table-striped', 'dataTable', 'nowrap' ],

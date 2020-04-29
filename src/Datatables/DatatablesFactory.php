@@ -17,9 +17,9 @@ use Zhyu\Datatables\Units\TestDatatables;
 class DatatablesFactory {
 
     private const systems = [
-        'resources' => \Zhyu\Datatables\Units\ResourceDatatables::class,
-        'user' => \Zhyu\Datatables\Units\UserDatatables::class,
-        'usergroup' => \Zhyu\Datatables\Units\UsergroupDatatables::class,
+        'resources' => \Zhyu\Datatables\Configs\ResourceDatatables::class,
+        'user' => \Zhyu\Datatables\Configs\UserDatatables::class,
+        'usergroup' => \Zhyu\Datatables\Configs\UsergroupDatatables::class,
     ];
 
     public static function bind(string $name = null){

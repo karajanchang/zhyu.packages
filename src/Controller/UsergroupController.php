@@ -21,6 +21,7 @@ class UsergroupController extends ZhyuController
         $this->middleware(['web', 'auth', 'checklogin']);
         $this->makeRepository();
         $this->setRoute('admin.usergroups');
+        parent::__construct();
     }
 
     public function repository(){
@@ -42,19 +43,26 @@ class UsergroupController extends ZhyuController
      */
     public function index()
     {
+        /*
         $query = request()->input('query');
         if(!isset($query)){
             return redirect()->to(route('admin.usergroups.index').'?query=parent_id:=:0');
+        }
+        */
+        $redirect = $this->parseQuery('admin.usergroups.index', 'parent_id#=#0');
+        if($redirect!==true){
+
+            return $redirect;
         }
         $this->authorize('admin.usergroups.index');
         $model = $this->repository->makeModel();
         $name = $this->table ? $this->table : $model->getTable();
         $datatablesService = DatatablesFactoryApp::bind($name);
 
-        $obj = ZhyuUrl::decode($query);
-        $title = isset($obj[2]) ? (string) $model->find($obj[2]) : null;
-
-        return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
+        //$obj = ZhyuUrl::decode($query);
+        //$title = isset($obj[2]) ? (string) $model->find($obj[2]) : null;
+        $title = '';
+        return $this->view('index', ['datatablesService' => $datatablesService, 'title' => $title]);
     }
 
     /**
@@ -65,8 +73,11 @@ class UsergroupController extends ZhyuController
     public function create()
     {
         $this->authorize('admin.usergroups.create');
+        $model = $this->repository->makeModel();
 
-        return parent::view(null, $this->repository->makeModel());
+        $return_url = route('admin.usergroups.index');
+
+        return parent::view(null, compact('return_url'), $model);
     }
 
     /**
@@ -100,7 +111,7 @@ class UsergroupController extends ZhyuController
         try {
             $model = $this->repository->find($id);
 
-            return parent::view(null, $model, ['title' => $title]);
+            return parent::view(null, ['title' => $title], $model);
         }catch (\Exception $e){
 
             return $this->responseJson($e, 500);
@@ -118,8 +129,9 @@ class UsergroupController extends ZhyuController
         $this->authorize('admin.usergroups.edit');
 
         $model = $this->repository->find($id);
+        $return_url = route('admin.usergroups.index');
 
-        return parent::view(null, $model, ['title' => $title]);
+        return parent::view(null, ['title' => $title, 'return_url' => $return_url ], $model);
     }
 
     /**
@@ -189,7 +201,7 @@ class UsergroupController extends ZhyuController
         ]);
         $return_url = route('admin.usergroups.index');
 
-        return $this->view('priv', $model, ['title' => $model->name. ' 權限', 'table' => 'priv', 'permissions' => $permissions, 'return_url' => $return_url ]);
+        return $this->view('priv', ['title' => $model->name. ' 權限', 'table' => 'priv', 'permissions' => $permissions, 'return_url' => $return_url], $model);
     }
 
     public function privSave($id, Request $request, UsergroupPermissionRepository $permissionRepository){

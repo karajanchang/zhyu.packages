@@ -13,6 +13,7 @@ class DummyClass extends CrudController{
      * @return Repository
      */
     public function repository(){
+
         return DummyRepository::class;
     }
     
@@ -24,12 +25,14 @@ class DummyClass extends CrudController{
      * @return array
      */
     public function rules($id = null){
+
         return [
 
         ];
     }
     
     public function route(){
+
         return 'DummyRoute';
     }
 }

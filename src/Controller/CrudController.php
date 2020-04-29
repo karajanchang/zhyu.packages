@@ -58,7 +58,7 @@ abstract class CrudController extends ZhyuController
         $model = $this->repository->makeModel();
         $datatablesService = DatatablesFactoryApp::bind($this->table ? $this->table : $model->getTable());
 
-        return $this->view('index', $model, ['datatablesService' => $datatablesService]);
+        return $this->view('index', ['datatablesService' => $datatablesService]);
     }
 
     /**
@@ -110,7 +110,7 @@ abstract class CrudController extends ZhyuController
 
         try {
             $model = $this->repository->find($id);
-            return parent::view(null, $model, ['title' => (string) $model]);
+            return parent::view(null, ['title' => (string) $model]);
         }catch (\Exception $e){
             return $this->responseJson($e, 500);
         }
@@ -126,8 +126,7 @@ abstract class CrudController extends ZhyuController
     {
         $this->authorize($this->getRoute().'.edit');
 
-        $model = $this->repository->find($id);
-        return parent::view(null, $model, ['title' => $title]);
+        return parent::view(null, ['title' => $title]);
     }
 
     /**

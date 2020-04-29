@@ -52,7 +52,7 @@ class UserController extends ZhyuController
         $obj = ZhyuUrl::decode($query);
         $title = isset($obj[2]) ? (string) $model->find($obj[2]).'<button type="button" onclick="location.href=\''.route('admin.users.index').'\'">返回</button>' : null;
 
-        return $this->view('index', $model, ['datatablesService' => $datatablesService, 'title' => $title]);
+        return $this->view('index', ['datatablesService' => $datatablesService, 'title' => $title], $model);
     }
 
     /**
@@ -64,7 +64,7 @@ class UserController extends ZhyuController
     {
         $this->authorize('admin.users.create');
 
-        return parent::view(null, $this->repository->makeModel());
+        return parent::view(null, [], $this->repository->makeModel());
     }
 
     /**
@@ -96,7 +96,7 @@ class UserController extends ZhyuController
         try {
             $model = $this->repository->find($id);
 
-            return parent::view(null, $model, ['title' => (String) $model]);
+            return parent::view(null, ['title' => (String) $model], $model);
         }catch (\Exception $e){
 
             return $this->responseJson($e, 500);
@@ -115,7 +115,7 @@ class UserController extends ZhyuController
 
         $model = $this->repository->find($id);
 
-        return parent::view(null, $model, ['title' => $title]);
+        return parent::view(null, ['title' => $title], $model);
     }
 
     /**
@@ -208,7 +208,7 @@ class UserController extends ZhyuController
         ]);
         $return_url = route('admin.users.index');
 
-        return $this->view('priv', $model, ['title' => $model->name. ' 權限', 'table' => 'priv', 'permissions' => $permissions, 'return_url' => $return_url ]);
+        return $this->view('priv', ['title' => $model->name. ' 權限', 'table' => 'priv', 'permissions' => $permissions, 'return_url' => $return_url ], $model);
     }
 
     public function privSave($id, Request $request, UserPermissionRepository $permissionRepository){

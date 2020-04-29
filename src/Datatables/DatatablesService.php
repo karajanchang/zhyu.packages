@@ -33,4 +33,14 @@ class DatatablesService {
 
         return $this->datatables->all();
     }
+
+    /**
+     * @return DatatablesInterface
+     */
+    public function getDatatables(): DatatablesInterface
+    {
+        return $this->datatables;
+    }
+
+
 }

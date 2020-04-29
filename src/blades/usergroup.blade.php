@@ -2,7 +2,9 @@
 
 @prepend('js')
     <script>
-        //var redirectAfterDelete = '/logistics';
+                @if(!empty($return_url))
+        var redirectAfterPut = '{{ $return_url }}';
+        @endif
     </script>
 @endprepend
 
