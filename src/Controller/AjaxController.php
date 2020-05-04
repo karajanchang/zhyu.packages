@@ -22,9 +22,11 @@ use Zhyu\Controller\Controller as ZhyuController;
 class AjaxController extends ZhyuController
 {
     private $divide = '#';
+    private $is_new_api = true;
 
     public function __construct()
     {
+        parent::__construct();
         $this->middleware(['web', 'auth', 'checklogin']);
     }
 
@@ -59,6 +61,7 @@ class AjaxController extends ZhyuController
         }
     }
 
+
     /*
     private function parseFristColumn($param){
         $p = explode('.', $param);
@@ -74,41 +77,32 @@ class AjaxController extends ZhyuController
 
             return ;
         }
-        $cols = ZhyuTool::urlMakeQuery($this->divide)->decode($query);
-        /*
-        dd($p);
-        $request_query = explode('*', $query);
-
-        $cols = [];
-        $oColumns = $repository->getSelect(false);
+        //$querys = ZhyuTool::urlMakeQuery($this->divide)->decode($query);
         $selectColumns = $repository->getSelect(true);
-
-        if(count($request_query)) {
-            foreach ($request_query as $query) {
-                $params = explode($this->divide, $query);
-                if(count($params)) {
-                    $key = array_search($this->parseFristColumn($params[0]), $selectColumns);
-                    if(isset($key) && $key>0 ) {
-                        $col = $oColumns[$key];
-                        array_shift($params);
-                        //dump('params '.$col, $params);
-                        if(isset($col)) {
-                            //---看是不是array []
-                            if(strstr($params[1], '[') && strstr($params[1], ']')){
-                                $params[1] = str_replace('[', '', $params[1]);
-                                $params[1] = str_replace(']', '', $params[1]);
-                                $params[1] = explode(',', $params[1]);
-                            }
-                            array_push($cols, [$col, $params]);
-                        }
-                    }
-                }
+        $cols = [];
+        //dump($selectColumns);
+        //dump($this->query);
+        if(is_array($this->query)){
+            foreach($this->query as $key => $query){
+                $keys= explode('.', $key);
+                $real_key = $keys[(count($keys)-1)];
+                //dump($real_key);
+                $co = array_search($real_key, $selectColumns);
+                //dump($co);
+                //dump($query);
+                array_push($cols, [ $co => $query]);
             }
         }
-        */
+        //dd($cols);
+
         if(count($cols)) {
-            $criteria = new WhereByCustom($cols);
-            $repository->pushCriteria($criteria);
+            if($this->is_new_api===false) {
+                $criteria = new WhereByCustomOld($cols);
+                $repository->pushCriteria($criteria);
+            }else{
+                $criteria = new WhereByCustom($cols);
+                $repository->pushCriteria($criteria);
+            }
         }
 //        $query = $repository->toSql();
 //        dump($query);
@@ -118,6 +112,9 @@ class AjaxController extends ZhyuController
 
     private function getRepository($model, $act) : Repository{
         $bindName = request()->input('bindName');
+
+        $this->is_new_api = false;
+
         if (!empty($bindName)) {
             $bindName = urldecode($bindName);
             $className = config('datatables.' . $bindName);
@@ -127,6 +124,8 @@ class AjaxController extends ZhyuController
                 RepositoryApp::bind($model);
                 $repository = app()->make(RepositoryInterface::class);
                 CriteriaApp::ajaxBind($repository, $model . '.' . $act, $dtTable);
+
+                $this->is_new_api = true;
 
                 return $repository;
             }
@@ -141,6 +140,7 @@ class AjaxController extends ZhyuController
 
     public function index($model, $act, $resource = null)
     {
+        DB::connection()->enableQueryLog();
         $repository = $this->getRepository($model, $act);
 
         $this->currentPage();
@@ -148,6 +148,8 @@ class AjaxController extends ZhyuController
         $this->query($repository);
 
         $res = $repository->paginate($this->getLimit());
+
+
 
         //--wrap data
         $resource_name = is_null($resource) ? $model : $resource;

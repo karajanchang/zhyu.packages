@@ -130,9 +130,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return mixed
      */
     public function paginate(int $perPage = 15, array $columns = ['*']) {
+        //dd($this->getCriteria());
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
-        //dd($this->model->toSql());
+        //dump($this->model->toSql());
         $rows = $this->model->paginate($perPage, $columns);
         $this->resetModel();
 //        dump($rows);
@@ -416,10 +417,10 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
     /**
-     * @param array $columns
+     * @param mixed $columns
      * @return $this
      */
-    public function select(array $columns = ['*']){
+    public function select($columns = ['*']){
         $this->model = $this->model->select($columns);
 
         return $this;

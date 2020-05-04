@@ -8,6 +8,7 @@
 
 namespace Zhyu\Repositories\Criterias;
 
+use Illuminate\Support\Facades\DB;
 use Zhyu\Datatables\DatatablesInterface;
 use Zhyu\Repositories\Criterias\Common\OrderByCustom;
 use Zhyu\Repositories\Eloquents\Repository;
@@ -66,7 +67,11 @@ class CriteriaApp{
                 $repository->pushCriteria(new $criteria);
             }
         }
-        static::ajax($repository);
+        if(is_null($dtTable)) {
+            static::ajaxOld($repository);
+        }else{
+            static::ajax($repository);
+        }
     }
 
     public static function ajax(Repository $repository){
@@ -75,14 +80,39 @@ class CriteriaApp{
         $orders = request()->input('order');
 
         $parseColumns = $repository->getSelect(true);
-//        dump($columns);
-//        dump($orders);
-//        dd($parseColumns);
 
         if(is_array($columns) && is_array($orders) && count($columns) && count($orders) && $draw){
             foreach($orders as $order) {
                 $key = $order['column'];
                 if(isset($columns[$key]['data'])) {
+                    if(count($parseColumns)){
+                        if(in_array($columns[$key]['data'], $parseColumns)){
+                            $key = (array_search($columns[$key]['data'], $parseColumns));
+                            //dd($columns[$key]['data']);
+                            $criteria = new OrderByCustom(DB::raw($key), $order['dir']);
+                            $repository->pushCriteria($criteria);
+                        }
+                    }else {
+                        $criteria = new OrderByCustom($columns[$key]['data'], $order['dir']);
+                        $repository->pushCriteria($criteria);
+                    }
+                }
+            }
+        }
+    }
+
+    public static function ajaxOld(Repository $repository){
+        $draw = request()->input('draw');
+        $columns = request()->input('columns');
+        $orders = request()->input('order');
+
+        $parseColumns = $repository->getSelect(true);
+
+        if(is_array($columns) && is_array($orders) && count($columns) && count($orders) && $draw){
+            foreach($orders as $order) {
+                $key = $order['column'];
+                if(isset($columns[$key]['data'])) {
+//                    dd('aaaaaaaaaaaa111111111111111');
                     if(count($parseColumns)){
                         if(in_array($columns[$key]['data'], $parseColumns)){
                             $criteria = new OrderByCustom($columns[$key]['data'], $order['dir']);
