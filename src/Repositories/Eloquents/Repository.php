@@ -405,7 +405,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         $parse_select = $this->parseSelect($this->select);
         //dd($parse_select);
         $rcolumns = ['*'];
-        if($columns===['*'] && isset($parse_select) && count($parse_select)){
+        if($columns==['*'] && isset($parse_select) && count($parse_select)){
             $rcolumns = [];
             foreach($parse_select as $key => $val){
                 array_push($rcolumns, DB::raw($key. ' as '.$val));
