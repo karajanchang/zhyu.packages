@@ -10,10 +10,10 @@ namespace Zhyu\Controller;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
-use Zhyu\Facades\ZhyuTool;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
 use Zhyu\Repositories\Criterias\Common\WhereByCustom;
+use Zhyu\Repositories\Criterias\Common\WhereByCustomOld;
 use Zhyu\Repositories\Criterias\CriteriaApp;
 use Zhyu\Repositories\Eloquents\Repository;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
