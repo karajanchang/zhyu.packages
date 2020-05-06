@@ -97,7 +97,7 @@ class AjaxController extends ZhyuController
 
         if(count($cols)) {
             if($this->is_new_api===false) {
-                $criteria = new WhereByCustomOld($cols);
+                $criteria = new WhereByCustom($cols);
                 $repository->pushCriteria($criteria);
             }else{
                 $criteria = new WhereByCustom($cols);
