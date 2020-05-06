@@ -133,8 +133,8 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         //dd($this->getCriteria());
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
-        //dump($this->model->toSql());
         $rows = $this->model->paginate($perPage, $columns);
+//        dump($this->model->toSql(), $columns);
         $this->resetModel();
 //        dump($rows);
 
@@ -402,18 +402,9 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return array
      */
     public function applySelect(array $columns) : array{
-        $parse_select = $this->parseSelect($this->select);
-        //dd($parse_select);
-        $rcolumns = ['*'];
-        if($columns==['*'] && isset($parse_select) && count($parse_select)){
-            $rcolumns = [];
-            foreach($parse_select as $key => $val){
-                array_push($rcolumns, DB::raw($key. ' as '.$val));
-            }
-        }
-        $this->model->select($rcolumns);
+        $this->model->select($columns);
 
-        return $rcolumns;
+        return $columns;
     }
 
     /**
@@ -511,4 +502,3 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
     }
 
 }
-
