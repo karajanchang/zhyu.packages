@@ -1,7 +1,9 @@
 <?php
 //---給表單用，檢查此表單元素是否有在query裡
 if (!function_exists('QueryIfExist')) {
-    function QueryIfExist(array $query, string $col, string $table = null, string $callback = null){
+    function QueryIfExist(array $query = null, string $col, string $table = null, string $callback = null){
+        if(is_null($query)) return false;
+
         $bool = 0;
 
         if(empty($col)){
@@ -45,7 +47,9 @@ if (!function_exists('QueryIfExist')) {
 }
 
 if (!function_exists('QueryIfArrayEual')) {
-    function QueryIfArrayEual($query, $column, $callback){
+    function QueryIfArrayEual($query = null, $column, $callback){
+        if(is_null($query)) return false;
+
         if(is_array($query[$column])){
             $key = count($query[$column])-1;
 
@@ -57,8 +61,10 @@ if (!function_exists('QueryIfArrayEual')) {
 }
 
 if (!function_exists('QueryColValue')) {
-    function QueryColValue(array $query, string $col, string $table = null)
+    function QueryColValue(array $query = null, string $col, string $table = null)
     {
+        if(is_null($query)) return '';
+
         if (empty($col)) {
 
             throw new \Exception('Please enter parameter: col');
@@ -98,8 +104,10 @@ if (!function_exists('RemoveUnwantTagsFromValue')) {
 }
 
 if (!function_exists('QueryColValueArray')) {
-    function QueryColValueArray($query, $column)
+    function QueryColValueArray($query = null, $column)
     {
+        if(is_null($query)) return '';
+
         if (is_array($query[$column])) {
             $key = count($query[$column]) - 1;
 
