@@ -402,7 +402,14 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return array
      */
     public function applySelect(array $columns) : array{
-        $this->model->select($columns);
+        $columns = $this->getSelect(true);
+        $cols = [];
+        if(is_array($columns)){
+            foreach($columns as $key => $col){
+                $cols[] = DB::raw($key.' as '. $col);
+            }
+        }
+        $this->model->select($cols);
 
         return $columns;
     }
