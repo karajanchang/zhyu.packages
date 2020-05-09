@@ -340,9 +340,14 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         if($this->skipCriteria === true)
             return $this;
 
+        $hasPushArray = [];
         foreach($this->getCriteria() as $criteria) {
             if($criteria instanceof Criteria) {
+                $class_name = get_class($criteria);
+                if(in_array($class_name, $hasPushArray)) continue;
+
                 $this->model = $criteria->apply($this->model, $this);
+                array_push($hasPushArray, $class_name);
             }
         }
 
