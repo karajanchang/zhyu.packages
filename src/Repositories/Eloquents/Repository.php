@@ -45,6 +45,8 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     protected $select = ['*'];
 
+    private $alias_prefix = 'as';
+
 
     /**
      * @param App $app
@@ -389,7 +391,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         foreach($select as $key => $val){
             //dump($key.'--'.$val);
             if(is_int($key)){
-                if(strstr($val, 'as')){
+                if(strstr(strtolower($val), $this->alias_prefix)){
                     $parse_select[] = $val;
                 }else{
                     $parse_select[$val] = $val;
@@ -419,7 +421,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
             if (is_array($columns) && count($columns)) {
                 $cols = [];
                 foreach ($columns as $key => $col) {
-                    if (strstr($col, 'as') || is_int($key)) {
+                    if (strstr(strtolower($col), $this->alias_prefix) || is_int($key)) {
                         $cols[] = $col;
                     } else {
                         $cols[] = DB::raw($key . ' as ' . $col);
