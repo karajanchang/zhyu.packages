@@ -77,20 +77,11 @@ class AjaxController extends ZhyuController
 
             return ;
         }
-        //$querys = ZhyuTool::urlMakeQuery($this->divide)->decode($query);
-        $selectColumns = $repository->getSelect(true);
+        //$selectColumns = $repository->getSelect(true);
         $cols = [];
-        //dump($selectColumns);
-        //dump($this->query);
         if(is_array($this->query)){
             foreach($this->query as $key => $query){
-                $keys= explode('.', $key);
-                $real_key = $keys[(count($keys)-1)];
-                //dump($real_key);
-                $co = array_search($real_key, $selectColumns);
-                //dump($co);
-                //dump($query);
-                array_push($cols, [ $co => $query]);
+                array_push($cols, [ $key => $query]);
             }
         }
         //dd($cols);

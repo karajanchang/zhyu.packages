@@ -133,7 +133,8 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         //dd($this->getCriteria());
         $this->applyCriteria();
         $columns = $this->applySelect($columns);
-//        dd($this->model->toSql(), $columns);
+        //dump($this->select);
+        //dd('SqlSql.......', $this->model->toSql(), $columns);
         $rows = $this->model->paginate($perPage, $columns);
         $this->resetModel();
 //        dump($rows);
@@ -384,18 +385,17 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      */
     private function parseSelect(array $select) : array{
         $parse_select = [];
+
         foreach($select as $key => $val){
-            if($val!='*') {
-                $exps = explode('.', $val);
-                $var = $val;
-                if (count($exps) == 2) {
-                    $var = $exps[1];
+            //dump($key.'--'.$val);
+            if(is_int($key)){
+                if(strstr($val, 'as')){
+                    $parse_select[] = $val;
+                }else{
+                    $parse_select[$val] = $val;
                 }
-                if (is_int($key)) {
-                    $parse_select[$val] = $var;
-                } else {
-                    $parse_select[$key] = $val;
-                }
+            }else{
+                $parse_select[$key] = $val;
             }
         }
 
@@ -406,17 +406,46 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param array $columns
      * @return array
      */
-    public function applySelect(array $columns) : array{
-        $this->setSelect($columns);
-        $columns = $this->getSelect(true);
+    public function applySelect($columns) : array{
+        //$this->setSelect($columns);
+        //$columns = $this->getSelect(true);
+        //dump('this->select....',$this->select);
+        //dump('applyselect..............', $columns);
         $cols = ['*'];
-        if(is_array($columns) && count($columns)){
+        $diff = count(array_diff($columns, ['*']));
+        if($diff > 0) {
+            $this->setSelect($columns);
+            $columns = $this->getSelect(true);
+            if (is_array($columns) && count($columns)) {
+                $cols = [];
+                foreach ($columns as $key => $col) {
+                    if (strstr($col, 'as') || is_int($key)) {
+                        $cols[] = $col;
+                    } else {
+                        $cols[] = DB::raw($key . ' as ' . $col);
+                    }
+                }
+            }
+        }else {
             $cols = [];
-            foreach($columns as $key => $col){
-                $cols[] = DB::raw($key.' as '. $col);
+            $diff = count(array_diff($this->select, ['*']));
+            if($diff > 0) {
+                foreach ($this->select as $key => $col) {
+                    if(is_string($key)) {
+                        $cols[] = DB::raw($key . ' as ' . $col);
+                    }else{
+                        $cols[] = $col;
+                    }
+                }
+            }else{
+                $cols[] = '*';
             }
         }
+        //dump('cols cols cols:::::::::', $cols);
+        //dd('applySelect', $columns, $cols);
         $this->model->select($cols);
+        //$cols = $columns;
+        //$this->model->select($columns);
 
         return $cols;
     }
