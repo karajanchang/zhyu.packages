@@ -407,9 +407,9 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return array
      */
     public function applySelect(array $columns) : array{
+        $this->setSelect($columns);
         $columns = $this->getSelect(true);
         $cols = ['*'];
-        //dump($columns);
         if(is_array($columns) && count($columns)){
             $cols = [];
             foreach($columns as $key => $col){
