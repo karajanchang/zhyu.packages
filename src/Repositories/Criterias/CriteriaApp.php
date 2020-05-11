@@ -79,7 +79,7 @@ class CriteriaApp{
         $columns = request()->input('columns');
         $orders = request()->input('order');
 
-        $parseColumns = $repository->getSelect(true);
+        $parseColumns = $repository->getSelect(false);
 
         if(is_array($columns) && is_array($orders) && count($columns) && count($orders) && $draw){
             foreach($orders as $order) {
@@ -88,7 +88,6 @@ class CriteriaApp{
                     if(count($parseColumns)){
                         if(in_array($columns[$key]['data'], $parseColumns)){
                             $key = (array_search($columns[$key]['data'], $parseColumns));
-                            //dd($columns[$key]['data']);
                             $criteria = new OrderByCustom(DB::raw($key), $order['dir']);
                             $repository->pushCriteria($criteria);
                         }
