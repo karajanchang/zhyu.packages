@@ -457,6 +457,8 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @return $this
      */
     public function select($columns = ['*']){
+        $columns = is_array($columns) ? $columns : func_get_args();
+
         $this->model = $this->model->select($columns);
 
         return $this;
