@@ -24,6 +24,11 @@ class OrderByCustom extends Criteria
 
     public function apply($model, RepositoryInterface $repository)
     {
+        if(!is_string($this->orderby_col)){
+
+            return $model;
+        }
+
         $query = $model->orderby($this->orderby_col, $this->orderby_dir);
         return $query;
     }

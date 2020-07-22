@@ -88,7 +88,8 @@ class CriteriaApp{
                     if(count($parseColumns)){
                         if(in_array($columns[$key]['data'], $parseColumns)){
                             $key = (array_search($columns[$key]['data'], $parseColumns));
-                            $criteria = new OrderByCustom(DB::raw($key), $order['dir']);
+                            $orderby = is_int($key) ? $parseColumns[$key] : $columns[$key]['data'];
+                            $criteria = new OrderByCustom($orderby, $order['dir']);
                             $repository->pushCriteria($criteria);
                         }
                     }else {
