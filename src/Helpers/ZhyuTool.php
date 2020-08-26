@@ -56,8 +56,8 @@ class ZhyuTool
         return $app;
     }
 
-    public function versionOutOfDate($version, $version_ask){
+    public function versionOutOfDate($version, $version_ask) : bool{
 
-        return app(VersionCompare::class, ['version' => $version, 'version_ask' => $version_ask])->isOutOfDate();
+        return version_compare($version, $version_ask, '<');
     }
 }
