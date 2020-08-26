@@ -9,6 +9,7 @@ use Zhyu\Tools\Csv;
 use Zhyu\Tools\Ip;
 use Zhyu\Tools\PlusMinusConvert;
 use Zhyu\Tools\UrlMakeQuery;
+use Zhyu\Tools\VersionCompare;
 use Zhyu\Tools\Zip;
 
 class ZhyuTool
@@ -53,5 +54,10 @@ class ZhyuTool
         $app = app(Zip::class);
 
         return $app;
+    }
+
+    public function versionOutOfDate($version, $version_ask){
+
+        return app(VersionCompare::class, ['version' => $version, 'version_ask' => $version_ask])->isOutOfDate();
     }
 }
