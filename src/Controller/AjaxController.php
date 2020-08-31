@@ -8,9 +8,11 @@
 
 namespace Zhyu\Controller;
 
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
+use Zhyu\Repositories\Criterias\Common\OrderByCustom;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
 use Zhyu\Repositories\Criterias\Common\WhereByCustom;
 use Zhyu\Repositories\Criterias\Common\WhereByCustomOld;
@@ -23,6 +25,7 @@ class AjaxController extends ZhyuController
 {
     private $divide = '#';
     private $is_new_api = true;
+    private $datatable = [];
 
     public function __construct()
     {
@@ -45,7 +48,7 @@ class AjaxController extends ZhyuController
         });
     }
 
-    private function search(RepositoryInterface $repository){
+    private function search(RepositoryInterface &$repository){
         $search = request()->input('search');
         if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2) return ;
 
@@ -59,6 +62,7 @@ class AjaxController extends ZhyuController
             $criteria = new OrWhereByCustom($cols);
             $repository->pushCriteria($criteria);
         }
+
     }
 
 
@@ -71,8 +75,9 @@ class AjaxController extends ZhyuController
     }
     */
 
-    private function query(RepositoryInterface $repository){
+    private function query(RepositoryInterface &$repository){
         $query = request()->input('query');
+
         if(is_null($query)){
 
             return ;
@@ -84,7 +89,6 @@ class AjaxController extends ZhyuController
                 array_push($cols, [ $key => $query]);
             }
         }
-        //dd($cols);
 
         if(count($cols)) {
             if($this->is_new_api===false) {
@@ -95,10 +99,36 @@ class AjaxController extends ZhyuController
                 $repository->pushCriteria($criteria);
             }
         }
-//        $query = $repository->toSql();
-//        dump($query);
-//        $bindings = $repository->getBindings();
-//        dump($bindings);
+        $query = $repository->toSql();
+        //dump($query);
+        $bindings = $repository->getBindings();
+        //dump($bindings);
+    }
+
+    private function order(RepositoryInterface $repository){
+        $order = request()->input('order');
+
+        $cols = [];
+        if(count($order)) {
+            if (is_array($this->datatable['config']['cols_display'])) {
+                foreach ($this->datatable['config']['cols_display'] as $field => $cols_display) {
+                    $cols[] = $field;
+                }
+            }
+
+            foreach ($order as $orderby) {
+                if (isset($orderby['column']) && isset($orderby['dir'])) {
+                    if (isset($cols[$orderby['column']])) {
+                        $col = $cols[$orderby['column']];
+                        $criteria = new OrderByCustom($col, $orderby['dir']);
+                        $repository->pushCriteria($criteria);
+                    }
+                }
+            }
+        }else{
+            $criteria = new OrderByCustom($this->datatable['config']['default_order_by'], $this->datatable['config']['default_order_by']);
+            $repository->pushCriteria($criteria);
+        }
     }
 
     private function getRepository($model, $act) : Repository{
@@ -111,6 +141,7 @@ class AjaxController extends ZhyuController
             $className = config('datatables.' . $bindName);
             if (!is_null($className)) {
                 $dtTable = app($className);
+                $this->datatable['config'] = $dtTable->config();
                 $model = app($dtTable->model())->getTable();
                 RepositoryApp::bind($model);
                 $repository = app()->make(RepositoryInterface::class);
@@ -137,6 +168,7 @@ class AjaxController extends ZhyuController
         $this->currentPage();
         $this->search($repository);
         $this->query($repository);
+        $this->order($repository);
 
         $res = $repository->paginate($this->getLimit());
 
