@@ -8,14 +8,12 @@
 
 namespace Zhyu\Controller;
 
-use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrderByCustom;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
 use Zhyu\Repositories\Criterias\Common\WhereByCustom;
-use Zhyu\Repositories\Criterias\Common\WhereByCustomOld;
 use Zhyu\Repositories\Criterias\CriteriaApp;
 use Zhyu\Repositories\Eloquents\Repository;
 use Zhyu\Repositories\Eloquents\RepositoryApp;
@@ -53,6 +51,17 @@ class AjaxController extends ZhyuController
         if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2) return ;
 
         $selectColumns = $repository->getSelect(true);
+        $first_key = array_key_first($selectColumns);
+        if($first_key=='*'){
+            $selectColumns = [];
+            $columns = request()->input('columns');
+            if(is_array($columns)) {
+                foreach ($columns as $key => $cols) {
+                    if($cols['data']=='buttons') continue;
+                    $selectColumns[$cols['data']] = $cols['data'];
+                }
+            }
+        }
 
         $cols = [];
         foreach($selectColumns as $key => $column){
@@ -109,6 +118,10 @@ class AjaxController extends ZhyuController
         $order = request()->input('order');
 
         $cols = [];
+        if(!isset($this->datatable['config'])){
+
+            return ;
+        }
         if(count($order)) {
             if (is_array($this->datatable['config']['cols_display'])) {
                 foreach ($this->datatable['config']['cols_display'] as $field => $cols_display) {
