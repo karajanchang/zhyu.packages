@@ -415,6 +415,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
         //dump('applyselect..............', $columns);
         $cols = ['*'];
         $diff = count(array_diff($columns, ['*']));
+
         if($diff > 0) {
             $this->setSelect($columns);
             $columns = $this->getSelect(true);
@@ -432,9 +433,13 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
             $cols = [];
             $diff = count(array_diff($this->select, ['*']));
             if($diff > 0) {
+//                dd('AAAAAAAAAA', $diff);
                 foreach ($this->select as $key => $col) {
                     if(is_string($key)) {
-                        $cols[] = DB::raw($key . ' as ' . $col);
+                        $rcol = explode('.', $col);
+                        $len = count($rcol)-1;
+                        //dd($rcol[$len]);
+                        $cols[] = DB::raw($key . ' as ' . $rcol[$len]);
                     }else{
                         $cols[] = $col;
                     }

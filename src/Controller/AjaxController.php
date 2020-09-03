@@ -10,6 +10,7 @@ namespace Zhyu\Controller;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Zhyu\Repositories\Contracts\RepositoryInterface;
 use Zhyu\Repositories\Criterias\Common\OrderByCustom;
 use Zhyu\Repositories\Criterias\Common\OrWhereByCustom;
@@ -46,18 +47,29 @@ class AjaxController extends ZhyuController
         });
     }
 
+    private function oldDatatableAllColumns(Repository $repository) : array{
+        //$model = app($repository->getModel());
+        $table = $repository->getModel()->getTable();
+
+        return Schema::getColumnListing($table);
+    }
+
     private function search(RepositoryInterface &$repository){
         $search = request()->input('search');
         if(!isset($search['value']) || is_null($search['value']) || mb_strlen($search['value'])<2) return ;
 
         $selectColumns = $repository->getSelect(true);
         $first_key = array_key_first($selectColumns);
+
+        //---old版本dattable
         if($first_key=='*'){
             $selectColumns = [];
             $columns = request()->input('columns');
+            $allColumns = $this->oldDatatableAllColumns($repository);
             if(is_array($columns)) {
+//                dd($first_key, $allColumns, $repository->model(), $columns, $this->is_new_api);
                 foreach ($columns as $key => $cols) {
-                    if($cols['data']=='buttons') continue;
+                    if(!in_array($cols['data'], $allColumns)) continue;
                     $selectColumns[$cols['data']] = $cols['data'];
                 }
             }
@@ -109,7 +121,7 @@ class AjaxController extends ZhyuController
             }
         }
         $query = $repository->toSql();
-        //dump($query);
+        //dd($query);
         $bindings = $repository->getBindings();
         //dump($bindings);
     }
