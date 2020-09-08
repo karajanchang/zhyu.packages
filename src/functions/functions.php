@@ -73,10 +73,8 @@ if (!function_exists('QueryColValue')) {
 
             return RemoveUnwantTagsFromValue($query[$col]);
         }
-
         $column = $table . '.' . $col;
         if (isset($query[$column])) {
-
             $b = QueryColValueArray($query, $column);
 
             return $b;
@@ -109,7 +107,13 @@ if (!function_exists('QueryColValueArray')) {
         if(is_null($query)) return '';
 
         if (is_array($query[$column])) {
-            $key = count($query[$column]) - 1;
+            $len = count($query[$column]);
+            //---func之後的不算
+            if($len > 2) {
+                $key = 1;
+            }else{
+                $key = $len - 1;
+            }
 
             return $query[$column][$key];
         }

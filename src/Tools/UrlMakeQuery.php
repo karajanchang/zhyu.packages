@@ -38,7 +38,7 @@ class UrlMakeQuery{
         $query = urldecode($query);
 
         $rows = explode('*', $query);
-        //dump($rows);
+//        dump('rows', $rows);
         foreach($rows as $row){
             $array = $this->parse2Array($row);
             if(count($array)==0) continue;
@@ -55,10 +55,12 @@ class UrlMakeQuery{
         $ess = explode('.', $rs[0]);
         $len = count($ess);
         $key = $ess[($len-1)];
-        //dump($rs);
+        //dump('rs........', $rs);
+        $rs3 = isset($rs[3]) ? $rs[3] : null;
+        $rs4 = isset($rs[4]) ? $rs[4] : null;
         //dump('key='.$key);
 
-        if(count($rs)==3) {
+        if(count($rs)>=3) {
             if(strstr($rs[2], '[') && strstr($rs[2], ']') ){
                 $rs[2] = str_replace('[', '', $rs[2]);
                 $rs[2] = str_replace(']', '', $rs[2]);
@@ -67,8 +69,8 @@ class UrlMakeQuery{
             //dump($rs[2]);
             $var = [
                 $rs[0] => [
-                    $rs[1], $rs[2]
-                ]
+                    $rs[1], $rs[2], $rs3, $rs4
+                ],
             ];
             //dd('parse2Array', $var);
         }elseif(count($rs)==2) {
@@ -78,6 +80,7 @@ class UrlMakeQuery{
         }else{
             $var = [];
         }
+        //dump('var....', $var);
 
         return $var;
     }
@@ -107,6 +110,12 @@ class UrlMakeQuery{
                 if(!empty($val['value'])){
                     array_push($puzzles, $val['value']);
                 }
+            }
+            if(!empty($val['func'])){
+                array_push($puzzles, $val['func']);
+            }
+            if(!empty($val['column'])){
+                array_push($puzzles, $val['column']);
             }
         }else{
             array_push($puzzles, '=');

@@ -79,6 +79,7 @@ class AjaxController extends ZhyuController
         foreach($selectColumns as $key => $column){
             array_push($cols, [ DB::raw($key), 'like binary', '%' . $search['value'] . '%']);
         }
+        //dd($cols);
         if(count($cols)) {
             $criteria = new OrWhereByCustom($cols);
             $repository->pushCriteria($criteria);
@@ -103,6 +104,7 @@ class AjaxController extends ZhyuController
 
             return ;
         }
+        //dump($query);
         //$selectColumns = $repository->getSelect(true);
         $cols = [];
         if(is_array($this->query)){
@@ -112,18 +114,17 @@ class AjaxController extends ZhyuController
         }
 
         if(count($cols)) {
-            if($this->is_new_api===false) {
-                $criteria = new WhereByCustom($cols);
-                $repository->pushCriteria($criteria);
-            }else{
-                $criteria = new WhereByCustom($cols);
-                $repository->pushCriteria($criteria);
-            }
+//            if($this->is_new_api===false) {
+//                $criteria = new WhereByCustom($cols);
+//                $repository->pushCriteria($criteria);
+//            }else{
+            $criteria = new WhereByCustom($cols);
+            $repository->pushCriteria($criteria);
+//            }
         }
-        $query = $repository->toSql();
-        //dd($query);
-        $bindings = $repository->getBindings();
-        //dump($bindings);
+//        $query = $repository->toSql();
+//        $bindings = $repository->getBindings();
+        //dup($bindings);
     }
 
     private function order(RepositoryInterface $repository){
@@ -170,6 +171,7 @@ class AjaxController extends ZhyuController
                 $model = app($dtTable->model())->getTable();
                 RepositoryApp::bind($model);
                 $repository = app()->make(RepositoryInterface::class);
+                //dd($model.'.'.$act, $this->datatable['config'], $className);
                 CriteriaApp::ajaxBind($repository, $model . '.' . $act, $dtTable);
 
                 $this->is_new_api = true;
@@ -177,6 +179,7 @@ class AjaxController extends ZhyuController
                 return $repository;
             }
         }
+        //dd($this->is_new_api);
 
         RepositoryApp::bind($model);
         $repository = app()->make(RepositoryInterface::class);
