@@ -38,8 +38,13 @@ class ZhyuCurl
         return $header;
     }
 
-    public function url($url){
+    public function url($url, array $auth = []){
         $this->url = $url;
+        //---設定任務
+        if(count($auth)){
+            $this->auth($auth);
+        }
+
         return $this;
     }
 
