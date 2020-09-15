@@ -113,7 +113,7 @@ class WhereByCustom extends Criteria
         if(!is_null($func)){
             $col = $func.'('.$rColumn.')';
         }else{
-            $col = $rColumn;
+            $col = strlen($table)>0 ? $table . '.' . $rColumn : $rColumn;
         }
         $ps = [DB::raw($col)];
 
