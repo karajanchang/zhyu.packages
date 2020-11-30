@@ -9,13 +9,16 @@
 namespace Zhyu\Helpers;
 
 
+use Illuminate\Support\Facades\Log;
 use Zhyu\Errors\CurlError;
 use Zhyu\Errors\CurlTimeout;
 
 class ZhyuCurl
 {
     private static $ch = null;
+    private $scheme = 'http';
     private $url='';
+    private $port = null;
     private $auth = [];
     private $method = null;
     private $timeout = null;
@@ -38,8 +41,22 @@ class ZhyuCurl
         return $header;
     }
 
+    private function parseUrl($url){
+        $parse = parse_url($url);
+        if(isset($parse['scheme']) && $parse['scheme']=='https'){
+            $this->scheme = 'https';
+        }
+        Log::info('post..........parse: ', $parse);
+
+        if(isset($parse['port'])) {
+            $this->port = (int) $parse['port'];
+        }
+
+        return $url;
+    }
+
     public function url($url, array $auth = []){
-        $this->url = $url;
+        $this->url = $this->parseUrl($url);
         //---設定任務
         if(count($auth)){
             $this->auth($auth);
@@ -90,6 +107,16 @@ class ZhyuCurl
             $this->method();
         }
         curl_setopt(self::$ch, CURLOPT_URL, $this->url);
+        if(!is_null($this->port)) {
+            curl_setopt(self::$ch, CURLOPT_PORT, $this->port);
+        }
+
+        //---skip ssl verify
+        if($this->scheme=='https') {
+            curl_setopt(self::$ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt(self::$ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
         curl_setopt(self::$ch, CURLOPT_HTTPHEADER, $this->header($this->auth));
         curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(self::$ch, CURLOPT_POSTFIELDS, json_encode($postData));
@@ -132,6 +159,18 @@ class ZhyuCurl
             $this->method($method);
         }
         curl_setopt(self::$ch, CURLOPT_URL, $this->url);
+        if(!is_null($this->port)){
+            curl_setopt(self::$ch, CURLOPT_PORT, $this->port);
+            Log::info('post.................port: '.$this->port);
+        }
+
+
+        //---skip ssl verify
+        if($this->scheme=='https') {
+            curl_setopt(self::$ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt(self::$ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
         curl_setopt(self::$ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
         curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(self::$ch, CURLOPT_POSTFIELDS, http_build_query($postData));
@@ -150,6 +189,17 @@ class ZhyuCurl
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header($this->auth));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $this->url);
+        if(!is_null($this->port)) {
+            curl_setopt($ch, CURLOPT_PORT, $this->port);
+        }
+
+        //---skip ssl verify
+        if($this->scheme=='https') {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
 
