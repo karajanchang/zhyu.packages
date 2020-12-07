@@ -248,6 +248,7 @@ class ZhyuCurl
     }
 
     private function close(){
+        $this->port = null;
         if(!is_null(self::$ch)) {
             curl_close(self::$ch);
             self::$ch = null;
