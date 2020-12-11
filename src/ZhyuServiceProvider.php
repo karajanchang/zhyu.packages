@@ -16,13 +16,9 @@ use Zhyu\Commands\MakeDatatableCommand;
 use Zhyu\Commands\MakeRepositoryCommand;
 use Zhyu\Commands\MakeResourceCollectionCommand;
 use Zhyu\Commands\MakeResourceCommand;
-use Zhyu\Commands\MakeReportCommand;
 use Zhyu\Decorates\Buttons\NormalButton;
 use Zhyu\Decorates\Buttons\SimpleButton;
 
-use Zhyu\Report\Media\CsvReport;
-use Zhyu\Report\Media\ExcelReport;
-use Zhyu\Report\Media\PdfReport;
 use Zhyu\Report\ReportFactory;
 use Zhyu\Report\ReportService;
 
@@ -35,7 +31,6 @@ class ZhyuServiceProvider extends ServiceProvider
         MakeResourceCommand::class,
         MakeResourceCollectionCommand::class,
         MakeDatatableCommand::class,
-        MakeReportCommand::class,
     ];
 
     public function register(){
@@ -56,24 +51,10 @@ class ZhyuServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->bind('csv.report', function ($app) {
-
-            return new CsvReport ($app);
-        });
-
-        $this->app->bind('excel.report', function ($app) {
-
-            return new ExcelReport ($app);
-        });
 
         $this->app->bind('Ip', function()
         {
             return app()->make(\Zhyu\Tools\Ip::class);
-        });
-
-        $this->app->bind('pdf.report', function ($app) {
-
-            return new PdfReport ($app);
         });
 
         $this->app->bind('ZhyuCurl', function($app, array $params)
@@ -91,17 +72,6 @@ class ZhyuServiceProvider extends ServiceProvider
             return app()->make(\Zhyu\Helpers\ZhyuGate::class);
         });
 
-        $this->app->bind('ZhyuReport', function($app, array $params)
-        {
-            if(!isset($params['name']) || strlen($params['name'])==0){
-                throw new \Exception('Please provider one class for report to bind');
-            }
-            ReportFactory::bind($params['name']);
-            $service = $app->make(ReportService::class);
-
-            return $service;
-        });
-
         $this->app->bind('ZhyuTool', function()
         {
             return app()->make(\Zhyu\Helpers\ZhyuTool::class);
@@ -111,15 +81,6 @@ class ZhyuServiceProvider extends ServiceProvider
         {
             return app()->make(\Zhyu\Helpers\ZhyuUrl::class);
         });
-
-
-
-
-        $configPath = __DIR__.'/config/report-generator.php';
-        $this->mergeConfigFrom($configPath, 'zhyu');
-
-
-        $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
 
         $this->registerAliases();
     }
@@ -152,7 +113,6 @@ class ZhyuServiceProvider extends ServiceProvider
                     __DIR__ . '/lang/en' => resource_path('lang/en'),
                     __DIR__ . '/lang/tw' => resource_path('lang/tw'),
                     __DIR__ . '/assets/public_js' => public_path('js'),
-                    __DIR__ . '/config/report-generator.php' => config_path('report-generator.php'),
                 ], 'zhyu');
 
                 $this->publishes([
@@ -198,10 +158,7 @@ class ZhyuServiceProvider extends ServiceProvider
         if (class_exists('Illuminate\Foundation\AliasLoader')) {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
 
-            $loader->alias('CsvReport', \Zhyu\Facades\CsvReport::class);
-            $loader->alias('ExcelReport', \Zhyu\Facades\ExcelReport::class);
             $loader->alias('Ip', \Zhyu\Facades\Ip::class);
-            $loader->alias('PdfReport', \Zhyu\Facades\PdfReport::class);
             $loader->alias('ZhyuDate', \Zhyu\Facades\ZhyuDate::class);
             $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
             $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);

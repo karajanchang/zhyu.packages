@@ -1,4 +1,0 @@
-<?php
-return [
-    'flush' => false
-];
