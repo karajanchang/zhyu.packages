@@ -21,8 +21,6 @@
     "illuminate/config": "^6.0|^7.0|^8.0",
     "illuminate/database": "^6.0|^7.0|^8.0",
     "illuminate/support": "^6.0|^7.0|^8.0",
-    "maatwebsite/excel": "=3.1.20",
-    "league/csv": "^9.2",
     "laravel/helpers": "^1.1",
     "doctrine/dbal": "^2.10"
   },
