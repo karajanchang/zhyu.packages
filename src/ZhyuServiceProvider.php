@@ -9,7 +9,6 @@
 namespace Zhyu;
 
 use Illuminate\Support\ServiceProvider;
-use Zhyu\Commands\MakeDatatableCommand;
 use Zhyu\Commands\MakeRepositoryCommand;
 
 
@@ -18,7 +17,6 @@ class ZhyuServiceProvider extends ServiceProvider
 {
     protected $commands = [
         MakeRepositoryCommand::class,
-        MakeDatatableCommand::class,
     ];
 
     public function register(){
