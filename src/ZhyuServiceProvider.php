@@ -8,48 +8,21 @@
 
 namespace Zhyu;
 
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Zhyu\Commands\MakeCrudCommand;
 use Zhyu\Commands\MakeDatatableCommand;
 use Zhyu\Commands\MakeRepositoryCommand;
-use Zhyu\Commands\MakeResourceCollectionCommand;
-use Zhyu\Commands\MakeResourceCommand;
-use Zhyu\Decorates\Buttons\NormalButton;
-use Zhyu\Decorates\Buttons\SimpleButton;
 
-use Zhyu\Report\ReportFactory;
-use Zhyu\Report\ReportService;
 
 
 class ZhyuServiceProvider extends ServiceProvider
 {
     protected $commands = [
-        MakeCrudCommand::class,
         MakeRepositoryCommand::class,
-        MakeResourceCommand::class,
-        MakeResourceCollectionCommand::class,
         MakeDatatableCommand::class,
     ];
 
     public function register(){
         $this->loadFunctions();
-
-        if(!$this->isLumen() && env('ZHYU_USE_ADMIN_FUNCTIONS', false) === true) {
-            $this->app->bind('button.create', function ($app, $params) {
-                return new NormalButton(@$params['data'], @$params['url'], 'btn btn-info m-r-15', 'fa fa-plus fa-fw', null, $params['text'], @$params['title']);
-            });
-            $this->app->bind('button.edit', function ($app, $params) {
-                return new SimpleButton($params['data'], @$params['url'], 'btn btn-info btn-circle btn-sm m-l-5', 'ti-pencil-alt', null, $params['text'], @$params['title']);
-            });
-            $this->app->bind('button.show', function ($app, $params) {
-                return new SimpleButton($params['data'], @$params['url'], 'btn btn-warning btn-circle btn-sm m-l-5', 'ti-file', null, $params['text'], @$params['title']);
-            });
-            $this->app->bind('button.destroy', function ($app, $params) {
-                return new SimpleButton($params['data'], @$params['url'], 'btn btn-danger btn-circle btn-sm m-l-5', 'ti-trash', null, $params['text'], @$params['title']);
-            });
-        }
 
 
         $this->app->bind('Ip', function()
@@ -67,10 +40,6 @@ class ZhyuServiceProvider extends ServiceProvider
             return app()->make(\Zhyu\Helpers\ZhyuDate::class);
         });
 
-        $this->app->bind('ZhyuGate', function()
-        {
-            return app()->make(\Zhyu\Helpers\ZhyuGate::class);
-        });
 
         $this->app->bind('ZhyuTool', function()
         {
@@ -87,42 +56,8 @@ class ZhyuServiceProvider extends ServiceProvider
 
     public function boot(){
         if ($this->isLumen()) {
+
             require_once 'Lumen.php';
-        }else {
-
-            if(env('ZHYU_USE_ADMIN_FUNCTIONS', false) === true) {
-                $must_exists_classes = [
-                    \App\User::class,
-                    \App\Usergroup::class,
-                ];
-                foreach ($must_exists_classes as $class) {
-                    if (env('ZHYU_RESOURCE_ENABLE', false) === true && !class_exists($class)) {
-                        throw new \Exception('this file must exists: ' . $class);
-                    }
-                }
-
-                $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
-                $this->loadTranslationsFrom(__DIR__ . '/lang', 'zhyu');
-
-                $this->loadViewsFrom(__DIR__ . '/blades', 'zhyu');
-                $this->loadMigrationsFrom(__DIR__ . '/databases/migrations');
-
-                $this->publishes([
-                    __DIR__ . '/blades' => resource_path('views/vendor/zhyu'),
-                    __DIR__ . '/assets/js' => resource_path('js'),
-                    __DIR__ . '/lang/en' => resource_path('lang/en'),
-                    __DIR__ . '/lang/tw' => resource_path('lang/tw'),
-                    __DIR__ . '/assets/public_js' => public_path('js'),
-                ], 'zhyu');
-
-                $this->publishes([
-                    __DIR__ . '/Resources/vendor' => app_path('Http/Resources'),
-                ], 'zhyu:view');
-
-                if (env('ZHYU_RESOURCE_ENABLE', false) && Schema::hasTable('resources')) {
-                    View::composer('vendor.zhyu.blocks.sidemenu', 'Zhyu\Http\View\Composers\Sidemenu');
-                }
-            }
         }
 
         if ($this->app->runningInConsole()) {
@@ -144,7 +79,7 @@ class ZhyuServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            Zhyu\ZhyuServiceProvider::class,
+            ZhyuServiceProvider::class,
         ];
     }
 
@@ -160,7 +95,6 @@ class ZhyuServiceProvider extends ServiceProvider
 
             $loader->alias('Ip', \Zhyu\Facades\Ip::class);
             $loader->alias('ZhyuDate', \Zhyu\Facades\ZhyuDate::class);
-            $loader->alias('ZhyuGate', \Zhyu\Facades\ZhyuGate::class);
             $loader->alias('ZhyuUrl', \Zhyu\Facades\ZhyuUrl::class);
             $loader->alias('ZhyuCurl', \Zhyu\Facades\ZhyuCurl::class);
         }
