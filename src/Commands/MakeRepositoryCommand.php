@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ZhyuVueCurd\Commands;
+namespace Zhyu\Commands;
 
 use InvalidArgumentException;
 use Illuminate\Console\GeneratorCommand;
