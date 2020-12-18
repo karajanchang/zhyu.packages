@@ -14,7 +14,7 @@ class MakeRepositoryCommand extends GeneratorCommand
      *
      * @var string
      */
-    private $tagName = '';
+    private $tagName = null;
 
     /**
      * The name of the model.
@@ -69,12 +69,14 @@ class MakeRepositoryCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
+        $namespace = $rootNamespace.'\Repositories';
+
         if(!is_null($this->tagName)){
 
-            return $rootNamespace.'\Repositories\\'.$this->tagName;
+            $namespace.='\\'.$this->tagName;
         }
 
-        return $rootNamespace.'\Repositories';
+        return $namespace;
     }
 
     public function handle()
