@@ -1,11 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: david
- * Date: 2019-04-07
- * Time: 10:46
- */
-namespace Zhyu\Commands;
+
+
+namespace ZhyuVueCurd\Commands;
 
 use InvalidArgumentException;
 use Illuminate\Console\GeneratorCommand;
@@ -13,6 +9,13 @@ use Symfony\Component\Console\Exception\InvalidOptionException;
 
 class MakeRepositoryCommand extends GeneratorCommand
 {
+    /**
+     * The name of the tag.
+     *
+     * @var string
+     */
+    private $tagName = '';
+
     /**
      * The name of the model.
      *
@@ -25,7 +28,7 @@ class MakeRepositoryCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'zhyu:repository {name} {--m=}';
+    protected $signature = 'zhyu:repository {name} {--m=} {--tag=}';
 
     /**
      * The console command name.
@@ -39,7 +42,7 @@ class MakeRepositoryCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create a new repository class';
+    protected $description = 'Create a new repository class (can with tag)';
 
     /**
      * The type of class being generated.
@@ -66,6 +69,11 @@ class MakeRepositoryCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
+        if(!is_null($this->tagName)){
+
+            return $rootNamespace.'\Repositories\\'.$this->tagName;
+        }
+
         return $rootNamespace.'\Repositories';
     }
 
@@ -76,6 +84,11 @@ class MakeRepositoryCommand extends GeneratorCommand
         }
         $this->modelName = ucwords($this->option('m'));
 
+        $tag = (string) $this->option('tag');
+        if(strlen($tag)>0) {
+            $this->tagName = ucwords($tag);
+        }
+
         parent::handle();
     }
 
@@ -84,7 +97,7 @@ class MakeRepositoryCommand extends GeneratorCommand
      * Replace the Model name for the given stub.
      *
      * @param  string  $stub
-     * @param  string  $m
+     * @param  string  $name
      * @return string
      */
     protected function replaceClass($stub, $name)
@@ -92,11 +105,9 @@ class MakeRepositoryCommand extends GeneratorCommand
         if(!$this->argument('name')){
             throw new InvalidArgumentException("Missing required argument repository name");
         }
-
         $stub = parent::replaceClass($stub, $name);
 
         return str_replace('DummyModel', $this->modelName, $stub);
     }
-
 
 }
