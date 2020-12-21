@@ -18,7 +18,7 @@ class DummyClass extends Repository
 
     public function model()
     {
-        return DummyModel::class;
+        return DummyMapModel::class;
     }
 
 }

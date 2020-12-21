@@ -10,6 +10,13 @@ use Symfony\Component\Console\Exception\InvalidOptionException;
 class MakeRepositoryCommand extends GeneratorCommand
 {
     /**
+     * The name of the module.
+     *
+     * @var string
+     */
+    private $moduleName = null;
+
+    /**
      * The name of the tag.
      *
      * @var string
@@ -28,7 +35,7 @@ class MakeRepositoryCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'zhyu:repository {name} {--m=} {--tag=}';
+    protected $signature = 'zhyu:repository {name} {--m=} {--model} {--module=} {--tag=}';
 
     /**
      * The console command name.
@@ -71,8 +78,11 @@ class MakeRepositoryCommand extends GeneratorCommand
     {
         $namespace = $rootNamespace.'\Repositories';
 
-        if(!is_null($this->tagName)){
+        if(!is_null($this->moduleName)){
+            $namespace.='\\'.$this->moduleName;
+        }
 
+        if(!is_null($this->tagName)){
             $namespace.='\\'.$this->tagName;
         }
 
@@ -85,6 +95,11 @@ class MakeRepositoryCommand extends GeneratorCommand
             throw new InvalidOptionException('Missing required option --m for model name');
         }
         $this->modelName = ucwords($this->option('m'));
+
+        $module = (string) $this->option('module');
+        if(strlen($module)>0) {
+            $this->moduleName = ucwords($module);
+        }
 
         $tag = (string) $this->option('tag');
         if(strlen($tag)>0) {
@@ -108,6 +123,12 @@ class MakeRepositoryCommand extends GeneratorCommand
             throw new InvalidArgumentException("Missing required argument repository name");
         }
         $stub = parent::replaceClass($stub, $name);
+
+        $stub = str_replace('DummyMapModel', $this->modelName, $stub);
+
+        if($this->option('model')===true){
+            $this->modelName = 'Models\\'.$this->modelName;
+        }
 
         return str_replace('DummyModel', $this->modelName, $stub);
     }
