@@ -14,3 +14,11 @@ if (!function_exists('DistanceTwoPointByLine')) {
         return $s;
     }
 }
+
+//---error log with class and method
+if(!function_exists('ErrorLogDetail')){
+    function ErrorLogDetail(\Throwable $e){
+
+        \Illuminate\Support\Facades\Log::error(__CLASS__.'::'.__METHOD__.' ('.$e->getLine().' line) :', [$e->getMessage()]);
+    }
+}
