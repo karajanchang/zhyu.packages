@@ -280,7 +280,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      *
      * @return mixed
      */
-    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key, $seconds = 600){
+    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key = null, $seconds = 600){
         $model = Cache::remember($cache_key, $seconds, function() use($where, $columns){
 
             return $this->findWhere($where, $columns);
