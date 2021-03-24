@@ -17,8 +17,13 @@ if (!function_exists('DistanceTwoPointByLine')) {
 
 //---error log with class and method
 if(!function_exists('ErrorLogDetail')){
-    function ErrorLogDetail(\Throwable $e){
+    function ErrorLogDetail(\Throwable $e = null, $rows = null){
+        if(!is_null($e) && $e instanceof \Trrowable) {
+            \Illuminate\Support\Facades\Log::error(__CLASS__ . '::' . __METHOD__ . ' (' . $e->getLine() . ' line) :', [$e->getMessage(), $rows]);
 
-        \Illuminate\Support\Facades\Log::error(__CLASS__.'::'.__METHOD__.' ('.$e->getLine().' line) :', [$e->getMessage()]);
+            return ;
+        }
+
+        \Illuminate\Support\Facades\Log::error(__CLASS__ . '::' . __METHOD__ . ' (' . $e->getLine() . ' line) :', [$e->getMessage(), $rows]);
     }
 }

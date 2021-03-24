@@ -118,7 +118,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param int | Carbon $seconds
      * @return mixed
      */
-    public function allCache(array $columns = ['*'], string $cacheKey, $seconds = 600) {
+    public function allCache(array $columns = ['*'], string $cacheKey = null, $seconds = 600) {
         $rows = Cache::remember($cacheKey, $seconds, function() use($columns){
             return $this->all($columns);
         });
