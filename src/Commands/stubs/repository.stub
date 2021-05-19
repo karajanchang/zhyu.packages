@@ -8,7 +8,7 @@
 
 namespace DummyNamespace;
 
-use App\DummyModel;
+use App\Models\DummyModel;
 
 
 use Zhyu\Repositories\Eloquents\Repository;
