@@ -1,0 +1,36 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: david
+ * Date: 2019-03-20
+ * Time: 15:02
+ */
+
+namespace DummyNamespace;
+
+use App\Repositories\DummyRepository;
+use Errors\DummyError;
+use Joymap\Services\ServiceAbstract;
+
+
+class DummyClass extends ServiceAbstract
+{
+    /*
+     * 如果自己有下construct，注意要呼叫父類的construct
+     */
+
+    public function error()
+    {
+        return DummyError::class;
+    }
+
+    public function repository()
+    {
+        return DummyRepository::class;
+    }
+
+
+    //--美好的開始是成功的第一步
+
+
+}

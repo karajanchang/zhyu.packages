@@ -10,13 +10,14 @@ namespace Zhyu;
 
 use Illuminate\Support\ServiceProvider;
 use Zhyu\Commands\MakeRepositoryCommand;
-
+use Zhyu\Commands\MakeServiceCommand;
 
 
 class ZhyuServiceProvider extends ServiceProvider
 {
     protected $commands = [
         MakeRepositoryCommand::class,
+        MakeServiceCommand::class,
     ];
 
     public function register(){
