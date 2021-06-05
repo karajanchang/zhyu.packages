@@ -30,6 +30,10 @@ class MakeServiceCommand extends GeneratorCommand
      */
     private $serviceName = '';
 
+    /**
+     * @var string
+     */
+    private $package = 'Joymap';
 
     /**
      * The name of repository
@@ -49,7 +53,7 @@ class MakeServiceCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'zhyu:service {name} {--r=} {--repository} {--e=} {--module=} {--tag=}';
+    protected $signature = 'zhyu:service {name} {--p=} {--package} {--r=} {--repository} {--e=} {--module=} {--tag=}';
 
     /**
      * The console command name.
@@ -113,6 +117,7 @@ class MakeServiceCommand extends GeneratorCommand
         if(!$this->option('e')){
             throw new InvalidOptionException('Missing required option --e for error name');
         }
+        $this->package = ucwords($this->option('p'));
         $this->errorName = ucwords($this->option('e'));
 
         $module = (string) $this->option('module');
@@ -145,6 +150,7 @@ class MakeServiceCommand extends GeneratorCommand
 
         $stub = str_replace('DummyError', $this->errorName, $stub);
         $stub = str_replace('DummyRepository', $this->repositoryName, $stub);
+        $stub = str_replace('DummyPackage', $this->package, $stub);
 
 
         return $stub;

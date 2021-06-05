@@ -9,8 +9,8 @@
 namespace DummyNamespace;
 
 use App\Repositories\DummyRepository;
-use Errors\DummyError;
-use Joymap\Services\ServiceAbstract;
+use App\Errors\DummyError;
+use DummyPackage\Services\ServiceAbstract;
 
 
 class DummyClass extends ServiceAbstract
