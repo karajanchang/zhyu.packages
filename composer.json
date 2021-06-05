@@ -27,7 +27,10 @@
   "autoload": {
      "psr-4": {
        "Zhyu\\": "src/"
-    }
+    },
+    "files": [
+      "src/Helpers/Helpers.php"
+    ]
   },
   "autoload-dev": {
      "psr-4": {
