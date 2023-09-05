@@ -118,7 +118,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      * @param int | Carbon $seconds
      * @return mixed
      */
-    public function allCache(array $columns = ['*'], string $cacheKey = null, $seconds = 600) {
+    public function allCache(array $columns = ['*'], string $cacheKey = null, int $seconds = 600) {
         $rows = Cache::remember($cacheKey, $seconds, function() use($columns){
             return $this->all($columns);
         });
@@ -280,7 +280,7 @@ abstract class Repository implements RepositoryInterface, CriteriaInterface {
      *
      * @return mixed
      */
-    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key = null, $seconds = 600){
+    public function findWhereCache(array $where, array $columns = ['*'], string $cache_key = null, ?int $seconds = 600){
         $model = Cache::remember($cache_key, $seconds, function() use($where, $columns){
 
             return $this->findWhere($where, $columns);
