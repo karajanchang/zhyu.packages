@@ -202,6 +202,7 @@ class ZhyuCurl
 
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_TIMEOUT, isset($timeout) ? $timeout : $this->timeout);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
         $data = $this->data();
 
